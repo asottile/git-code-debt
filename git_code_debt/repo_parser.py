@@ -36,6 +36,11 @@ class RepoParser(object):
             self.tempdir = None
 
     def get_commit_shas(self, since=None):
+        """Returns a list of Commit objects.
+
+        Args:
+           since - (optional) A timestamp to look from.
+        """
         assert self.tempdir
 
         cmd = ['git', 'log', self.ref,  '--topo-order', '--format=%H%n%at%n%cN']
