@@ -9,7 +9,21 @@
 <%block name="scripts">
     ${parent.scripts()}
     <script src="static/js/chart.js"></script>
-    <script src="static/js/git_code_debt.js"></script>
 </%block>
 
-<canvas id="graph" width="800" height="600"></canvas>
+<h1>Technical Debt</h1>
+
+<table>
+    <tr>
+        <th>Metric</th>
+        <th># of Occurrences</th>
+        <th># of Files</th>
+        <th>Today's Change</th>
+    </tr>
+    % for metric in metrics:
+        <td><a href="${metric['href']}">${metric['title']}</a></td>
+        <td>${metric['occurrences']}</td>
+        <td>${metric['files']}</td>
+        <td>${metric['change']}</td>
+    % endfor
+</table>
