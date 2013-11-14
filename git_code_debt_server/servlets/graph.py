@@ -21,4 +21,4 @@ def show(name):
     data_points = time.data_points_for_time_range(start_date, end_date)
     metrics_for_dates = metrics.metrics_for_dates(repo, ref, name, data_points)
 
-    return render_template('graph.mako', metrics=json.dumps(metrics_for_dates))
+    return render_template('graph.mako', metric_name=name, metrics=json.dumps(metrics_for_dates))

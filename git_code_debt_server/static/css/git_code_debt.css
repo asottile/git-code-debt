@@ -2,3 +2,8 @@ canvas {
     display: block;
     margin: auto;
 }
+
+h1 {
+    font-family: sans-serif;
+    text-align: center;
+}
