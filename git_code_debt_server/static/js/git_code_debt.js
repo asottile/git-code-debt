@@ -4,10 +4,14 @@
 
     var data = [];
     var labels = [];
+    var max = 0;
+    var steps = 10;
 
     for (var i = 0; i < metrics.length; i++) {
         data.push(metrics[i][0]);
         labels.push(metrics[i][1]);
+
+        max = Math.max(max, metrics[i][0]);
     }
 
     var data = {
@@ -23,8 +27,8 @@
 
     var options = {
         scaleOverride: true,
-        scaleSteps: 10,
-        scaleStepWidth: 10,
+        scaleSteps: steps + 1,
+        scaleStepWidth: Math.floor(max / steps),
         scaleStartsValue: 0
     };
 
