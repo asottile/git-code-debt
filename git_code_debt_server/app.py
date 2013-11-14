@@ -1,15 +1,11 @@
 import flask
-import mako.lookup
+
+from git_code_debt_server.render_mako import render_template
+from git_code_debt_server.servlets.graph import graph
 
 app = flask.Flask(__name__)
 
-template_lookup = mako.lookup.TemplateLookup(
-    directories=['git_code_debt_server/templates'],
-)
-
-def render_template(template_name, **env):
-    template = template_lookup.get_template(template_name)
-    return template.render(**env)
+app.register_blueprint(graph)
 
 @app.route('/')
 def index():
