@@ -16,14 +16,12 @@
 <table>
     <tr>
         <th>Metric</th>
-        <th># of Occurrences</th>
-        <th># of Files</th>
+        <th>Value</th>
         <th>Today's Change</th>
     </tr>
     % for metric in metrics:
         <td><a href="${metric['href']}">${metric['title']}</a></td>
         <td>${metric['occurrences']}</td>
-        <td>${metric['files']}</td>
         <td>${metric['change']}</td>
     % endfor
 </table>
