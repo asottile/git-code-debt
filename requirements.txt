@@ -1,5 +1,7 @@
 flask
 mako
+mock
 pyquery
+pyyaml
 simplejson
 testify

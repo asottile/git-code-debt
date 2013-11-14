@@ -4,3 +4,5 @@
 .coverage
 ca.pem
 /py_env
+
+/config.yaml
