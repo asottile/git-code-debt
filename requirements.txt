@@ -1,0 +1,5 @@
+flask
+mako
+pyquery
+simplejson
+testify

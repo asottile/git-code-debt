@@ -1,0 +1,6 @@
+*.pyc
+.pydevproject
+.project
+.coverage
+ca.pem
+/py_env
