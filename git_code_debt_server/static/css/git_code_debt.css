@@ -7,3 +7,17 @@ h1 {
     font-family: sans-serif;
     text-align: center;
 }
+
+table {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+    width: 640px;
+    margin: auto;
+    text-align: center;
+    font-family: sans-serif;
+}
+
+td, th {
+    padding: 5px;
+    border: 1px solid #ccc;
+}
