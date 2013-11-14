@@ -1,10 +1,15 @@
-all: test
+all: test itest
 
+itests: itest
 tests: test
 
 test: py_env
 	bash -c 'source py_env/bin/activate && \
-		testify tests'
+		testify tests -x integration'
+
+itest: py_env
+	bash -c 'source py_env/bin/activate && \
+		testify tests -i integration'
 
 py_env: requirements.txt
 	rm -rf py_env
