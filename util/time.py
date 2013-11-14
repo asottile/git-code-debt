@@ -1,15 +1,5 @@
-from dateutil.relativedelta import relativedelta
+import datetime
 
-GRANULARITY_THRESHOLD = 3
-
-def get_granularity(start_date, end_date):
-    delta = relativedelta(end_date, start_date)
-
-    if (delta.years > GRANULARITY_THRESHOLD):
-        return 'years'
-    elif (delta.months > GRANULARITY_THRESHOLD):
-        return 'months'
-    elif (delta.weeks > GRANULARITY_THRESHOLD):
-        return 'weeks'
-    else:
-        return 'days'
+def data_points_for_time_range(start_date, end_date, data_points=10):
+    interval = (end_date - start_date).days / data_points
+    return [start_date + datetime.timedelta(i * interval, 0) for i in range(data_points)]
