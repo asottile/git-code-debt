@@ -1,14 +1,16 @@
 import datetime
 import flask
 
+from util import time
+
 graph = flask.Blueprint('graph', __name__)
 
 @graph.route('/graph/<name>')
 def show(name):
-    from_timestamp = int(flask.request.args.get('from'))
-    to_timestamp = int(flask.request.args.get('to'))
+    start_timestamp = int(flask.request.args.get('start'))
+    end_timestamp = int(flask.request.args.get('end'))
 
-    friendly_from = datetime.datetime.fromtimestamp(from_timestamp)
-    friendly_to = datetime.datetime.fromtimestamp(to_timestamp)
+    start_date = datetime.datetime.fromtimestamp(start_timestamp)
+    end_date = datetime.datetime.fromtimestamp(end_timestamp)
 
-    return "Viewing " + name + " from " + str(friendly_from) + " to " + str(friendly_to)
+    return str(time.data_points_for_time_range(start_date, end_date))
