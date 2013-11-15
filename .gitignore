@@ -4,3 +4,4 @@
 .coverage
 ca.pem
 /py_env
+*.db
