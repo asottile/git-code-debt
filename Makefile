@@ -14,7 +14,7 @@ itest: py_env
 tables: py_env clean_tables
 	cat schema/* | sqlite3 `python -c 'import git_code_debt_server.config; print git_code_debt_server.config.DATABASE_PATH'`
 	bash -c 'source py_env/bin/activate && \
-		PYTHONPATH=. python scripts/populate_metric_ids.py'
+		PYTHONPATH=. python git_code_debt/populate_metric_ids.py'
 
 py_env: requirements.txt
 	rm -rf py_env
