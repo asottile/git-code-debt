@@ -20,8 +20,10 @@
         <th>Today's Change</th>
     </tr>
     % for metric in metrics:
-        <td><a href="${metric['href']}">${metric['title']}</a></td>
-        <td>${metric['occurrences']}</td>
-        <td>${metric['change']}</td>
+        <tr>
+            <td><a href="${metric['href']}">${metric['title']}</a></td>
+            <td>${metric['occurrences']}</td>
+            <td>${metric['change']}</td>
+        </tr>
     % endfor
 </table>
