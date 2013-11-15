@@ -1,3 +1,6 @@
 import os.path
 
-DATABASE_PATH = os.path.abspath('git_code_debt_server/database.db')
+DATABASE_PATH = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)),
+    'database.db',
+)
