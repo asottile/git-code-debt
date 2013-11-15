@@ -13,8 +13,8 @@ itest: py_env
 		testify tests -i integration'
 
 tables: py_env clean_tables
-	cat schema/* | sqlite3 ./database.db
 	bash -c 'source py_env/bin/activate && \
+		PYTHONPATH=. python git_code_debt/schema.py ./database.db && \
 		PYTHONPATH=. python git_code_debt/populate_metric_ids.py ./database.db'
 
 py_env: requirements.txt
