@@ -2,11 +2,11 @@
 import argparse
 import collections
 import re
+import sqlite3
 
 from git_code_debt.diff_parser_base import get_file_diff_stats_from_output
 from git_code_debt.discovery import get_metric_parsers
 from git_code_debt.repo_parser import RepoParser
-from git_code_debt_server.app import get_database
 
 STAT_INSERTIONS_RE = re.compile('(\d+) insertion')
 STAT_DELETIONS_RE = re.compile('(\d+) deletion')
@@ -90,8 +90,8 @@ def insert_metric_values(database, metric_values, metric_mapping, repo, commit):
             [repo, commit.sha, metric_id, commit.date, value],
         )
 
-def load_data(repo):
-    with get_database() as database:
+def load_data(database_file, repo):
+    with sqlite3.connect(database_file) as database:
         repo_parser = RepoParser(repo)
 
         with repo_parser.repo_checked_out():
@@ -148,10 +148,11 @@ def load_data(repo):
 def main():
     parser = argparse.ArgumentParser(description='Generates metrics from a git repo')
     parser.add_argument('repo', help='Repository link to generate metrics from')
+    parser.add_argument('database', help='Database file')
     parser.add_argument('--from-sha', type=str, help='Start repo from date')
     args = parser.parse_args()
 
-    load_data(args.repo)
+    load_data(args.database, args.repo)
 
 if __name__ == '__main__':
     main()

@@ -1,3 +1,4 @@
+
 all: tables test itest
 
 itests: itest
@@ -12,9 +13,9 @@ itest: py_env
 		testify tests -i integration'
 
 tables: py_env clean_tables
-	cat schema/* | sqlite3 `python -c 'import git_code_debt_server.config; print git_code_debt_server.config.DATABASE_PATH'`
 	bash -c 'source py_env/bin/activate && \
-		PYTHONPATH=. python git_code_debt/populate_metric_ids.py'
+		PYTHONPATH=. python git_code_debt/schema.py ./database.db && \
+		PYTHONPATH=. python git_code_debt/populate_metric_ids.py ./database.db'
 
 py_env: requirements.txt
 	rm -rf py_env
@@ -22,8 +23,12 @@ py_env: requirements.txt
 	bash -c 'source py_env/bin/activate && \
 		pip install -r requirements.txt'
 
+start:
+	bash -c 'source py_env/bin/activate && \
+		PYTHONPATH=. python -m git_code_debt_server.app ./database.db'
+
 clean: clean_tables
 	rm -rf py_env
 
 clean_tables:
-	rm -f `python -c 'import git_code_debt_server.config; print git_code_debt_server.config.DATABASE_PATH'`
+	rm -f ./database.db
