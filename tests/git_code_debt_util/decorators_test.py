@@ -2,7 +2,7 @@
 import time
 import testify as T
 
-from util.decorators import cached_property
+from git_code_debt_util.decorators import cached_property
 
 class TestCachedProperty(T.TestCase):
 

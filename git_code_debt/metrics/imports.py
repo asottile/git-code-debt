@@ -3,10 +3,11 @@ import collections
 from git_code_debt.diff_parser_base import DiffParserBase
 from git_code_debt.metric import Metric
 from git_code_debt.metrics.common import FILE_TYPE_MAP
-from util.path import split_file_path
+from git_code_debt_util.path import split_file_path
 
 
 def is_python_import(line):
+    line = line.lstrip()
     if line.startswith('import'):
         return True
     if line.startswith('from') and 'import' in line:
@@ -14,12 +15,13 @@ def is_python_import(line):
     return False
 
 def is_template_import(line):
+    line = line.lstrip()
     return (
         line.startswith('#') and
         is_python_import(line[1:])
     )
 
-# Maps a set of file extensions to a nice name
+# Maps a set of file extensions to a function that determines if the line is an import.
 IMPORT_CHECK_MAP = {
     '.py': is_python_import,
     '.tmpl': is_template_import,
@@ -27,7 +29,7 @@ IMPORT_CHECK_MAP = {
 
 
 class ImportsParser(DiffParserBase):
-    """Counts number of imports in a repository by file type"""
+    """Counts number of imports in a repository by file type."""
 
     def get_metrics_from_stat(self, file_diff_stats):
         imports_by_extension = collections.defaultdict(int)
@@ -53,5 +55,5 @@ class ImportsParser(DiffParserBase):
     def get_possible_metric_ids(self):
         return [
             'ImportCount_{0}'.format(file_type)
-            for file_type in FILE_TYPE_MAP.values() + ['unknown']
+            for file_type in set(FILE_TYPE_MAP.values()) | set(['unknown'])
         ]

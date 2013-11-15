@@ -1,7 +1,7 @@
 
 import testify as T
 
-from util.iter import chunk_iter
+from git_code_debt_util.iter import chunk_iter
 
 class TestChunkIter(T.TestCase):
 

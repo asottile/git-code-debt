@@ -1,7 +1,7 @@
 
 import testify as T
 
-from util.discovery import get_module_name
+from git_code_debt_util.discovery import get_module_name
 
 class TestGetModuleName(T.TestCase):
     """Tests the get_module_name function."""

@@ -1,8 +1,8 @@
+argparse
 flask
 ipdb
 mako
 mock
 pyquery
-pyyaml
 simplejson
 testify

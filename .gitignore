@@ -6,3 +6,6 @@ ca.pem
 /py_env
 *.db
 .idea
+build
+dist
+*.egg-info

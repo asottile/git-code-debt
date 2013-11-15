@@ -2,7 +2,7 @@
 import pyquery
 import simplejson
 
-from util.decorators import cached_property
+from git_code_debt_util.decorators import cached_property
 
 class TestingResponse(object):
     """A TestingResponse wraps a response from a testing Client."""

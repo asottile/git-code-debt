@@ -5,8 +5,8 @@ import shutil
 import subprocess
 import tempfile
 
-from util.backport_subprocess import backport_check_output
-from util.iter import chunk_iter
+from git_code_debt_util.backport_subprocess import backport_check_output
+from git_code_debt_util.iter import chunk_iter
 
 # XXX: Python 2.6 compatibility
 backport_check_output()
