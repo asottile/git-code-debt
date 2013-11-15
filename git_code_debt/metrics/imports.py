@@ -29,7 +29,7 @@ IMPORT_CHECK_MAP = {
 
 
 class ImportsParser(DiffParserBase):
-    """Counts number of imports in a repository by file type"""
+    """Counts number of imports in a repository by file type."""
 
     def get_metrics_from_stat(self, file_diff_stats):
         imports_by_extension = collections.defaultdict(int)

@@ -2,6 +2,7 @@
 import os.path
 
 from git_code_debt.diff_parser_base import DiffParserBase
+from git_code_debt.metrics.base import SimpleLineCounterBase
 from git_code_debt_util.discovery import discover
 
 __discovery_paths = set()
@@ -18,8 +19,13 @@ def register_metrics_folder(path):
 # Register our folder
 register_metrics_folder(METRICS_FOLDER)
 
+METRICS_BASE_CLASSES = [
+    DiffParserBase,
+    SimpleLineCounterBase,
+]
+
 def is_metric_cls(cls):
-    return cls is not DiffParserBase and issubclass(cls, DiffParserBase)
+    return cls not in METRICS_BASE_CLASSES and issubclass(cls, DiffParserBase)
 
 def get_metric_parsers():
     metric_parsers = set()
