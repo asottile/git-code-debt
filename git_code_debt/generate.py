@@ -1,11 +1,25 @@
 
 import argparse
 import collections
+import re
 
 from git_code_debt.diff_parser_base import get_file_diff_stats_from_output
 from git_code_debt.discovery import get_metric_parsers
 from git_code_debt.repo_parser import RepoParser
 from git_code_debt_server.app import get_database
+
+STAT_INSERTIONS_RE = re.compile('(\d+) insertion')
+STAT_DELETIONS_RE = re.compile('(\d+) deletion')
+
+def get_stats_from_output(stat_out):
+    stat_line = stat_out.splitlines()[-1]
+    insertions = STAT_INSERTIONS_RE.search(stat_line)
+    deletions = STAT_DELETIONS_RE.search(stat_line)
+
+    return (
+        (int(insertions.group(1)) if insertions else 0) -
+        (int(deletions.group(1)) if deletions else 0)
+    )
 
 def get_metric_outputs(diff):
     def get_all_metrics(file_diff_stats):
@@ -89,22 +103,41 @@ def load_data(repo):
 
             # Maps metric_name to a running value
             metric_values = collections.defaultdict(int)
+            running_total_loc = 0
 
             # Grab the state of our metrics at the last place
+            compare_commit = None
             if previous_sha is not None:
                 compare_commit = commits[0]
                 metric_values.update(get_metric_values(database, compare_commit))
                 commits = commits[1:]
 
             for commit in commits:
-                if previous_sha is None:
+                if compare_commit is None:
                     diff = repo_parser.get_original_commit(commit.sha)
+                    stat_out = repo_parser.get_original_diff_stat(commit.sha)
                 else:
                     diff = repo_parser.get_commit_diff(compare_commit.sha, commit.sha)
+                    stat_out = repo_parser.get_commit_diff_stat(compare_commit.sha, commit.sha)
 
                 metrics = get_metric_outputs(diff)
                 increment_metric_values(metric_values, metrics)
                 insert_metric_values(database, metric_values, metric_mapping, repo, commit)
+
+                running_total_loc +=  get_stats_from_output(stat_out)
+                if running_total_loc != metric_values['TotalLinesOfCode']:
+                    raise AssertionError(
+                        'Integrity of commits compromised.\n'
+                        'Diff stat LOC: {0}\n'
+                        'Diffs LOC: {1}\n'
+                        'Previous SHA: {2}\n'
+                        'Current SHA: {3}\n'.format(
+                            running_total_loc,
+                            metric_values['TotalLinesOfCode'],
+                            compare_commit.sha,
+                            commit.sha,
+                        ),
+                    )
 
                 compare_commit = commit
 
