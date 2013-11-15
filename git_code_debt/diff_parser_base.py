@@ -45,6 +45,11 @@ def _get_file_diff_stats_from_output_helper(output):
                         lines_removed,
                     )
 
+                    filename_from = None
+                    filename_to = None
+                    lines_added = None
+                    lines_removed = None
+
                 # exhaust the index line
                 lines_iter.next()
                 from_line = lines_iter.next()

@@ -63,6 +63,18 @@ index dc7827c..0000000
 -bar
 """
 
+COMMIT_ENDING_WITH_BINARY_FILES = """diff --git a/htdocs/css/base.css b/htdocs/css/base.css
+index f0f7eac..ca3d0a2 100644
+--- a/htdocs/css/base.css
++++ b/htdocs/css/base.css
+@@ -18,7 +18,7 @@ DIV, TD, P {
++foo
+diff --git a/htdocs/i/p.gif b/htdocs/i/p.gif
+new file mode 100644
+index 0000000..35d42e8
+Binary files /dev/null and b/htdocs/i/p.gif differ
+"""
+
 class TestDiffParser(T.TestCase):
 
     def test_get_file_diff_stats_from_output(self):
@@ -104,6 +116,10 @@ class TestDiffParser(T.TestCase):
                 Status.DELETED,
             )],
         )
+
+    def test_binary_files(self):
+        ret = get_file_diff_stats_from_output(COMMIT_ENDING_WITH_BINARY_FILES)
+        T.assert_length(ret, 1)
 
 class TestAllMetricParsersDefinePossibleMetrics(T.TestCase):
 
