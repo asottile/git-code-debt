@@ -17,5 +17,11 @@ py_env: requirements.txt
 	bash -c 'source py_env/bin/activate && \
 		pip install -r requirements.txt'
 
-clean:
+tables: clean_tables
+	cat schema/* | sqlite3 `python -c 'import git_code_debt_server.config; print git_code_debt_server.config.DATABASE_PATH'`
+
+clean: clean_tables
 	rm -rf py_env
+
+clean_tables:
+	rm -f `python -c 'import git_code_debt_server.config; print git_code_debt_server.config.DATABASE_PATH'`
