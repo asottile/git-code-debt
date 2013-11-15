@@ -1,8 +1,8 @@
 
-import fnmatch
 import inspect
 import os
 import os.path
+import pkgutil
 import sys
 
 def get_module_name(root, filename):
@@ -24,34 +24,28 @@ def get_module_name(root, filename):
     # XXX: should really use pathsep here
     return relpath.replace('/', '.')
 
-def discover(directory, cls_match_func):
+def discover(package, cls_match_func):
     """Returns a set of classes in the directory matched by cls_match_func
 
     Args:
-        directory - Directory to search in relative to the cwd (or absolute)
+        path - A Python package
         cls_match_func - Function taking a class and returning true if the
             class is to be included in the output.
     """
     matched_classes = set()
 
-    # Look for all python files in the jar downloader directory
-    for root, _, filenames in os.walk(directory):
-        for filename in filenames:
-            if not fnmatch.fnmatch(filename, '*.py'):
-                continue
+    for importer, module_name, ispkg in pkgutil.walk_packages(
+        package.__path__,
+        prefix=package.__name__ + '.',
+    ):
+        __import__(module_name)
+        module = sys.modules[module_name]
 
-            module_name = get_module_name(root, filename)
-            # TODO: testify does something similar and wraps this in a try
-            # except.  Is this something I want to do?
-            # Import the module
-            __import__(module_name)
-            module = sys.modules[module_name]
+        # Check all the classes in that module
+        for name, _ in inspect.getmembers(module, inspect.isclass):
+            imported_class = getattr(module, name)
 
-            # Check all the classes in that module
-            for name, _ in inspect.getmembers(module, inspect.isclass):
-                imported_class = getattr(module, name)
-
-                if cls_match_func(imported_class):
-                    matched_classes.add(imported_class)
+            if cls_match_func(imported_class):
+                matched_classes.add(imported_class)
 
     return matched_classes

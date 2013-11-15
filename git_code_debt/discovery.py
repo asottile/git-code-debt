@@ -1,22 +1,15 @@
 
-import os.path
-
 from git_code_debt.diff_parser_base import DiffParserBase
+import git_code_debt.metrics
 from git_code_debt_util.discovery import discover
 
-__discovery_paths = set()
+__discovery_paths = []
 
-METRICS_FOLDER = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)),
-    'metrics'
-)
+def register_metrics_module(path):
+    __discovery_paths.append(path)
 
-def register_metrics_folder(path):
-    assert os.path.exists(path)
-    __discovery_paths.add(path)
-
-# Register our folder
-register_metrics_folder(METRICS_FOLDER)
+# Register our metrics
+register_metrics_module(git_code_debt.metrics)
 
 def is_metric_cls(cls):
     return cls is not DiffParserBase and issubclass(cls, DiffParserBase)
