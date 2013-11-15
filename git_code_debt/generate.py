@@ -30,7 +30,7 @@ def get_metric_mapping(database):
             name
         FROM metric_names
     """).fetchall()
-    results = results
+    return dict(results)
 
 def get_previous_sha(database):
     return database.execute("""
