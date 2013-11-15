@@ -1,6 +1,5 @@
 
 import collections
-import subprocess
 
 class Status(object):
     ADDED = object()
@@ -11,18 +10,6 @@ FileDiffStat = collections.namedtuple(
     'FileStat',
     ['filename', 'lines_added', 'lines_removed', 'status'],
 )
-
-def get_original_commit(sha):
-    output = subprocess.check_output(
-        ['git', 'show', sha],
-    )
-    return output
-
-def get_subprocess_output(previous_sha, sha):
-    output = subprocess.check_output(
-       ['git', 'diff', previous_sha, sha],
-    )
-    return output
 
 def _to_file_diff_stat(filename_from, filename_to, lines_added, lines_removed):
     if filename_from == 'dev/null':
