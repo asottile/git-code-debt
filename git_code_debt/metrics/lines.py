@@ -2,14 +2,8 @@ import collections
 
 from git_code_debt.diff_parser_base import DiffParserBase
 from git_code_debt.metric import Metric
+from git_code_debt.metrics.common import FILE_TYPE_MAP
 from util.path import split_file_path
-
-# Maps a set of file extensions to a nice name
-FILE_TYPE_MAP = {
-    '.py': 'Python',
-    '.yaml': 'Yaml',
-    '.tmpl': 'Template',
-}
 
 
 class LinesOfCodeParser(DiffParserBase):
