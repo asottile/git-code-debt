@@ -12,6 +12,12 @@ FileDiffStat = collections.namedtuple(
     ['filename', 'lines_added', 'lines_removed', 'status'],
 )
 
+def get_original_commit(sha):
+    output = subprocess.check_output(
+        ['git', 'show', sha],
+    )
+    return output
+
 def get_subprocess_output(previous_sha, sha):
     output = subprocess.check_output(
        ['git', 'diff', previous_sha, sha],
@@ -102,4 +108,7 @@ class DiffParserBase(object):
         Returns:
            generator of Metric objects
         """
+        raise NotImplementedError
+
+    def get_possible_metric_ids(self):
         raise NotImplementedError
