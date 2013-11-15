@@ -11,9 +11,8 @@ Commit = collections.namedtuple('Commit', ['sha', 'date', 'name'])
 
 class RepoParser(object):
 
-    def __init__(self, git_repo, ref):
+    def __init__(self, git_repo):
         self.git_repo = git_repo
-        self.ref = ref
         self.tempdir = None
 
     @contextlib.contextmanager
@@ -21,13 +20,8 @@ class RepoParser(object):
         assert not self.tempdir
         self.tempdir = tempfile.mkdtemp(suffix='temp-repo')
         try:
-            subprocess.call(
+            subprocess.check_call(
                 ['git', 'clone', self.git_repo, self.tempdir],
-                stdout=None,
-            )
-            subprocess.call(
-                ['git', 'checkout', self.ref],
-                cwd=self.tempdir,
                 stdout=None,
             )
             yield
@@ -35,17 +29,19 @@ class RepoParser(object):
             shutil.rmtree(self.tempdir)
             self.tempdir = None
 
-    def get_commit_shas(self, since=None):
+    def get_commit_shas(self, since_sha=None):
         """Returns a list of Commit objects.
 
         Args:
-           since - (optional) A timestamp to look from.
+           since_sha - (optional) A sha to search from
         """
         assert self.tempdir
 
-        cmd = ['git', 'log', self.ref,  '--topo-order', '--format=%H%n%at%n%cN']
-        if since:
-            cmd += ['--after={0}'.format(since)]
+        cmd = ['git', 'log', '--first-parent', '--format=%H%n%at%n%cN']
+        if since_sha:
+            cmd.append('{0}..master'.format(since_sha))
+        else:
+            cmd.append('master')
 
         output = subprocess.check_output(
             cmd,
