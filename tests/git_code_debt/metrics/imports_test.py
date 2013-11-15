@@ -13,6 +13,7 @@ class ImportParserTest(T.TestCase):
     def test_python_import_check(self):
         T.assert_equal(is_python_import('import collections'), True)
         T.assert_equal(is_python_import('from collections import defaultdict'), True)
+        T.assert_equal(is_python_import('\timport inline'), True)
         T.assert_equal(is_python_import('from with no followup'), False)
         T.assert_equal(is_python_import('line with nothing related'), False)
         T.assert_equal(is_python_import('line with import not at start'), False)
@@ -20,6 +21,7 @@ class ImportParserTest(T.TestCase):
     def test_template_import_check(self):
         T.assert_equal(is_template_import('#import'), True)
         T.assert_equal(is_template_import('#from foo import bar'), True)
+        T.assert_equal(is_template_import('\t#import inline'), True)
         T.assert_equal(is_template_import('nothing related'), False)
         T.assert_equal(is_template_import('lines with #import not at the beginning'), False)
 
