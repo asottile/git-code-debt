@@ -30,21 +30,27 @@ def get_metric_mapping(database):
     """).fetchall()
     return dict(results)
 
-def get_previous_sha(database):
-    return database.execute("""
+def get_previous_sha(database, repo):
+    result = database.execute(
+        """
         SELECT
             sha
         FROM metric_data
-        ORDER BY timestamp ASC
+        WHERE repo = ?
+        ORDER BY timestamp DESC
         LIMIT 1
-    """).fetchone()
+        """,
+        [repo]
+    ).fetchone()
+
+    return result[0] if result else None
 
 def get_metric_values(database, commit):
     results = database.execute(
         '''
         SELECT
             metric_names.name,
-            value
+            running_value
         FROM metric_data
         INNER JOIN metric_names ON
             metric_names.id = metric_data.metric_id
@@ -75,11 +81,15 @@ def main():
         repo_parser = RepoParser(args.repo)
 
         with repo_parser.repo_checked_out():
-            previous_sha = get_previous_sha(database)
+            previous_sha = get_previous_sha(database, args.repo)
 
             metric_mapping = get_metric_mapping(database)
 
             commits = repo_parser.get_commit_shas(since_sha=previous_sha)
+
+            # If there is nothing to check gtfo
+            if not commits:
+                return
 
             # Maps metric_name to a running value
             metric_values = collections.defaultdict(int)
