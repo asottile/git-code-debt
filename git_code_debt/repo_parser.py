@@ -11,9 +11,8 @@ Commit = collections.namedtuple('Commit', ['sha', 'date', 'name'])
 
 class RepoParser(object):
 
-    def __init__(self, git_repo, ref):
+    def __init__(self, git_repo):
         self.git_repo = git_repo
-        self.ref = ref
         self.tempdir = None
 
     @contextlib.contextmanager
@@ -21,13 +20,8 @@ class RepoParser(object):
         assert not self.tempdir
         self.tempdir = tempfile.mkdtemp(suffix='temp-repo')
         try:
-            subprocess.call(
+            subprocess.check_call(
                 ['git', 'clone', self.git_repo, self.tempdir],
-                stdout=None,
-            )
-            subprocess.call(
-                ['git', 'checkout', self.ref],
-                cwd=self.tempdir,
                 stdout=None,
             )
             yield
@@ -43,7 +37,7 @@ class RepoParser(object):
         """
         assert self.tempdir
 
-        cmd = ['git', 'log', self.ref,  '--topo-order', '--format=%H%n%at%n%cN']
+        cmd = ['git', 'log', 'master', '--first-parent', '--format=%H%n%at%n%cN']
         if since:
             cmd += ['--after={0}'.format(since)]
 
