@@ -2,7 +2,6 @@ import testify as T
 
 from git_code_debt.metrics.lines import LinesOfCodeParser
 from git_code_debt.diff_parser_base import FileDiffStat
-from git_code_debt.metric import Metric
 
 
 @T.suite('unit')
@@ -16,9 +15,11 @@ class LinesOfCodeParserTest(T.TestCase):
         ]
 
         metrics = [item for item in parser.get_metrics_from_stat(input)]
-        T.assert_equal(metrics, [
-            Metric('TotalLinesOfCode', 3),
-            Metric('TotalLinesOfCode_Python', 1),
-            Metric('TotalLinesOfCode_Yaml', 2),
-            Metric('TotalLinesOfCode_Template', 0),
-        ])
+
+        expected_value = {
+            'TotalLinesOfCode': 3,
+            'TotalLinesOfCode_Python': 1,
+            'TotalLinesOfCode_Yaml': 2,
+        }
+        for metric in metrics:
+            T.assert_equal(metric.value, expected_value.get(metric.metric_name, 0))
