@@ -7,6 +7,7 @@ from util.path import split_file_path
 
 
 def is_python_import(line):
+    line = line.lstrip()
     if line.startswith('import'):
         return True
     if line.startswith('from') and 'import' in line:
@@ -14,12 +15,13 @@ def is_python_import(line):
     return False
 
 def is_template_import(line):
+    line = line.lstrip()
     return (
         line.startswith('#') and
         is_python_import(line[1:])
     )
 
-# Maps a set of file extensions to a nice name
+# Maps a set of file extensions to a function that determines if the line is an import.
 IMPORT_CHECK_MAP = {
     '.py': is_python_import,
     '.tmpl': is_template_import,
