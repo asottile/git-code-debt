@@ -33,5 +33,5 @@ class LinesOfCodeParser(DiffParserBase):
     def get_possible_metric_ids(self):
         return ['TotalLinesOfCode'] + [
             'TotalLinesOfCode_{0}'.format(file_type)
-            for file_type in FILE_TYPE_MAP.values() + ['unknown']
+            for file_type in set(FILE_TYPE_MAP.values()) | set(['unknown'])
         ]
