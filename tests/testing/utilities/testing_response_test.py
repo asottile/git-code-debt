@@ -2,7 +2,7 @@
 import testify as T
 
 from testing.utilities.testing_response import TestingResponse
-from util.auto_namedtuple import auto_namedtuple
+from git_code_debt_util.auto_namedtuple import auto_namedtuple
 
 class TestTestingResponse(T.TestCase):
 
