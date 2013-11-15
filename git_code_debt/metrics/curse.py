@@ -4,13 +4,11 @@ import os
 from git_code_debt.diff_parser_base import DiffParserBase
 from git_code_debt.metric import Metric
 from git_code_debt.metrics.common import FILE_TYPE_MAP
+from git_code_debt.metrics.curse_words import word_list
 from git_code_debt_util.path import split_file_path
 
 
-path = os.path.join(os.path.dirname(__file__), 'single_curse_words.txt')
-curse_words_file = open(path)
-curse_words = dict([(word[:-1], True) for word in curse_words_file.readlines()])
-curse_words_file.close()
+curse_words = dict([(word, True) for word in word_list])
 
 
 def count_curse_words(lines):
