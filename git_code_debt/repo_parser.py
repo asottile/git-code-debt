@@ -7,6 +7,7 @@ import tempfile
 
 from util.iter import chunk_iter
 
+# TODO: remove name since we can't really do anything useful with it
 Commit = collections.namedtuple('Commit', ['sha', 'date', 'name'])
 
 class RepoParser(object):
@@ -37,7 +38,7 @@ class RepoParser(object):
         """
         assert self.tempdir
 
-        cmd = ['git', 'log', '--first-parent', '--format=%H%n%at%n%cN']
+        cmd = ['git', 'log', '--first-parent', '--reverse', '--format=%H%n%at%n%cN']
         if since_sha:
             cmd.append('{0}..master'.format(since_sha))
         else:

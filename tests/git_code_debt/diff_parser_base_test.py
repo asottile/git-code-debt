@@ -3,7 +3,7 @@ import testify as T
 
 from git_code_debt.diff_parser_base import FileDiffStat
 from git_code_debt.diff_parser_base import Status
-from git_code_debt.diff_parser_base import _get_file_diff_stats_from_output
+from git_code_debt.diff_parser_base import get_file_diff_stats_from_output
 
 SAMPLE_OUTPUT = """diff --git a/README.md b/README.md
 index 17b5d50..6daaaeb 100644
@@ -65,7 +65,7 @@ index dc7827c..0000000
 class TestDiffParser(T.TestCase):
 
     def test_get_file_diff_stats_from_output(self):
-        ret = _get_file_diff_stats_from_output(SAMPLE_OUTPUT)
+        ret = get_file_diff_stats_from_output(SAMPLE_OUTPUT)
         T.assert_equal(
             ret,
             [FileDiffStat(
@@ -77,11 +77,11 @@ class TestDiffParser(T.TestCase):
         )
 
     def test_does_not_choke_on_empty(self):
-        ret = _get_file_diff_stats_from_output(MERGE_COMMIT_OUTPUT)
+        ret = get_file_diff_stats_from_output(MERGE_COMMIT_OUTPUT)
         T.assert_equal(ret, [])
 
     def test_added_file(self):
-        ret = _get_file_diff_stats_from_output(FILE_ADDED_COMMIT)
+        ret = get_file_diff_stats_from_output(FILE_ADDED_COMMIT)
         T.assert_equal(
             ret,
             [FileDiffStat(
@@ -93,7 +93,7 @@ class TestDiffParser(T.TestCase):
         )
 
     def test_removed_file(self):
-        ret = _get_file_diff_stats_from_output(FILE_REMOVED_COMMIT)
+        ret = get_file_diff_stats_from_output(FILE_REMOVED_COMMIT)
         T.assert_equal(
             ret,
             [FileDiffStat(

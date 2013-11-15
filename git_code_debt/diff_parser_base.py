@@ -12,9 +12,9 @@ FileDiffStat = collections.namedtuple(
     ['filename', 'lines_added', 'lines_removed', 'status'],
 )
 
-def _get_subprocess_output(sha):
+def get_subprocess_output(previous_sha, sha):
     output = subprocess.check_output(
-       ['git', 'show', sha],
+       ['git', 'diff', previous_sha, sha],
     )
     return output
 
@@ -86,16 +86,11 @@ def _get_file_diff_stats_from_output_helper(output):
                 lines_removed,
             )
 
-def _get_file_diff_stats_from_output(output):
+def get_file_diff_stats_from_output(output):
     return list(_get_file_diff_stats_from_output_helper(output))
 
 class DiffParserBase(object):
     """Generates metrics from git show"""
-
-    def get_metrics(self, sha):
-        output = _get_subprocess_output(sha)
-        file_diff_stats = _get_file_diff_stats_from_output(output)
-        self.get_metrics_from_stat(file_diff_stats)
 
     def get_metrics_from_stat(self, file_diff_stats):
         """Implement me to yield Metric objects from the input list of

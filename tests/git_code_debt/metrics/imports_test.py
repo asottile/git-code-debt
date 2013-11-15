@@ -1,6 +1,6 @@
 import testify as T
 
-from git_code_debt.metrics.imports import ImportParser
+from git_code_debt.metrics.imports import ImportsParser
 from git_code_debt.metrics.imports import is_python_import
 from git_code_debt.metrics.imports import is_template_import
 from git_code_debt.diff_parser_base import FileDiffStat
@@ -19,11 +19,12 @@ class ImportParserTest(T.TestCase):
 
     def test_template_import_check(self):
         T.assert_equal(is_template_import('#import'), True)
+        T.assert_equal(is_template_import('#from foo import bar'), True)
         T.assert_equal(is_template_import('nothing related'), False)
         T.assert_equal(is_template_import('lines with #import not at the beginning'), False)
 
     def test_import_parser(self):
-        parser = ImportParser()
+        parser = ImportsParser()
         input = [
             FileDiffStat('test.py', ['import collections', 'from os import path'], ['import os.path', 'nothing'], 'this_should_be_ignored'),
         ]

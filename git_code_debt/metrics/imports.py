@@ -14,9 +14,10 @@ def is_python_import(line):
     return False
 
 def is_template_import(line):
-    if line.startswith('#import'):
-        return True
-    return False
+    return (
+        line.startswith('#') and
+        is_python_import(line[1:])
+    )
 
 # Maps a set of file extensions to a nice name
 IMPORT_CHECK_MAP = {
@@ -25,7 +26,7 @@ IMPORT_CHECK_MAP = {
 }
 
 
-class ImportParser(DiffParserBase):
+class ImportsParser(DiffParserBase):
     """Counts number of imports in a repository by file type"""
 
     def get_metrics_from_stat(self, file_diff_stats):
