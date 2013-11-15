@@ -2,7 +2,7 @@
 import os.path
 
 from git_code_debt.diff_parser_base import DiffParserBase
-from util.discovery import discover
+from git_code_debt_util.discovery import discover
 
 __discovery_paths = set()
 
