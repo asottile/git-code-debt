@@ -1,5 +1,4 @@
 git-code-debt
 =============
 
-
-hello world
+A dashboard for monitoring code debt in a git repository.
