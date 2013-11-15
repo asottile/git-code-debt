@@ -6,7 +6,6 @@ from git_code_debt.metric import Metric
 
 
 class TestCounter(SimpleLineCounterBase):
-    metric_name = 'TestMetric'
 
     def file_check(self, filename):
         return True
@@ -21,9 +20,11 @@ class SimpleLineCounterBaseTest(T.TestCase):
     def test_simple_base_counter(self):
         parser = TestCounter()
 
+        T.assert_equal(parser.get_possible_metric_ids(), ['TestCounter'])
+
         input = [
             FileDiffStat('test.py', ['a', 'b', 'c'], ['d'], 'this_should_be_ignored'),
         ]
 
         metrics = [item for item in parser.get_metrics_from_stat(input)]
-        T.assert_equal(metrics, [Metric('TestMetric', 2)])
+        T.assert_equal(metrics, [Metric('TestCounter', 2)])

@@ -19,8 +19,12 @@ class SimpleLineCounterBase(DiffParserBase):
 
         yield Metric(self.metric_name, metric_value)
 
+    @property
+    def metric_name(self):
+        return self.__class__.__name__
+
     def get_possible_metric_ids(self):
-        return self.metric_name
+        return [self.metric_name]
 
     def file_check(self, filename):
         raise NotImplementedError()
