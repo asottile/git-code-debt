@@ -31,7 +31,8 @@ def _get_file_diff_stats_from_output_helper(output):
     lines_added = None
     lines_removed = None
 
-    lines_iter = iter(output.splitlines())
+    NEWLINE = '\n'
+    lines_iter = iter(output.split(NEWLINE))
 
     try:
         while True:

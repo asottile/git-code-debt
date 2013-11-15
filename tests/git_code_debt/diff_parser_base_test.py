@@ -75,6 +75,15 @@ index 0000000..35d42e8
 Binary files /dev/null and b/htdocs/i/p.gif differ
 """
 
+COMMIT_WITH_TERRIBLE = """commit blahblahblah
+
+diff --git a/herpderp b/herpderp
+index herp...derp
+--- a/herpderp
++++ b/herpderp
++\r+
+"""
+
 class TestDiffParser(T.TestCase):
 
     def test_get_file_diff_stats_from_output(self):
@@ -120,6 +129,10 @@ class TestDiffParser(T.TestCase):
     def test_binary_files(self):
         ret = get_file_diff_stats_from_output(COMMIT_ENDING_WITH_BINARY_FILES)
         T.assert_length(ret, 1)
+
+    def test_commit_with_terrible(self):
+        ret = get_file_diff_stats_from_output(COMMIT_WITH_TERRIBLE)
+        T.assert_length(ret[0].lines_added, 1)
 
 class TestAllMetricParsersDefinePossibleMetrics(T.TestCase):
 
