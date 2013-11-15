@@ -25,7 +25,7 @@ py_env: requirements.txt
 
 start:
 	bash -c 'source py_env/bin/activate && \
-		python -m git_code_debt_server.app ./database.db'
+		PYTHONPATH=. python -m git_code_debt_server.app ./database.db'
 
 clean: clean_tables
 	rm -rf py_env
