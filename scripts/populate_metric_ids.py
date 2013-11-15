@@ -1,14 +1,10 @@
 
-from git_code_debt.discovery import get_metric_parsers
 from git_code_debt_server.app import get_database
+from git_code_debt_server.logic.metrics import get_metric_ids
 
 def main():
     with get_database() as database:
-        metric_ids = []
-        metric_parsers = get_metric_parsers()
-        for metric_parser_cls in metric_parsers:
-            for metric_id in metric_parser_cls().get_possible_metric_ids():
-                metric_ids.append(metric_id)
+        metric_ids = get_metric_ids()
 
         for metric_id in metric_ids:
             database.execute(

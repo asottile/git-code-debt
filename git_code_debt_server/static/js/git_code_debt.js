@@ -32,5 +32,5 @@
         scaleStartsValue: 0
     };
 
-    new Chart(context).Line(data, options);
+    new Chart(context).Line(data, {});
 })(this);
