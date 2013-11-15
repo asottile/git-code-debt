@@ -19,7 +19,7 @@ def _to_file_diff_stat(filename_from, filename_to, lines_added, lines_removed):
         status = Status.DELETED
         filename = filename_from
     else:
-        assert filename_from == filename_to
+        assert filename_from == filename_to, u'{0} => {1}'.format(filename_from, filename_to)
         status = Status.ALREADY_EXISTING
         filename = filename_to
 
@@ -57,8 +57,8 @@ def _get_file_diff_stats_from_output_helper(output):
                 # To line is directly after it
                 to_line = lines_iter.next()
                 assert to_line.startswith('+++ ')
-                filename_from = from_line[4:].lstrip('a/')
-                filename_to = to_line[4:].lstrip('b/')
+                filename_from = from_line[4:].lstrip('a').lstrip('/')
+                filename_to = to_line[4:].lstrip('b').lstrip('/')
                 lines_added = []
                 lines_removed = []
 

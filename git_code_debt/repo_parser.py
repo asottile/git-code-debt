@@ -5,7 +5,11 @@ import shutil
 import subprocess
 import tempfile
 
+from util.backport_subprocess import backport_check_output
 from util.iter import chunk_iter
+
+# XXX: Python 2.6 compatibility
+backport_check_output()
 
 # TODO: remove name since we can't really do anything useful with it
 Commit = collections.namedtuple('Commit', ['sha', 'date', 'name'])
