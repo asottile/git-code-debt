@@ -49,3 +49,9 @@ class ImportsParser(DiffParserBase):
             imports_changed = imports_by_extension.get(extension, 0)
             file_type = FILE_TYPE_MAP.get(extension, 'unknown')
             yield Metric('ImportCount_{0}'.format(file_type), imports_changed)
+
+    def get_possible_metric_ids(self):
+        return [
+            'ImportCount_{0}'.format(file_type)
+            for file_type in FILE_TYPE_MAP.values() + ['unknown']
+        ]

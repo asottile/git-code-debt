@@ -4,6 +4,7 @@ import testify as T
 from git_code_debt.diff_parser_base import FileDiffStat
 from git_code_debt.diff_parser_base import Status
 from git_code_debt.diff_parser_base import get_file_diff_stats_from_output
+from git_code_debt.generate import get_metric_parsers
 
 SAMPLE_OUTPUT = """diff --git a/README.md b/README.md
 index 17b5d50..6daaaeb 100644
@@ -103,3 +104,16 @@ class TestDiffParser(T.TestCase):
                 Status.DELETED,
             )],
         )
+
+class TestAllMetricParsersDefinePossibleMetrics(T.TestCase):
+
+    def test_all_have_possible_metrics(self):
+        for metric_parser_cls in get_metric_parsers():
+            try:
+                assert metric_parser_cls().get_possible_metric_ids()
+            except Exception:
+                raise AssertionError(
+                    '{0} does not implement get_possible_metric_ids'.format(
+                        metric_parser_cls.__name__
+                    )
+                )
