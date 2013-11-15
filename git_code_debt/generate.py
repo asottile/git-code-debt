@@ -3,8 +3,6 @@ import argparse
 import collections
 
 from git_code_debt.diff_parser_base import get_file_diff_stats_from_output
-from git_code_debt.diff_parser_base import get_original_commit
-from git_code_debt.diff_parser_base import get_subprocess_output
 from git_code_debt.discovery import get_metric_parsers
 from git_code_debt.repo_parser import RepoParser
 from git_code_debt_server.app import get_database
@@ -26,8 +24,8 @@ def increment_metric_values(metric_values, metrics):
 def get_metric_mapping(database):
     results = database.execute("""
         SELECT
-            id,
-            name
+            name,
+            id
         FROM metric_names
     """).fetchall()
     return dict(results)
@@ -41,22 +39,32 @@ def get_previous_sha(database):
         LIMIT 1
     """).fetchone()
 
-def insert_metric_values(database, metric_values, metric_mapping, repo, commit):
-    raise NotImplementedError
-
 def get_metric_values(database, commit):
-    # TODO: actually get this from the database
-    # Something like '''
-    # SELECT
-    #     metric_id,
-    #     metric_names.name,
-    #     value
-    # FROM metric_data
-    # INNER JOIN metric_names ON
-    #    metric_names.id = metric_data.metric_id
-    # WHERE sha = ?
-    # '''
-    raise NotImplementedError
+    results = database.execute(
+        '''
+        SELECT
+            metric_names.name,
+            value
+        FROM metric_data
+        INNER JOIN metric_names ON
+            metric_names.id = metric_data.metric_id
+        WHERE sha = ?
+        ''',
+        [commit.sha],
+    )
+    return dict(results)
+
+def insert_metric_values(database, metric_values, metric_mapping, repo, commit):
+    for metric_name, value in metric_values.iteritems():
+        metric_id = metric_mapping[metric_name]
+        database.execute(
+            '''
+            INSERT INTO metric_data
+            (repo, sha, metric_id, timestamp, running_value)
+            VALUES (?, ?, ?, ?, ?)
+            ''',
+            [repo, commit.sha, metric_id, commit.date, value],
+        )
 
 def main():
     parser = argparse.ArgumentParser(description='Generates metrics from a git repo')
@@ -84,9 +92,9 @@ def main():
 
             for commit in commits:
                 if previous_sha is None:
-                    diff = get_original_commit(commit.sha)
+                    diff = repo_parser.get_original_commit(commit.sha)
                 else:
-                    diff = get_subprocess_output(compare_commit.sha, commit.sha)
+                    diff = repo_parser.get_commit_diff(compare_commit.sha, commit.sha)
 
                 metrics = get_metric_outputs(diff)
                 increment_metric_values(metric_values, metrics)

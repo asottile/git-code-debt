@@ -55,3 +55,21 @@ class RepoParser(object):
             commits.append(Commit(sha, int(date), name))
 
         return commits
+
+    def get_original_commit(self, sha):
+        assert self.tempdir
+        output = subprocess.check_output(
+            ['git', 'show', sha],
+            cwd=self.tempdir,
+        )
+        return output
+
+    def get_commit_diff(self, previous_sha, sha):
+        assert self.tempdir
+        output = subprocess.check_output(
+            ['git', 'diff', previous_sha, sha],
+            cwd=self.tempdir,
+        )
+        return output
+
+
