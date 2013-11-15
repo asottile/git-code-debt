@@ -1,10 +1,13 @@
+body {
+    font-family: sans-serif;
+}
+
 canvas {
     display: block;
     margin: auto;
 }
 
 h1 {
-    font-family: sans-serif;
     text-align: center;
 }
 
@@ -14,10 +17,14 @@ table {
     width: 640px;
     margin: auto;
     text-align: center;
-    font-family: sans-serif;
 }
 
 td, th {
     padding: 5px;
     border: 1px solid #ccc;
+}
+
+.date-picker {
+    margin: 20px;
+    text-align: center;
 }

@@ -20,4 +20,4 @@ def show(name):
 
     metrics_for_js = [(m.value, str(datetime.datetime.fromtimestamp(m.date))) for m in metrics_for_dates]
 
-    return render_template('graph.mako', metric_name=name, metrics=json.dumps(metrics_for_js))
+    return render_template('graph.mako', metric_name=name, metrics=json.dumps(metrics_for_js), start_timestamp=start_timestamp, end_timestamp=end_timestamp, sha=sha)
