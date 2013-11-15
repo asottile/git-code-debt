@@ -7,7 +7,7 @@ from git_code_debt_util.discovery import discover
 __discovery_paths = set()
 
 METRICS_FOLDER = os.path.join(
-    os.path.abspath(os.path.dirname(__file__)),
+    os.path.dirname(os.path.abspath(__file__)),
     'metrics'
 )
 
