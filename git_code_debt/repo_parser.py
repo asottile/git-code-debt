@@ -30,6 +30,7 @@ class RepoParser(object):
             shutil.rmtree(self.tempdir)
             self.tempdir = None
 
+    # TODO: rename this to get_commits
     def get_commit_shas(self, since_sha=None):
         """Returns a list of Commit objects.
 

@@ -10,9 +10,12 @@ app = flask.Flask(__name__)
 app.register_blueprint(index)
 app.register_blueprint(graph)
 
+def get_database():
+    return sqlite3.connect(DATABASE_PATH)
+
 @app.before_request
 def before_request():
-    flask.g.db = sqlite3.connect(DATABASE_PATH)
+    flask.g.db = get_database()
 
 @app.teardown_request
 def teardown_request(exception):
