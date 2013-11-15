@@ -72,16 +72,12 @@ def insert_metric_values(database, metric_values, metric_mapping, repo, commit):
             [repo, commit.sha, metric_id, commit.date, value],
         )
 
-def main():
-    parser = argparse.ArgumentParser(description='Generates metrics from a git repo')
-    parser.add_argument('repo', help='Repository link to generate metrics from')
-    args = parser.parse_args()
-
+def load_data(repo):
     with get_database() as database:
-        repo_parser = RepoParser(args.repo)
+        repo_parser = RepoParser(repo)
 
         with repo_parser.repo_checked_out():
-            previous_sha = get_previous_sha(database, args.repo)
+            previous_sha = get_previous_sha(database, repo)
 
             metric_mapping = get_metric_mapping(database)
 
@@ -108,10 +104,17 @@ def main():
 
                 metrics = get_metric_outputs(diff)
                 increment_metric_values(metric_values, metrics)
-                insert_metric_values(database, metric_values, metric_mapping, args.repo, commit)
+                insert_metric_values(database, metric_values, metric_mapping, repo, commit)
 
                 compare_commit = commit
 
+def main():
+    parser = argparse.ArgumentParser(description='Generates metrics from a git repo')
+    parser.add_argument('repo', help='Repository link to generate metrics from')
+    parser.add_argument('--from-sha', type=str, help='Start repo from date')
+    args = parser.parse_args()
+
+    load_data(args.repo)
 
 if __name__ == '__main__':
     main()
