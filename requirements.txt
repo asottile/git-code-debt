@@ -3,6 +3,5 @@ ipdb
 mako
 mock
 pyquery
-pyyaml
 simplejson
 testify
