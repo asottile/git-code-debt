@@ -38,3 +38,7 @@ class TestGetStatsFromOutput(T.TestCase):
     def test_deletions(self):
         ret = get_stats_from_output(OUTPUT_WITH_DELETIONS)
         T.assert_equal(ret, -24)
+
+    def test_empty_string(self):
+        ret = get_stats_from_output('')
+        T.assert_equal(ret, 0)
