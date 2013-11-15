@@ -13,7 +13,6 @@ class RepoParserRepoCheckedOutTest(T.TestCase):
     def get_repo_parser(self):
         return RepoParser(
             'git@github.com:asottile/git-code-debt',
-            'master',
         )
 
     def test_repo_checked_out(self):
@@ -38,7 +37,7 @@ class RepoParserTest(T.TestCase):
 
     @T.class_setup_teardown
     def check_out_repo(self):
-        self.repo_parser = RepoParser('git@github.com:asottile/git-code-debt', 'master')
+        self.repo_parser = RepoParser('git@github.com:asottile/git-code-debt')
         with self.repo_parser.repo_checked_out():
             yield
 
@@ -56,6 +55,6 @@ class RepoParserTest(T.TestCase):
             all_commits = self.repo_parser.get_commit_shas(12345)
             T.assert_equal(all_commits, [])
             T.assert_in(
-                '--after={0}'.format(after_time),
+                '{0}..master'.format(after_time),
                 check_output_mock.call_args[0][0]
             )
