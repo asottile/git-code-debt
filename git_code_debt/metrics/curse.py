@@ -9,7 +9,7 @@ from git_code_debt_util.path import split_file_path
 
 path = os.path.join(os.path.dirname(__file__), 'single_curse_words.txt')
 curse_words_file = open(path)
-curse_words = dict([(word, True) for word in curse_words_file.readlines()])
+curse_words = dict([(word[:-1], True) for word in curse_words_file.readlines()])
 curse_words_file.close()
 
 
@@ -51,5 +51,5 @@ class CurseWordsParser(DiffParserBase):
     def get_possible_metric_ids(self):
         return ['TotalCurseWords'] + [
             'TotalCurseWords_{0}'.format(file_type)
-            for file_type in FILE_TYPE_MAP.values() + ['unknown']
+            for file_type in set(FILE_TYPE_MAP.values() + ['unknown'])
         ]
