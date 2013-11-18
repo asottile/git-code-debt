@@ -15,7 +15,7 @@ def show():
     start_timestamp = calendar.timegm(start_date.utctimetuple())
     end_timestamp = calendar.timegm(end_date.utctimetuple())
 
-    most_recent_metrics = [metrics.most_recent_metric(m) for m in metrics.get_metric_ids()]
+    most_recent_metrics = [metrics.most_recent_metric(m) for m in metrics.get_metric_ids_from_database()]
 
     return render_template('index.mako', metrics=[
         {

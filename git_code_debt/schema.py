@@ -11,6 +11,9 @@ METRIC_DATA = """CREATE TABLE metric_data (
     PRIMARY KEY (repo, sha, metric_id)
 );
 """
+METRIC_DATA_IDX = """
+    CREATE INDEX metric_data__timestamp_idx ON metric_data (timestamp);
+"""
 
 METRIC_NAMES = """CREATE TABLE metric_names (
     id INTEGER PRIMARY KEY ASC,
@@ -26,6 +29,7 @@ def main():
     with sqlite3.connect(args.database) as db:
         db.execute(METRIC_NAMES)
         db.execute(METRIC_DATA)
+        db.execute(METRIC_DATA_IDX)
 
 if __name__ == '__main__':
     main()

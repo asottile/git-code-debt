@@ -1,5 +1,4 @@
 import collections
-import os
 
 from git_code_debt.diff_parser_base import DiffParserBase
 from git_code_debt.metric import Metric

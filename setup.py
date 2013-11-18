@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='Code Debt Metrics',
-    version='0.1.2',
+    version='0.1.3',
     packages=[
        'git_code_debt',
        'git_code_debt.metrics',

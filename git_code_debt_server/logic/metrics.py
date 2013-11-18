@@ -15,6 +15,17 @@ def get_metric_ids():
             metric_ids.append(metric_id)
     return metric_ids
 
+def get_metric_ids_from_database():
+    result = flask.g.db.execute(
+        '''
+        SELECT
+            name
+        FROM metric_names
+        ORDER BY name
+        '''
+    ).fetchall()
+    return [name for name, in result]
+
 def most_recent_metric(metric_name):
     result = flask.g.db.execute(
         '''
