@@ -1,0 +1,7 @@
+[report]
+exclude_lines =
+    # Don't complain about defensive assertions
+    raise NotImplementedError
+
+    # Don't complain about non-runnable code
+    if __name__ == .__main__.:

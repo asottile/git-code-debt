@@ -12,6 +12,13 @@ itest: py_env
 	bash -c 'source py_env/bin/activate && \
 		testify tests -i integration'
 
+coverage: py_env
+	bash -c 'source py_env/bin/activate && \
+		coverage erase && \
+		coverage run `which testify` tests && \
+		coverage combine && \
+		coverage report -m --omit="/usr/*,py_env/*,*/__init__.py,tests/*,pre-commit.py,*_mako"'
+
 tables: py_env clean_tables
 	bash -c 'source py_env/bin/activate && \
 		PYTHONPATH=. python git_code_debt/schema.py ./database.db && \
