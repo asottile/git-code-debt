@@ -21,7 +21,8 @@ def is_template_import(line):
         is_python_import(line[1:])
     )
 
-# Maps a set of file extensions to a function that determines if the line is an import.
+# Maps a set of file extensions to a function that determines if the line is
+# an import.
 IMPORT_CHECK_MAP = {
     '.py': is_python_import,
     '.tmpl': is_template_import,
@@ -55,5 +56,5 @@ class ImportsParser(DiffParserBase):
     def get_possible_metric_ids(self):
         return [
             'ImportCount_{0}'.format(file_type)
-            for file_type in set(FILE_TYPE_MAP.values()) | set(['unknown'])
+            for file_type in set(IMPORT_CHECK_MAP.values()) | set(['unknown'])
         ]
