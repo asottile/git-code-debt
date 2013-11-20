@@ -5,7 +5,7 @@ import sys
 from git_code_debt_server.servlets.graph import graph
 from git_code_debt_server.servlets.index import index
 
-app = flask.Flask(__name__)
+app = flask.Flask('git_code_debt_server')
 
 app.register_blueprint(index)
 app.register_blueprint(graph)
