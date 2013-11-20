@@ -8,15 +8,20 @@ from git_code_debt.discovery import is_metric_cls
 class TestIsMetricCls(T.TestCase):
 
     def test_not_DiffParserBase(self):
-        T.assert_equal(False, is_metric_cls(DiffParserBase))
+        T.assert_is(is_metric_cls(DiffParserBase), False)
 
     def test_is_DiffParserBase(self):
          class Foo(DiffParserBase): pass
-         T.assert_equal(True, is_metric_cls(Foo))
+         T.assert_is(is_metric_cls(Foo), True)
 
     def test_definitely_isnt_DiffParserBase(self):
         class Bar(object): pass
-        T.assert_equal(False, is_metric_cls(Bar))
+        T.assert_is(is_metric_cls(Bar), False)
+
+    def test_is_a_DiffParserBase_but_has__metric__False(self):
+        class Baz(DiffParserBase):
+            __metric__ = False
+        T.assert_is(is_metric_cls(Baz), False)
 
 @T.suite('integration')
 class TestGetMetricParsersSmokeTest(T.TestCase):
