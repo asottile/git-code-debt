@@ -31,7 +31,7 @@ def get_metric_parsers(metrics_modules=tuple(), include_defaults=True):
         import git_code_debt.metrics
         metric_parsers.update(discover(git_code_debt.metrics, is_metric_cls))
 
-    for metrics_folder in metrics_modules:
-        metric_parsers.update(discover(metrics_folder, is_metric_cls))
+    for metrics_module in metrics_modules:
+        metric_parsers.update(discover(metrics_module, is_metric_cls))
     return metric_parsers
 
