@@ -1,34 +1,62 @@
 import testify as T
 
+from git_code_debt.file_diff_stat import FileDiffStat
 from git_code_debt.metrics.imports import ImportsParser
 from git_code_debt.metrics.imports import is_python_import
 from git_code_debt.metrics.imports import is_template_import
-from git_code_debt.diff_parser_base import FileDiffStat
 from git_code_debt.metric import Metric
 
 
-@T.suite('unit')
+class TestPythonImports(T.TestCase):
+
+    LINES_TO_EXPECTED = (
+        ('import collections', True),
+        ('from collections import defaultdict', True),
+        ('from foo import bar as baz', True),
+        ('import bar as baz', True),
+        ('#import foo as bar', False),
+        ('from with nothing', False),
+        ('    import foo', True),
+        ('herpderp', False),
+    )
+
+    def test_imports(self):
+        for line, expected in self.LINES_TO_EXPECTED:
+            T.assert_equal(
+                is_python_import(line),
+                expected,
+            )
+
+class TestTemplateImports(T.TestCase):
+
+    LINES_TO_EXPECTED = (
+        ('#import foo', True),
+        ('#from foo import bar', True),
+        ('#from foo import bar as baz', True),
+        ('#import bar as baz', True),
+        ('    #import foo', True),
+        ('## Nothing to import from here', False),
+        ('herpderp', False),
+    )
+
+    def test_imports(self):
+        for line, expected in self.LINES_TO_EXPECTED:
+            T.assert_equal(
+                is_template_import(line),
+                expected,
+            )
+
 class ImportParserTest(T.TestCase):
-
-    def test_python_import_check(self):
-        T.assert_equal(is_python_import('import collections'), True)
-        T.assert_equal(is_python_import('from collections import defaultdict'), True)
-        T.assert_equal(is_python_import('\timport inline'), True)
-        T.assert_equal(is_python_import('from with no followup'), False)
-        T.assert_equal(is_python_import('line with nothing related'), False)
-        T.assert_equal(is_python_import('line with import not at start'), False)
-
-    def test_template_import_check(self):
-        T.assert_equal(is_template_import('#import'), True)
-        T.assert_equal(is_template_import('#from foo import bar'), True)
-        T.assert_equal(is_template_import('\t#import inline'), True)
-        T.assert_equal(is_template_import('nothing related'), False)
-        T.assert_equal(is_template_import('lines with #import not at the beginning'), False)
 
     def test_import_parser(self):
         parser = ImportsParser()
         input = [
-            FileDiffStat('test.py', ['import collections', 'from os import path'], ['import os.path', 'nothing'], 'this_should_be_ignored'),
+            FileDiffStat(
+                'test.py',
+                ['import collections', 'from os import path'],
+                ['import os.path', 'nothing'],
+                'this_should_be_ignored'
+            ),
         ]
 
         metrics = [item for item in parser.get_metrics_from_stat(input)]

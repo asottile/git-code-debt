@@ -1,6 +1,5 @@
 
-from git_code_debt.diff_parser_base import DiffParserBase
-from git_code_debt.metrics.base import SimpleLineCounterBase
+from git_code_debt.metrics.base import DiffParserBase
 import git_code_debt.metrics
 from git_code_debt_util.discovery import discover
 
@@ -12,13 +11,12 @@ def register_metrics_module(path):
 # Register our metrics
 register_metrics_module(git_code_debt.metrics)
 
-METRICS_BASE_CLASSES = [
-    DiffParserBase,
-    SimpleLineCounterBase,
-]
-
 def is_metric_cls(cls):
-    return cls not in METRICS_BASE_CLASSES and issubclass(cls, DiffParserBase)
+    return (
+        cls is not DiffParserBase and
+        cls.__dict__.get('__metric__', True) and
+        issubclass(cls, DiffParserBase)
+    )
 
 def get_metric_parsers():
     metric_parsers = set()

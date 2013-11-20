@@ -4,7 +4,7 @@ import collections
 import re
 import sqlite3
 
-from git_code_debt.diff_parser_base import get_file_diff_stats_from_output
+from git_code_debt.file_diff_stat import get_file_diff_stats_from_output
 from git_code_debt.discovery import get_metric_parsers
 from git_code_debt.repo_parser import RepoParser
 

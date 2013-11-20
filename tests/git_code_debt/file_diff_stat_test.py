@@ -1,9 +1,9 @@
 
 import testify as T
 
-from git_code_debt.diff_parser_base import FileDiffStat
-from git_code_debt.diff_parser_base import Status
-from git_code_debt.diff_parser_base import get_file_diff_stats_from_output
+from git_code_debt.file_diff_stat import FileDiffStat
+from git_code_debt.file_diff_stat import Status
+from git_code_debt.file_diff_stat import get_file_diff_stats_from_output
 from git_code_debt.generate import get_metric_parsers
 
 SAMPLE_OUTPUT = """diff --git a/README.md b/README.md

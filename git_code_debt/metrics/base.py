@@ -1,9 +1,28 @@
-from git_code_debt.diff_parser_base import DiffParserBase
 from git_code_debt.metric import Metric
 
+class DiffParserBase(object):
+    """Generates metrics from git show"""
+    # Specify __metric__ = False to not be included
+    __metric__ = False
+
+    def get_metrics_from_stat(self, file_diff_stats):
+        """Implement me to yield Metric objects from the input list of
+        FileStat objects.
+
+        Args:
+            file_diff_stats - list of FileDiffStat objects
+
+        Returns:
+           generator of Metric objects
+        """
+        raise NotImplementedError
+
+    def get_possible_metric_ids(self):
+        raise NotImplementedError
 
 class SimpleLineCounterBase(DiffParserBase):
     """Simple counter for various file types and line types."""
+    __metric__ = False
 
     metric_name = None
 

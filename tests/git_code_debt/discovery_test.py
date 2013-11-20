@@ -1,7 +1,7 @@
 
 import testify as T
 
-from git_code_debt.diff_parser_base import DiffParserBase
+from git_code_debt.metrics.base import DiffParserBase
 from git_code_debt.discovery import get_metric_parsers
 from git_code_debt.discovery import is_metric_cls
 
