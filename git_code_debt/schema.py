@@ -1,35 +1,25 @@
 
 import argparse
+import pkg_resources
 import sqlite3
-
-METRIC_DATA = """CREATE TABLE metric_data (
-    repo CHAR(255) NOT NULL,
-    sha CHAR(40) NOT NULL,
-    metric_id INTEGER NOT NULL,
-    timestamp INTEGER NOT NULL,
-    running_value INTEGER NOT NULL,
-    PRIMARY KEY (repo, sha, metric_id)
-);
-"""
-METRIC_DATA_IDX = """
-    CREATE INDEX metric_data__timestamp_idx ON metric_data (timestamp);
-"""
-
-METRIC_NAMES = """CREATE TABLE metric_names (
-    id INTEGER PRIMARY KEY ASC,
-    name CHAR(255) NOT NULL
-);
-"""
 
 def main():
     parser = argparse.ArgumentParser(description='Set up schema')
     parser.add_argument('database', help='Path to database')
     args = parser.parse_args()
 
+    SQL_FILES = [
+        'schema/metric_names.sql',
+        'schema/metric_data.sql',
+    ]
+
     with sqlite3.connect(args.database) as db:
-        db.execute(METRIC_NAMES)
-        db.execute(METRIC_DATA)
-        db.execute(METRIC_DATA_IDX)
+        for sql_file in SQL_FILES:
+            resource_filename = pkg_resources.resource_filename(
+                'git_code_debt', sql_file
+            )
+            with open(resource_filename, 'r') as resource:
+                db.executescript(resource.read())
 
 if __name__ == '__main__':
     main()

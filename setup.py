@@ -6,10 +6,13 @@ setup(
     version='0.1.3',
     packages=find_packages('.', exclude=('tests*', 'testing*')),
     package_data={
+        'git_code_debt': [
+            'schema/*.sql',
+        ],
         'git_code_debt_server': [
-            'templates/*',
-            'static/css/*',
-            'static/js/*',
+            'templates/*.mako',
+            'static/css/*.css',
+            'static/js/*.js',
         ],
     },
     install_requires=[
