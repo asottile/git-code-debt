@@ -73,7 +73,7 @@ def insert_metric_values(database, metric_values, metric_mapping, repo, commit):
             [repo, commit.sha, metric_id, commit.date, value],
         )
 
-def load_data(database_file, repo):
+def load_data(database_file, repo, debug):
     with sqlite3.connect(database_file) as database:
         repo_parser = RepoParser(repo)
 
@@ -102,30 +102,35 @@ def load_data(database_file, repo):
             for commit in commits:
                 if compare_commit is None:
                     diff = repo_parser.get_original_commit(commit.sha)
-                    stat_out = repo_parser.get_original_diff_stat(commit.sha)
                 else:
                     diff = repo_parser.get_commit_diff(compare_commit.sha, commit.sha)
-                    stat_out = repo_parser.get_commit_diff_stat(compare_commit.sha, commit.sha)
 
                 metrics = get_metric_outputs(diff)
                 increment_metric_values(metric_values, metrics)
                 insert_metric_values(database, metric_values, metric_mapping, repo, commit)
 
-                running_total_loc +=  get_stats_from_output(stat_out)
-                # TODO: binary file => symlink is broken
-                #if running_total_loc != metric_values['TotalLinesOfCode']:
-                #    raise AssertionError(
-                #        'Integrity of commits compromised.\n'
-                #        'Diff stat LOC: {0}\n'
-                #        'Diffs LOC: {1}\n'
-                #        'Previous SHA: {2}\n'
-                #        'Current SHA: {3}\n'.format(
-                #            running_total_loc,
-                #            metric_values['TotalLinesOfCode'],
-                #            compare_commit.sha,
-                #            commit.sha,
-                #        ),
-                #    )
+                # TODO: debug fails on repositories that have a binary file => symlink change
+                if debug:
+                    if compare_commit is None:
+                        stat_out = repo_parser.get_original_diff_stat(commit.sha)
+                    else:
+                        stat_out = repo_parser.get_commit_diff_stat(compare_commit.sha, commit.sha)
+
+                    running_total_loc += get_stats_from_output(stat_out)
+
+                    if running_total_loc != metric_values['TotalLinesOfCode']:
+                        raise AssertionError(
+                            'Integrity of commits compromised.\n'
+                            'Diff stat LOC: {0}\n'
+                            'Diffs LOC: {1}\n'
+                            'Previous SHA: {2}\n'
+                            'Current SHA: {3}\n'.format(
+                                running_total_loc,
+                                metric_values['TotalLinesOfCode'],
+                                compare_commit.sha,
+                                commit.sha,
+                            ),
+                        )
 
                 compare_commit = commit
 
@@ -133,9 +138,15 @@ def main():
     parser = argparse.ArgumentParser(description='Generates metrics from a git repo')
     parser.add_argument('repo', help='Repository link to generate metrics from')
     parser.add_argument('database', help='Database file')
+    parser.add_argument(
+        '--debug',
+        default=False,
+        action='store_true',
+        help='Whether to check diff stats at each iteration',
+    )
     args = parser.parse_args()
 
-    load_data(args.database, args.repo)
+    load_data(args.database, args.repo, args.debug)
 
 if __name__ == '__main__':
     main()
