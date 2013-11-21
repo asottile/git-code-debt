@@ -1,7 +1,7 @@
 
 import testify as T
 
-from git_code_debt.generate import get_stats_from_output
+from git_code_debt.parse_diff_stat import get_stats_from_output
 
 OUTPUT_WITH_INSERTIONS_AND_DELETIONS = '''
 14b4fc0 Made names for js and css consistent

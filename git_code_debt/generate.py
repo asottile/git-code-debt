@@ -1,29 +1,12 @@
 
 import argparse
 import collections
-import re
 import sqlite3
 
-from git_code_debt.file_diff_stat import get_file_diff_stats_from_output
 from git_code_debt.discovery import get_metric_parsers
+from git_code_debt.file_diff_stat import get_file_diff_stats_from_output
+from git_code_debt.parse_diff_stat import get_stats_from_output
 from git_code_debt.repo_parser import RepoParser
-
-STAT_INSERTIONS_RE = re.compile('(\d+) insertion')
-STAT_DELETIONS_RE = re.compile('(\d+) deletion')
-
-def get_stats_from_output(stat_out):
-    # Sometimes there are empty diffs
-    if not stat_out:
-        return 0
-
-    stat_line = stat_out.splitlines()[-1]
-    insertions = STAT_INSERTIONS_RE.search(stat_line)
-    deletions = STAT_DELETIONS_RE.search(stat_line)
-
-    return (
-        (int(insertions.group(1)) if insertions else 0) -
-        (int(deletions.group(1)) if deletions else 0)
-    )
 
 def get_metric_outputs(diff):
     def get_all_metrics(file_diff_stats):
