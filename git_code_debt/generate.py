@@ -150,7 +150,6 @@ def main():
     parser = argparse.ArgumentParser(description='Generates metrics from a git repo')
     parser.add_argument('repo', help='Repository link to generate metrics from')
     parser.add_argument('database', help='Database file')
-    parser.add_argument('--from-sha', type=str, help='Start repo from date')
     args = parser.parse_args()
 
     load_data(args.database, args.repo)
