@@ -1,4 +1,6 @@
 
+import sys
+
 from git_code_debt.metrics.base import DiffParserBase
 from git_code_debt_util.discovery import discover
 
@@ -35,3 +37,24 @@ def get_metric_parsers(metric_packages=tuple(), include_defaults=True):
         metric_parsers.update(discover(metric_package, is_metric_cls))
     return metric_parsers
 
+def get_modules(module_names):
+    """Returns module objects for each module name.  Has the side effect of
+    importing each module.
+
+    Args:
+        module_names - iterable of module names
+
+    Returns:
+        Module objects for each module specified in module_names
+    """
+    modules = []
+
+    for module_name in module_names:
+        __import__(module_name)
+        modules.append(sys.modules[module_name])
+
+    return modules
+
+def get_metric_parsers_from_args(metric_package_names, skip_defaults):
+    packages = get_modules(metric_package_names)
+    return get_metric_parsers(metric_packages=packages, include_defaults=not skip_defaults)

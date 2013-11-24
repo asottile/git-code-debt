@@ -5,8 +5,8 @@ import testify as T
 
 from git_code_debt.create_tables import create_schema
 from git_code_debt.create_tables import get_metric_ids
-from git_code_debt.create_tables import get_modules
 from git_code_debt.create_tables import populate_metric_ids
+from git_code_debt.discovery import get_metric_parsers_from_args
 from testing.base_classes.temp_dir_test_case import TempDirTestCase
 
 @T.suite('integration')
@@ -40,18 +40,5 @@ class TestPopulateMetricIds(TempDirTestCase):
             # Smoke test assertion
             T.assert_length(
                 results,
-                len(get_metric_ids(tuple(), True)),
+                len(get_metric_ids(get_metric_parsers_from_args(tuple(), False))),
             )
-
-class TestGetModules(T.TestCase):
-
-    def test_get_modules_no_modules(self):
-        ret = get_modules([])
-        T.assert_equal(ret, [])
-
-    def test_get_modules_some_modules(self):
-        ret = get_modules([
-            'git_code_debt.metrics', 'git_code_debt.create_tables',
-        ])
-        # Not a great assertion, but at least it tests that it works
-        T.assert_length(ret, 2)

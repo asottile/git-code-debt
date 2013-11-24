@@ -2,6 +2,7 @@
 import testify as T
 
 from git_code_debt.discovery import get_metric_parsers
+from git_code_debt.discovery import get_modules
 from git_code_debt.discovery import is_metric_cls
 from git_code_debt.metrics.base import DiffParserBase
 from git_code_debt_util.discovery import discover
@@ -47,3 +48,16 @@ class TestGetMetricParsersTest(T.TestCase):
             metrics_in_tests,
             get_metric_parsers((tests,), include_defaults=False),
         )
+
+class TestGetModules(T.TestCase):
+
+    def test_get_modules_no_modules(self):
+        ret = get_modules([])
+        T.assert_equal(ret, [])
+
+    def test_get_modules_some_modules(self):
+        ret = get_modules([
+            'git_code_debt.metrics', 'git_code_debt.create_tables',
+        ])
+        # Not a great assertion, but at least it tests that it works
+        T.assert_length(ret, 2)

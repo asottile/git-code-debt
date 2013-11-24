@@ -4,9 +4,8 @@ import os
 import os.path
 import pkg_resources
 import sqlite3
-import sys
 
-from git_code_debt.discovery import get_metric_parsers
+from git_code_debt.discovery import get_metric_parsers_from_args
 
 def create_schema(db):
     """Creates the database schema."""
@@ -18,38 +17,16 @@ def create_schema(db):
         with open(resource_filename, 'r') as resource:
             db.executescript(resource.read())
 
-def get_metric_ids(metric_packages, include_defaults):
+def get_metric_ids(metric_parsers):
     metric_ids = set([])
-    metric_parsers = get_metric_parsers(
-        metric_packages=metric_packages,
-        include_defaults=include_defaults,
-    )
     for metric_parser_cls in metric_parsers:
         for metric_id in metric_parser_cls().get_possible_metric_ids():
             metric_ids.add(metric_id)
     return metric_ids
 
-def get_modules(module_names):
-    """Returns module objects for each module name.  Has the side effect of
-    importing each module.
-
-    Args:
-        module_names - iterable of module names
-
-    Returns:
-        Module objects for each module specified in module_names
-    """
-    modules = []
-
-    for module_name in module_names:
-        __import__(module_name)
-        modules.append(sys.modules[module_name])
-
-    return modules
-
 def populate_metric_ids(db, package_names, skip_defaults):
-    packages = get_modules(package_names)
-    metric_ids = get_metric_ids(packages, not skip_defaults)
+    metric_parsers = get_metric_parsers_from_args(package_names, skip_defaults)
+    metric_ids = get_metric_ids(metric_parsers)
 
     for metric_id in metric_ids:
         db.execute(
