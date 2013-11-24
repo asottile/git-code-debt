@@ -18,10 +18,10 @@ def create_schema(db):
         with open(resource_filename, 'r') as resource:
             db.executescript(resource.read())
 
-def get_metric_ids(metrics_modules, include_defaults):
+def get_metric_ids(metrics_packages, include_defaults):
     metric_ids = set([])
     metric_parsers = get_metric_parsers(
-        metrics_modules=metrics_modules,
+        metrics_packages=metrics_packages,
         include_defaults=include_defaults,
     )
     for metric_parser_cls in metric_parsers:
@@ -47,9 +47,9 @@ def get_modules(module_names):
 
     return modules
 
-def populate_metric_ids(db, module_names, skip_defaults):
-    modules = get_modules(module_names)
-    metric_ids = get_metric_ids(modules, not skip_defaults)
+def populate_metric_ids(db, package_names, skip_defaults):
+    packages = get_modules(package_names)
+    metric_ids = get_metric_ids(packages, not skip_defaults)
 
     for metric_id in metric_ids:
         db.execute(
@@ -65,12 +65,17 @@ def main():
         action='store_true',
         help='Whether to skip default metrics',
     )
-    parser.add_argument('modules', type=str, nargs='*', help='Metrics Modules')
+    parser.add_argument(
+        'package_names',
+        type=str,
+        nargs='*',
+        help='Metrics Package Names (such as foo.metrics bar.metrics)',
+    )
     args = parser.parse_args()
 
     with sqlite3.connect(args.database) as db:
         create_schema(db)
-        populate_metric_ids(db, args.modules, args.skip_default_metrics)
+        populate_metric_ids(db, args.package_names, args.skip_default_metrics)
 
 if __name__ == '__main__':
     main()
