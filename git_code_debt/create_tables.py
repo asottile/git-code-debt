@@ -30,12 +30,26 @@ def get_metric_ids(metrics_modules, include_defaults):
             metric_ids.append(metric_id)
     return set(metric_ids)
 
-def populate_metric_ids(db, module_names, skip_defaults):
-    def get_module(module_name):
-        __import__(module_name)
-        return sys.modules[module_name]
+def get_modules(module_names):
+    """Returns module objects for each module name.  Has the side effect of
+    importing each module.
 
-    modules = [get_module(module_name) for module_name in module_names]
+    Args:
+        module_names - iterable of module names
+
+    Returns:
+        Module objects for each module specified in module_names
+    """
+    modules = []
+
+    for module_name in module_names:
+        __import__(module_name)
+        modules.append(sys.modules[module_name])
+
+    return modules
+
+def populate_metric_ids(db, module_names, skip_defaults):
+    modules = get_modules(module_names)
     metric_ids = get_metric_ids(modules, not skip_defaults)
 
     for metric_id in metric_ids:
