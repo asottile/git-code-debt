@@ -24,6 +24,11 @@ def discover(package, cls_match_func):
         for name, _ in inspect.getmembers(module, inspect.isclass):
             imported_class = getattr(module, name)
 
+            # Don't include things that are only there due to a side-effect of
+            # importing
+            if imported_class.__module__ != module.__name__:
+                continue
+
             if cls_match_func(imported_class):
                 matched_classes.add(imported_class)
 
