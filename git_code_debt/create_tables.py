@@ -22,7 +22,7 @@ def get_metric_ids(metric_parsers):
     for metric_parser_cls in metric_parsers:
         for metric_id in metric_parser_cls().get_possible_metric_ids():
             metric_ids.add(metric_id)
-    return metric_ids
+    return sorted(metric_ids)
 
 def populate_metric_ids(db, package_names, skip_defaults):
     metric_parsers = get_metric_parsers_from_args(package_names, skip_defaults)
