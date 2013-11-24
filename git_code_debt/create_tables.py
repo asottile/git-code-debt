@@ -18,10 +18,10 @@ def create_schema(db):
         with open(resource_filename, 'r') as resource:
             db.executescript(resource.read())
 
-def get_metric_ids(metrics_packages, include_defaults):
+def get_metric_ids(metric_packages, include_defaults):
     metric_ids = set([])
     metric_parsers = get_metric_parsers(
-        metrics_packages=metrics_packages,
+        metric_packages=metric_packages,
         include_defaults=include_defaults,
     )
     for metric_parser_cls in metric_parsers:
@@ -66,16 +66,20 @@ def main():
         help='Whether to skip default metrics',
     )
     parser.add_argument(
-        'package_names',
+        'metric_package_names',
         type=str,
         nargs='*',
-        help='Metrics Package Names (such as foo.metrics bar.metrics)',
+        help='Metric Package Names (such as foo.metrics bar.metrics)',
     )
     args = parser.parse_args()
 
     with sqlite3.connect(args.database) as db:
         create_schema(db)
-        populate_metric_ids(db, args.package_names, args.skip_default_metrics)
+        populate_metric_ids(
+            db,
+            args.metric_package_names,
+            args.skip_default_metrics,
+        )
 
 if __name__ == '__main__':
     main()

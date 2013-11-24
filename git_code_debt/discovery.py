@@ -15,11 +15,11 @@ def is_metric_cls(cls):
         issubclass(cls, DiffParserBase)
     )
 
-def get_metric_parsers(metrics_packages=tuple(), include_defaults=True):
+def get_metric_parsers(metric_packages=tuple(), include_defaults=True):
     """Gets all of the metric parsers.
 
     Args:
-        metrics_packages - Defaults to no extra packages. An iterable of
+        metric_packages - Defaults to no extra packages. An iterable of
             metric containing packages.  A metric inherits DiffParserBase
             and does not have __metric__ = False
             A metric package must be imported using import a.b.c
@@ -31,7 +31,7 @@ def get_metric_parsers(metrics_packages=tuple(), include_defaults=True):
         import git_code_debt.metrics
         metric_parsers.update(discover(git_code_debt.metrics, is_metric_cls))
 
-    for metrics_package in metrics_packages:
-        metric_parsers.update(discover(metrics_package, is_metric_cls))
+    for metric_package in metric_packages:
+        metric_parsers.update(discover(metric_package, is_metric_cls))
     return metric_parsers
 
