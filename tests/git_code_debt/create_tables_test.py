@@ -24,6 +24,7 @@ class TestCreateSchema(TempDirTestCase):
             T.assert_in('metric_names', table_names)
             T.assert_in('metric_data', table_names)
 
+
 class TestGetModules(T.TestCase):
 
     def test_get_modules_no_modules(self):

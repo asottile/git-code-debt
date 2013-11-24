@@ -1,34 +1,33 @@
 
 import argparse
+import os
+import os.path
 import pkg_resources
 import sqlite3
 import sys
 
 from git_code_debt.discovery import get_metric_parsers
 
-SQL_FILES = [
-    'schema/metric_names.sql',
-    'schema/metric_data.sql',
-]
-
 def create_schema(db):
-    for sql_file in SQL_FILES:
-        resource_filename = pkg_resources.resource_filename(
-            'git_code_debt', sql_file
-        )
+    """Creates the database schema."""
+    schema_dir = pkg_resources.resource_filename('git_code_debt', 'schema')
+    schema_files = os.listdir(schema_dir)
+
+    for sql_file in schema_files:
+        resource_filename = os.path.join(schema_dir, sql_file)
         with open(resource_filename, 'r') as resource:
             db.executescript(resource.read())
 
 def get_metric_ids(metrics_modules, include_defaults):
-    metric_ids = []
+    metric_ids = set([])
     metric_parsers = get_metric_parsers(
         metrics_modules=metrics_modules,
         include_defaults=include_defaults,
     )
     for metric_parser_cls in metric_parsers:
         for metric_id in metric_parser_cls().get_possible_metric_ids():
-            metric_ids.append(metric_id)
-    return set(metric_ids)
+            metric_ids.add(metric_id)
+    return metric_ids
 
 def get_modules(module_names):
     """Returns module objects for each module name.  Has the side effect of
