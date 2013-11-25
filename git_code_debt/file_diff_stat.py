@@ -9,13 +9,17 @@ class Status(object):
 
 class FileDiffStat(collections.namedtuple(
     'FileStat',
-    ['filename', 'lines_added', 'lines_removed', 'status'],
+    ['path', 'lines_added', 'lines_removed', 'status'],
 )):
     __slots__ = ()
 
     @property
     def extension(self):
-        return os.path.splitext(self.filename)[1]
+        return os.path.splitext(self.path)[1]
+
+    @property
+    def filename(self):
+        return os.path.split(self.path)[1]
 
 def _to_file_diff_stat(filename_from, filename_to, lines_added, lines_removed):
     if filename_from == 'dev/null':
