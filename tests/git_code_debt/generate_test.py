@@ -24,3 +24,19 @@ class TestGenerateIntegration(SandboxTestCase):
 
     def test_generate_integration(self):
         main(['.', self.db_path])
+
+    def test_generate_integration_with_debug(self):
+        main(['.', self.db_path, '--debug'])
+
+    def get_metric_data_count(self):
+        with self.db() as db:
+            return db.execute(
+                'SELECT COUNT(*) FROM metric_data'
+            ).fetchone()[0]
+
+    def test_generate_integration_previous_data(self):
+        main(['.', self.db_path])
+        before_data_count = self.get_metric_data_count()
+        main(['.', self.db_path])
+        after_data_count = self.get_metric_data_count()
+        T.assert_equal(before_data_count, after_data_count)
