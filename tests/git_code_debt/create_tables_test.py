@@ -1,10 +1,13 @@
 
+import mock
 import os.path
 import sqlite3
+import sys
 import testify as T
 
 from git_code_debt.create_tables import create_schema
 from git_code_debt.create_tables import get_metric_ids
+from git_code_debt.create_tables import main
 from git_code_debt.create_tables import populate_metric_ids
 from git_code_debt.discovery import get_metric_parsers_from_args
 from testing.base_classes.temp_dir_test_case import TempDirTestCase
@@ -42,3 +45,12 @@ class TestPopulateMetricIds(TempDirTestCase):
                 results,
                 len(get_metric_ids(get_metric_parsers_from_args(tuple(), False))),
             )
+
+@T.suite('integration')
+class TestCreateTablesIntegration(TempDirTestCase):
+
+    def test_create_tables_smoke(self):
+        # Basically make sure it runs without crashing
+        db_path = os.path.join(self.temp_dir, 'db.db')
+        with mock.patch.object(sys, 'argv', ['', db_path]):
+            main()
