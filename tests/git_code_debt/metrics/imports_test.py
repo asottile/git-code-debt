@@ -1,10 +1,11 @@
 import testify as T
 
 from git_code_debt.file_diff_stat import FileDiffStat
-from git_code_debt.metrics.imports import ImportsParser
+from git_code_debt.metric import Metric
+from git_code_debt.metrics.imports import CheetahTemplateImportCount
 from git_code_debt.metrics.imports import is_python_import
 from git_code_debt.metrics.imports import is_template_import
-from git_code_debt.metric import Metric
+from git_code_debt.metrics.imports import PythonImportCount
 
 
 class TestPythonImports(T.TestCase):
@@ -46,21 +47,34 @@ class TestTemplateImports(T.TestCase):
                 expected,
             )
 
-class ImportParserTest(T.TestCase):
+class TestPythonImportCount(T.TestCase):
 
     def test_import_parser(self):
-        parser = ImportsParser()
+        parser = PythonImportCount()
         input = [
             FileDiffStat(
                 'test.py',
                 ['import collections', 'from os import path'],
                 ['import os.path', 'nothing'],
-                'this_should_be_ignored'
+                None,
             ),
         ]
 
-        metrics = [item for item in parser.get_metrics_from_stat(input)]
-        T.assert_equal(metrics, [
-            Metric('ImportCount_Python', 1),
-            Metric('ImportCount_Template', 0),
-        ])
+        metrics = list(parser.get_metrics_from_stat(input))
+        T.assert_equal(metrics, [Metric('PythonImportCount', 1)])
+
+class TestCheetahTemplateImportCount(T.TestCase):
+
+    def test_import_parser(self):
+        parser = CheetahTemplateImportCount()
+        input = [
+            FileDiffStat(
+                'test.tmpl',
+                ['#import collections', '#from os import path'],
+                ['#import os.path', 'nothing'],
+                None,
+            ),
+        ]
+
+        metrics = list(parser.get_metrics_from_stat(input))
+        T.assert_equal(metrics, [Metric('CheetahTemplateImportCount', 1)])

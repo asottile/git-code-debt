@@ -11,9 +11,9 @@ class SimpleLineCounterBaseTest(T.TestCase):
     def test_simple_base_counter(self):
         """Smoke test for SimpleLineCounterBase"""
         class TestCounter(SimpleLineCounterBase):
-            def file_check(self, filename):
+            def should_include_file(self, file_diff_stat):
                 return True
-            def line_check(self, line):
+            def line_matches_metric(self, line, file_diff_stat):
                 return True
 
         parser = TestCounter()
