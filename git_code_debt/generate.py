@@ -2,6 +2,7 @@
 import argparse
 import collections
 import sqlite3
+import sys
 
 from git_code_debt.discovery import get_metric_parsers_from_args
 from git_code_debt.file_diff_stat import get_file_diff_stats_from_output
@@ -88,7 +89,7 @@ def load_data(database_file, repo, package_names, skip_defaults, debug):
 
                 compare_commit = commit
 
-def main():
+def main(argv):
     parser = argparse.ArgumentParser(description='Generates metrics from a git repo')
     parser.add_argument('repo', help='Repository link to generate metrics from')
     parser.add_argument('database', help='Database file')
@@ -110,7 +111,7 @@ def main():
         action='store_true',
         help='Whether to check diff stats at each iteration',
     )
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     load_data(
         args.database,
@@ -121,4 +122,4 @@ def main():
     )
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1:])
