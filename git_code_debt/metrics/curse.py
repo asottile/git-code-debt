@@ -4,17 +4,12 @@ from git_code_debt.metric import Metric
 from git_code_debt.metrics.base import DiffParserBase
 from git_code_debt.metrics.common import FILE_TYPE_MAP
 from git_code_debt.metrics.curse_words import word_list
-from git_code_debt_util.path import split_file_path
-
-
-curse_words = dict([(word, True) for word in word_list])
-
 
 def count_curse_words(lines):
     curses = 0
     for line in lines:
         for word in line.split():
-            if word in curse_words:
+            if word in word_list:
                 curses += 1
     return curses
 
@@ -35,8 +30,7 @@ class CurseWordsParser(DiffParserBase):
             total_curses = total_curses + curses_changed
 
             # Track by file extension -> type mapping
-            _, _, extension = split_file_path(file_diff_stat.filename)
-            file_type = FILE_TYPE_MAP.get(extension, 'unknown')
+            file_type = FILE_TYPE_MAP.get(file_diff_stat.extension, 'unknown')
             curses_by_file_type[file_type] += curses_changed
 
         # Yield overall metric and one per type of expected mapping types

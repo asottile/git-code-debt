@@ -3,7 +3,6 @@ import collections
 from git_code_debt.metrics.base import DiffParserBase
 from git_code_debt.metric import Metric
 from git_code_debt.metrics.common import FILE_TYPE_MAP
-from git_code_debt_util.path import split_file_path
 
 
 class LinesOfCodeParser(DiffParserBase):
@@ -20,8 +19,7 @@ class LinesOfCodeParser(DiffParserBase):
             total_lines += lines_changed
 
             # Track by file extension -> type mapping
-            _, _, extension = split_file_path(file_diff_stat.filename)
-            file_type = FILE_TYPE_MAP.get(extension, 'unknown')
+            file_type = FILE_TYPE_MAP.get(file_diff_stat.extension, 'unknown')
             lines_by_file_type[file_type] += lines_changed
 
         # Yield overall metric and one per type of expected mapping types

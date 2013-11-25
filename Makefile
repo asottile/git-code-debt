@@ -31,7 +31,7 @@ coverage: py_env
 
 tables: py_env clean_tables
 	bash -c 'source py_env/bin/activate && \
-		PYTHONPATH=. python -m git_code_debt.create_tables ./database.db'
+		python -m git_code_debt.create_tables ./database.db'
 
 start: py_env
 	bash -c 'source py_env/bin/activate && \
