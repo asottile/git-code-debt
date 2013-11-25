@@ -1,7 +1,7 @@
 import testify as T
 
-from git_code_debt.metrics.lines import LinesOfCodeParser
 from git_code_debt.file_diff_stat import FileDiffStat
+from git_code_debt.metrics.lines import LinesOfCodeParser
 
 class LinesOfCodeParserTest(T.TestCase):
 
