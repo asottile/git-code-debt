@@ -1,4 +1,5 @@
 argparse
+coverage
 flask
 ipdb
 mako
