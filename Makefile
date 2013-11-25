@@ -1,21 +1,31 @@
 
-all: tables test itest
+TEST_TARGETS =
+ITEST_TARGETS = -i integration
+UTEST_TARGETS = -x integration
 
-itests: itest
+all: tables _tests
+
+integration:
+	$(eval TEST_TARGETS := $(ITEST_TARGETS))
+
+unit:
+	$(eval TEST_TARGETS := $(UTEST_TARGETS))
+
 tests: test
+test: unit _tests
+itests: itest
+itest: integration _tests
 
-test: py_env
-	bash -c 'source py_env/bin/activate && \
-		testify tests -x integration'
+_tests: py_env
+	bash -c "source py_env/bin/activate && testify tests $(TEST_TARGETS)"
 
-itest: py_env
-	bash -c 'source py_env/bin/activate && \
-		testify tests -i integration'
+ucoverage: unit coverage
+icoverage: integration coverage
 
 coverage: py_env
 	bash -c 'source py_env/bin/activate && \
 		coverage erase && \
-		coverage run `which testify` tests && \
+		coverage run `which testify` tests $(TEST_TARGETS) && \
 		coverage combine && \
 		coverage report -m --omit="/usr/*,py_env/*,*/__init__.py,tests/*,pre-commit.py,*_mako"'
 
