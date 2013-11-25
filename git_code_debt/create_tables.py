@@ -4,6 +4,7 @@ import os
 import os.path
 import pkg_resources
 import sqlite3
+import sys
 
 from git_code_debt.discovery import get_metric_parsers_from_args
 
@@ -33,7 +34,7 @@ def populate_metric_ids(db, package_names, skip_defaults):
             "INSERT INTO metric_names ('name') VALUES (?)", [metric_id]
         )
 
-def main():
+def main(argv):
     parser = argparse.ArgumentParser(description='Set up schema')
     parser.add_argument('database', help='Path to database')
     parser.add_argument(
@@ -48,7 +49,7 @@ def main():
         nargs='*',
         help='Metric Package Names (such as foo.metrics bar.metrics)',
     )
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     with sqlite3.connect(args.database) as db:
         create_schema(db)
@@ -59,4 +60,4 @@ def main():
         )
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1:])

@@ -1,8 +1,6 @@
 
-import mock
 import os.path
 import sqlite3
-import sys
 import testify as T
 
 from git_code_debt.create_tables import create_schema
@@ -52,5 +50,4 @@ class TestCreateTablesIntegration(TempDirTestCase):
     def test_create_tables_smoke(self):
         # Basically make sure it runs without crashing
         db_path = os.path.join(self.temp_dir, 'db.db')
-        with mock.patch.object(sys, 'argv', ['', db_path]):
-            main()
+        main([db_path])
