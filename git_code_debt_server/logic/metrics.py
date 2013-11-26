@@ -3,17 +3,7 @@ import collections
 import flask
 
 
-from git_code_debt.discovery import get_metric_parsers
-
 Metric = collections.namedtuple('Metric', ['name', 'value', 'sha', 'date'])
-
-def get_metric_ids():
-    metric_ids = []
-    metric_parsers = get_metric_parsers()
-    for metric_parser_cls in metric_parsers:
-        for metric_id in metric_parser_cls().get_possible_metric_ids():
-            metric_ids.append(metric_id)
-    return metric_ids
 
 def get_metric_ids_from_database():
     result = flask.g.db.execute(

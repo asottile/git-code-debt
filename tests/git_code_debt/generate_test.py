@@ -1,44 +1,42 @@
 
+import collections
 import testify as T
 
-from git_code_debt.generate import get_stats_from_output
+from git_code_debt.generate import increment_metric_values
+from git_code_debt.generate import main
+from git_code_debt.metric import Metric
+from testing.base_classes.sandbox_test_case import SandboxTestCase
 
-OUTPUT_WITH_INSERTIONS_AND_DELETIONS = '''
-14b4fc0 Made names for js and css consistent
- git_code_debt_server/static/css/banker.css        |    4 ----
- git_code_debt_server/static/css/git_code_debt.css |    4 ++++
- git_code_debt_server/static/js/banker.js          |   24 ---------------------
- git_code_debt_server/static/js/git_code_debt.js   |   24 +++++++++++++++++++++
- 4 files changed, 28 insertions(+), 28 deletions(-)
-'''
+class TestIncrementMetricValues(T.TestCase):
 
-OUTPUT_WITH_DELETIONS = '''
-14b4fc0 Made names for js and css consistent
- git_code_debt_server/static/js/git_code_debt.js   |   24 +++++++++++++++++++++
- 4 files changed, 24 deletions(-)
-'''
+    def test_increment_metrics_first_time(self):
+        metrics = collections.defaultdict(int)
+        increment_metric_values(metrics, [Metric('foo', 1), Metric('bar', 2)])
+        T.assert_equal(metrics, {'foo': 1, 'bar': 2})
 
-OUTPUT_WITH_INSERTIONS = '''
-14b4fc0 Made names for js and css consistent
- git_code_debt_server/static/css/git_code_debt.css |    4 ++++
- git_code_debt_server/static/js/git_code_debt.js   |   24 +++++++++++++++++++++
- 4 files changed, 28 insertions(+)
-'''
+    def test_increment_metrics_already_there(self):
+        metrics = collections.defaultdict(int, {'foo': 2, 'bar': 3})
+        increment_metric_values(metrics, [Metric('foo', 1), Metric('bar', 2)])
+        T.assert_equal(metrics, {'foo': 3, 'bar': 5})
 
-class TestGetStatsFromOutput(T.TestCase):
+@T.suite('integration')
+class TestGenerateIntegration(SandboxTestCase):
 
-    def test_insertions_and_deletions(self):
-        ret = get_stats_from_output(OUTPUT_WITH_INSERTIONS_AND_DELETIONS)
-        T.assert_equal(ret, 0)
+    def test_generate_integration(self):
+        main(['.', self.db_path])
 
-    def test_insertions(self):
-        ret = get_stats_from_output(OUTPUT_WITH_INSERTIONS)
-        T.assert_equal(ret, 28)
+    def test_generate_integration_with_debug(self):
+        main(['.', self.db_path, '--debug'])
 
-    def test_deletions(self):
-        ret = get_stats_from_output(OUTPUT_WITH_DELETIONS)
-        T.assert_equal(ret, -24)
+    def get_metric_data_count(self):
+        with self.db() as db:
+            return db.execute(
+                'SELECT COUNT(*) FROM metric_data'
+            ).fetchone()[0]
 
-    def test_empty_string(self):
-        ret = get_stats_from_output('')
-        T.assert_equal(ret, 0)
+    def test_generate_integration_previous_data(self):
+        main(['.', self.db_path])
+        before_data_count = self.get_metric_data_count()
+        main(['.', self.db_path])
+        after_data_count = self.get_metric_data_count()
+        T.assert_equal(before_data_count, after_data_count)

@@ -1,33 +1,21 @@
 
 import argparse
 import collections
-import re
 import sqlite3
+import sys
 
-from git_code_debt.diff_parser_base import get_file_diff_stats_from_output
-from git_code_debt.discovery import get_metric_parsers
+from git_code_debt.discovery import get_metric_parsers_from_args
+from git_code_debt.file_diff_stat import get_file_diff_stats_from_output
+from git_code_debt.logic import get_metric_mapping
+from git_code_debt.logic import get_metric_values
+from git_code_debt.logic import get_previous_sha
+from git_code_debt.logic import insert_metric_values
+from git_code_debt.parse_diff_stat import get_stats_from_output
 from git_code_debt.repo_parser import RepoParser
 
-STAT_INSERTIONS_RE = re.compile('(\d+) insertion')
-STAT_DELETIONS_RE = re.compile('(\d+) deletion')
-
-def get_stats_from_output(stat_out):
-    # Sometimes there are empty diffs
-    if not stat_out:
-        return 0
-
-    stat_line = stat_out.splitlines()[-1]
-    insertions = STAT_INSERTIONS_RE.search(stat_line)
-    deletions = STAT_DELETIONS_RE.search(stat_line)
-
-    return (
-        (int(insertions.group(1)) if insertions else 0) -
-        (int(deletions.group(1)) if deletions else 0)
-    )
-
-def get_metric_outputs(diff):
+def get_metrics(diff, metric_parsers):
     def get_all_metrics(file_diff_stats):
-        for metric_parser_cls in get_metric_parsers():
+        for metric_parser_cls in metric_parsers:
             metric_parser = metric_parser_cls()
             for metric in metric_parser.get_metrics_from_stat(file_diff_stats):
                 yield metric
@@ -39,66 +27,16 @@ def increment_metric_values(metric_values, metrics):
     for metric in metrics:
         metric_values[metric.metric_name] += metric.value
 
-def get_metric_mapping(database):
-    results = database.execute("""
-        SELECT
-            name,
-            id
-        FROM metric_names
-    """).fetchall()
-    return dict(results)
+def load_data(database_file, repo, package_names, skip_defaults, debug):
+    metric_parsers = get_metric_parsers_from_args(package_names, skip_defaults)
 
-def get_previous_sha(database, repo):
-    result = database.execute(
-        """
-        SELECT
-            sha
-        FROM metric_data
-        WHERE repo = ?
-        ORDER BY timestamp DESC
-        LIMIT 1
-        """,
-        [repo]
-    ).fetchone()
+    with sqlite3.connect(database_file) as db:
+        metric_mapping = get_metric_mapping(db)
 
-    return result[0] if result else None
-
-def get_metric_values(database, commit):
-    results = database.execute(
-        '''
-        SELECT
-            metric_names.name,
-            running_value
-        FROM metric_data
-        INNER JOIN metric_names ON
-            metric_names.id = metric_data.metric_id
-        WHERE sha = ?
-        ''',
-        [commit.sha],
-    )
-    return dict(results)
-
-def insert_metric_values(database, metric_values, metric_mapping, repo, commit):
-    for metric_name, value in metric_values.iteritems():
-        metric_id = metric_mapping[metric_name]
-        database.execute(
-            '''
-            INSERT INTO metric_data
-            (repo, sha, metric_id, timestamp, running_value)
-            VALUES (?, ?, ?, ?, ?)
-            ''',
-            [repo, commit.sha, metric_id, commit.date, value],
-        )
-
-def load_data(database_file, repo):
-    with sqlite3.connect(database_file) as database:
         repo_parser = RepoParser(repo)
 
         with repo_parser.repo_checked_out():
-            previous_sha = get_previous_sha(database, repo)
-
-            metric_mapping = get_metric_mapping(database)
-
+            previous_sha = get_previous_sha(db, repo)
             commits = repo_parser.get_commit_shas(since_sha=previous_sha)
 
             # If there is nothing to check gtfo
@@ -113,47 +51,75 @@ def load_data(database_file, repo):
             compare_commit = None
             if previous_sha is not None:
                 compare_commit = commits[0]
-                metric_values.update(get_metric_values(database, compare_commit))
+                metric_values.update(get_metric_values(db, compare_commit))
                 commits = commits[1:]
 
             for commit in commits:
                 if compare_commit is None:
                     diff = repo_parser.get_original_commit(commit.sha)
-                    stat_out = repo_parser.get_original_diff_stat(commit.sha)
                 else:
                     diff = repo_parser.get_commit_diff(compare_commit.sha, commit.sha)
-                    stat_out = repo_parser.get_commit_diff_stat(compare_commit.sha, commit.sha)
 
-                metrics = get_metric_outputs(diff)
+                metrics = get_metrics(diff, metric_parsers)
                 increment_metric_values(metric_values, metrics)
-                insert_metric_values(database, metric_values, metric_mapping, repo, commit)
+                insert_metric_values(db, metric_values, metric_mapping, repo, commit)
 
-                running_total_loc +=  get_stats_from_output(stat_out)
-                # TODO: binary file => symlink is broken
-                #if running_total_loc != metric_values['TotalLinesOfCode']:
-                #    raise AssertionError(
-                #        'Integrity of commits compromised.\n'
-                #        'Diff stat LOC: {0}\n'
-                #        'Diffs LOC: {1}\n'
-                #        'Previous SHA: {2}\n'
-                #        'Current SHA: {3}\n'.format(
-                #            running_total_loc,
-                #            metric_values['TotalLinesOfCode'],
-                #            compare_commit.sha,
-                #            commit.sha,
-                #        ),
-                #    )
+                # TODO: debug fails on repositories that have a binary file => symlink change
+                if debug:
+                    if compare_commit is None:
+                        stat_out = repo_parser.get_original_diff_stat(commit.sha)
+                    else:
+                        stat_out = repo_parser.get_commit_diff_stat(compare_commit.sha, commit.sha)
+
+                    running_total_loc += get_stats_from_output(stat_out)
+
+                    if running_total_loc != metric_values['TotalLinesOfCode']:
+                        raise AssertionError(
+                            'Integrity of commits compromised.\n'
+                            'Diff stat LOC: {0}\n'
+                            'Diffs LOC: {1}\n'
+                            'Previous SHA: {2}\n'
+                            'Current SHA: {3}\n'.format(
+                                running_total_loc,
+                                metric_values['TotalLinesOfCode'],
+                                compare_commit.sha,
+                                commit.sha,
+                            ),
+                        )
 
                 compare_commit = commit
 
-def main():
+def main(argv):
     parser = argparse.ArgumentParser(description='Generates metrics from a git repo')
     parser.add_argument('repo', help='Repository link to generate metrics from')
     parser.add_argument('database', help='Database file')
-    parser.add_argument('--from-sha', type=str, help='Start repo from date')
-    args = parser.parse_args()
+    parser.add_argument(
+        '--skip-default-metrics',
+        default=False,
+        action='store_true',
+        help='Whether to skip the default metrics',
+    )
+    parser.add_argument(
+        'metric_package_names',
+        type=str,
+        nargs='*',
+        help='Metric Package Names (such as foo.metrics bar.metrics)',
+    )
+    parser.add_argument(
+        '--debug',
+        default=False,
+        action='store_true',
+        help='Whether to check diff stats at each iteration',
+    )
+    args = parser.parse_args(argv)
 
-    load_data(args.database, args.repo)
+    load_data(
+        args.database,
+        args.repo,
+        args.metric_package_names,
+        args.skip_default_metrics,
+        args.debug,
+    )
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1:])

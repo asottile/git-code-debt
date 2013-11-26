@@ -1,31 +1,47 @@
 
-all: tables test itest
+TEST_TARGETS =
+ITEST_TARGETS = -i integration
+UTEST_TARGETS = -x integration
 
-itests: itest
+all: tables _tests
+
+integration:
+	$(eval TEST_TARGETS := $(ITEST_TARGETS))
+
+unit:
+	$(eval TEST_TARGETS := $(UTEST_TARGETS))
+
 tests: test
+test: unit _tests
+itests: itest
+itest: integration _tests
 
-test: py_env
-	bash -c 'source py_env/bin/activate && \
-		testify tests -x integration'
+_tests: py_env
+	bash -c "source py_env/bin/activate && testify tests $(TEST_TARGETS)"
 
-itest: py_env
+ucoverage: unit coverage
+icoverage: integration coverage
+
+coverage: py_env
 	bash -c 'source py_env/bin/activate && \
-		testify tests -i integration'
+		coverage erase && \
+		coverage run `which testify` tests $(TEST_TARGETS) && \
+		coverage combine && \
+		coverage report -m --omit="/usr/*,py_env/*,*/__init__.py,tests/*,pre-commit.py,*_mako"'
 
 tables: py_env clean_tables
 	bash -c 'source py_env/bin/activate && \
-		PYTHONPATH=. python git_code_debt/schema.py ./database.db && \
-		PYTHONPATH=. python git_code_debt/populate_metric_ids.py ./database.db'
+		python -m git_code_debt.create_tables ./database.db'
+
+start: py_env
+	bash -c 'source py_env/bin/activate && \
+		PYTHONPATH=. python -m git_code_debt_server.app ./database.db'
 
 py_env: requirements.txt
 	rm -rf py_env
 	virtualenv py_env
 	bash -c 'source py_env/bin/activate && \
 		pip install -r requirements.txt'
-
-start:
-	bash -c 'source py_env/bin/activate && \
-		PYTHONPATH=. python -m git_code_debt_server.app ./database.db'
 
 clean: clean_tables
 	rm -rf py_env

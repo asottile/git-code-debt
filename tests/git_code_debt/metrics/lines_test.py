@@ -1,10 +1,8 @@
 import testify as T
 
+from git_code_debt.file_diff_stat import FileDiffStat
 from git_code_debt.metrics.lines import LinesOfCodeParser
-from git_code_debt.diff_parser_base import FileDiffStat
 
-
-@T.suite('unit')
 class LinesOfCodeParserTest(T.TestCase):
 
     def test_simple_lines(self):

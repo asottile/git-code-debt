@@ -1,10 +1,5 @@
-import collections
 
-from git_code_debt.diff_parser_base import DiffParserBase
-from git_code_debt.metric import Metric
-from git_code_debt.metrics.common import FILE_TYPE_MAP
-from git_code_debt_util.path import split_file_path
-
+from git_code_debt.metrics.base import SimpleLineCounterBase
 
 def is_python_import(line):
     line = line.lstrip()
@@ -21,39 +16,18 @@ def is_template_import(line):
         is_python_import(line[1:])
     )
 
-# Maps a set of file extensions to a function that determines if the line is an import.
-IMPORT_CHECK_MAP = {
-    '.py': is_python_import,
-    '.tmpl': is_template_import,
-}
+class PythonImportCount(SimpleLineCounterBase):
 
+    def should_include_file(self, file_diff_stat):
+        return file_diff_stat.extension == '.py'
 
-class ImportsParser(DiffParserBase):
-    """Counts number of imports in a repository by file type."""
+    def line_matches_metric(self, line, file_diff_stat):
+        return is_python_import(line)
 
-    def get_metrics_from_stat(self, file_diff_stats):
-        imports_by_extension = collections.defaultdict(int)
+class CheetahTemplateImportCount(SimpleLineCounterBase):
 
-        for file_diff_stat in file_diff_stats:
-            import_count = 0
+    def should_include_file(self, file_diff_stat):
+        return file_diff_stat.extension == '.tmpl'
 
-            _, _, extension = split_file_path(file_diff_stat.filename)
-            is_import_line = IMPORT_CHECK_MAP.get(extension, None)
-            if is_import_line:
-                for line in file_diff_stat.lines_added:
-                    import_count += 1 if is_import_line(line) else 0
-                for line in file_diff_stat.lines_removed:
-                    import_count -= 1 if is_import_line(line) else 0
-
-            imports_by_extension[extension] += import_count
-
-        for extension in IMPORT_CHECK_MAP.keys():
-            imports_changed = imports_by_extension.get(extension, 0)
-            file_type = FILE_TYPE_MAP.get(extension, 'unknown')
-            yield Metric('ImportCount_{0}'.format(file_type), imports_changed)
-
-    def get_possible_metric_ids(self):
-        return [
-            'ImportCount_{0}'.format(file_type)
-            for file_type in set(FILE_TYPE_MAP.values()) | set(['unknown'])
-        ]
+    def line_matches_metric(self, line, file_diff_stat):
+        return is_template_import(line)

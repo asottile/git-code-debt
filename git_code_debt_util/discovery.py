@@ -1,28 +1,7 @@
 
 import inspect
-import os
-import os.path
 import pkgutil
 import sys
-
-def get_module_name(root, filename):
-    """Returns the module name for a python file.
-
-    Args:
-        root - Path to file's directory
-        filename - Name of the python file.
-    """
-    if not filename.endswith('.py'):
-        raise ValueError('filename must end with .py')
-
-    filename = filename[:-3]
-    joined_path = os.path.join(root, filename)
-    relpath = os.path.relpath(
-        joined_path,
-        os.path.join(os.path.dirname(__file__), '../'),
-    )
-    # XXX: should really use pathsep here
-    return relpath.replace('/', '.')
 
 def discover(package, cls_match_func):
     """Returns a set of classes in the directory matched by cls_match_func
@@ -44,6 +23,11 @@ def discover(package, cls_match_func):
         # Check all the classes in that module
         for name, _ in inspect.getmembers(module, inspect.isclass):
             imported_class = getattr(module, name)
+
+            # Don't include things that are only there due to a side-effect of
+            # importing
+            if imported_class.__module__ != module.__name__:
+                continue
 
             if cls_match_func(imported_class):
                 matched_classes.add(imported_class)

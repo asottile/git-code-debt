@@ -8,7 +8,7 @@ JAVASCRIPT = 'Javascript'
 JAVA = 'Java'
 ILLUSTRATOR = 'Illustrator'
 HTML = 'Html'
-CCPP = 'C/C++'
+CCPP = 'C_C++'
 TEXT = 'Text'
 SQL = 'SQL'
 

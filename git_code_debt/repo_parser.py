@@ -45,9 +45,9 @@ class RepoParser(object):
 
         cmd = ['git', 'log', '--first-parent', '--reverse', '--format=%H%n%at%n%cN']
         if since_sha:
-            cmd.append('{0}..master'.format(since_sha))
+            cmd.append('{0}..HEAD'.format(since_sha))
         else:
-            cmd.append('master')
+            cmd.append('HEAD')
 
         output = subprocess.check_output(
             cmd,

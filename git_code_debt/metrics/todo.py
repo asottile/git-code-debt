@@ -1,11 +1,6 @@
 from git_code_debt.metrics.base import SimpleLineCounterBase
 
 
-class TODOCounter(SimpleLineCounterBase):
-    metric_name = 'TODOCount'
-
-    def file_check(self, filename):
-        return True
-
-    def line_check(self, line):
+class TODOCount(SimpleLineCounterBase):
+    def line_matches_metric(self, line, file_diff_stat):
         return 'TODO' in line
