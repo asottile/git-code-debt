@@ -48,11 +48,24 @@ class RepoParserTest(T.TestCase):
 
     def test_get_commit_shas_after_date(self):
         with mock.patch.object(subprocess, 'check_output') as check_output_mock:
-            check_output_mock.return_value = ''
-            after_time = 12345
-            all_commits = self.repo_parser.get_commit_shas(12345)
-            T.assert_equal(all_commits, [])
+            previous_sha = '29d0d321f43950fd2aa1d1df9fc81dee0e9046b3'
+            commit = Commit(previous_sha, 123, 'asottile')
+            check_output_mock.return_value = '\n'.join(unicode(part) for part in commit) + '\n'
+            self.repo_parser.get_commit_shas(previous_sha)
             T.assert_in(
-                '{0}..HEAD'.format(after_time),
+                '{0}..HEAD'.format(previous_sha),
                 check_output_mock.call_args[0][0]
             )
+
+    def test_get_commits_since_commit_includes_that_commit(self):
+        previous_sha = '29d0d321f43950fd2aa1d1df9fc81dee0e9046b3'
+        all_commits = self.repo_parser.get_commit_shas(previous_sha)
+        shas = [commit.sha for commit in all_commits]
+        T.assert_in(previous_sha, shas)
+        T.assert_equal(len(shas), len(set(shas)))
+
+    def test_get_commit(self):
+        # Smoke test
+        sha = '29d0d321f43950fd2aa1d1df9fc81dee0e9046b3'
+        ret = self.repo_parser.get_commit(sha)
+        T.assert_equal(ret, Commit(sha, 1385346958, 'Anthony Sottile'))

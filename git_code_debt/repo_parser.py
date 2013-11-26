@@ -14,6 +14,8 @@ backport_check_output()
 # TODO: remove name since we can't really do anything useful with it
 Commit = collections.namedtuple('Commit', ['sha', 'date', 'name'])
 
+COMMIT_FORMAT = '--format=%H%n%at%n%cN'
+
 class RepoParser(object):
 
     def __init__(self, git_repo):
@@ -34,6 +36,15 @@ class RepoParser(object):
             shutil.rmtree(self.tempdir)
             self.tempdir = None
 
+    def get_commit(self, sha):
+        output = subprocess.check_output(
+            ['git', 'show', COMMIT_FORMAT, sha],
+            cwd=self.tempdir,
+        )
+        sha, date, name, = output.splitlines()[:3]
+
+        return Commit(sha, int(date), name)
+
     # TODO: rename this to get_commits
     def get_commit_shas(self, since_sha=None):
         """Returns a list of Commit objects.
@@ -43,10 +54,12 @@ class RepoParser(object):
         """
         assert self.tempdir
 
-        cmd = ['git', 'log', '--first-parent', '--reverse', '--format=%H%n%at%n%cN']
+        cmd = ['git', 'log', '--first-parent', '--reverse', COMMIT_FORMAT]
         if since_sha:
+            commits = [self.get_commit(since_sha)]
             cmd.append('{0}..HEAD'.format(since_sha))
         else:
+            commits = []
             cmd.append('HEAD')
 
         output = subprocess.check_output(
@@ -54,7 +67,6 @@ class RepoParser(object):
             cwd=self.tempdir,
         )
 
-        commits = []
         for sha, date, name in chunk_iter(output.splitlines(), 3):
             commits.append(Commit(sha, int(date), name))
 
