@@ -39,7 +39,7 @@ def most_recent_metric(metric_name):
     else:
         return Metric(metric_name, 0, 'No Data', 0)
 
-def metrics_for_dates(repo, sha, metric_name, dates):
+def metrics_for_dates(repo, metric_name, dates):
 
     def get_metric_for_timestamp(timestamp):
         result = flask.g.db.execute(

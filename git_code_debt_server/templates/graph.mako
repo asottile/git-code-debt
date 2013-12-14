@@ -15,7 +15,6 @@
 
 <script>
     metrics = ${metrics};
-    sha = "${sha}";
 </script>
 
 <h1>${metric_name}</h1>

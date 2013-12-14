@@ -22,7 +22,12 @@ def show():
             'title': m.name,
             'occurrences': m.value,
             'change': 0,
-            'href': flask.url_for('graph.show', name=m.name, sha=m.sha, start=str(start_timestamp), end=str(end_timestamp))
+            'href': flask.url_for(
+                'graph.show',
+                name=m.name,
+                start=str(start_timestamp),
+                end=str(end_timestamp),
+            ),
         }
         for m in most_recent_metrics
     ])
