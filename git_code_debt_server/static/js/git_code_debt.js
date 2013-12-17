@@ -36,7 +36,7 @@
                 var startTimestamp = new Date(startDate).getTime() / 1000;
                 var endTimestamp = new Date(endDate).getTime() / 1000;
 
-                var url = '?sha=' + sha + '&start=' + startTimestamp + '&end=' + endTimestamp;
+                var url = '?start=' + startTimestamp + '&end=' + endTimestamp;
                 window.location = url;
             }
         });
