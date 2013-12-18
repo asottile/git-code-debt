@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='Code Debt Metrics',
-    version='0.3.0',
+    version='0.3.1',
     packages=find_packages('.', exclude=('tests*', 'testing*')),
     package_data={
         'git_code_debt': [
