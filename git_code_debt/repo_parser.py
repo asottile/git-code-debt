@@ -54,7 +54,7 @@ class RepoParser(object):
         """
         assert self.tempdir
 
-        cmd = ['git', 'log', '--oneline', '--reverse', COMMIT_FORMAT]
+        cmd = ['git', 'log', '--first-parent', '--reverse', COMMIT_FORMAT]
         if since_sha:
             commits = [self.get_commit(since_sha)]
             cmd.append('{0}..HEAD'.format(since_sha))
