@@ -27,13 +27,13 @@ def increment_metric_values(metric_values, metrics):
     for metric in metrics:
         metric_values[metric.metric_name] += metric.value
 
-def load_data(database_file, repo, package_names, skip_defaults, debug):
+def load_data(database_file, repo, package_names, skip_defaults, tempdir_location, debug):
     metric_parsers = get_metric_parsers_from_args(package_names, skip_defaults)
 
     with sqlite3.connect(database_file) as db:
         metric_mapping = get_metric_mapping(db)
 
-        repo_parser = RepoParser(repo)
+        repo_parser = RepoParser(repo, tempdir_location=tempdir_location)
 
         with repo_parser.repo_checked_out():
             previous_sha = get_previous_sha(db, repo)
@@ -106,6 +106,12 @@ def main(argv):
         help='Metric Package Names (such as foo.metrics bar.metrics)',
     )
     parser.add_argument(
+        '--tempdir-location',
+        type=str,
+        default=None,
+        help='Override location of temp dirs, default is system default.',
+    )
+    parser.add_argument(
         '--debug',
         default=False,
         action='store_true',
@@ -118,6 +124,7 @@ def main(argv):
         args.repo,
         args.metric_package_names,
         args.skip_default_metrics,
+        args.tempdir_location,
         args.debug,
     )
 
