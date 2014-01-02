@@ -7,27 +7,43 @@ from git_code_debt_server.logic import metrics
 
 index = flask.Blueprint('index', __name__)
 
+DATE_NAMES_TO_TIMEDELTAS = (
+    ('Last Day', datetime.timedelta(days=1)),
+    ('Last Week', datetime.timedelta(days=7)),
+    ('Last Month', datetime.timedelta(days=30)),
+    ('Last 3 Months', datetime.timedelta(days=90)),
+    ('Last 6 Months', datetime.timedelta(days=180)),
+    ('Last Year', datetime.timedelta(days=365)),
+)
+
+def to_timestamp(dt):
+    return calendar.timegm(dt.utctimetuple())
+
 @index.route('/')
 def show():
-    end_date = datetime.datetime.today()
-    start_date = end_date - datetime.timedelta(180)
+    metric_names = metrics.get_metric_ids_from_database()
+    today = datetime.datetime.today()
+    today_timestamp = to_timestamp(today)
+    offsets = [
+        (time_name, to_timestamp(today - offset))
+        for (time_name, offset) in DATE_NAMES_TO_TIMEDELTAS
+    ]
+    current_values = metrics.get_metrics_for_sha(
+        metrics.get_sha_for_date(today_timestamp),
+    )
+    metric_data = dict(
+        (
+            time_name,
+            metrics.get_metrics_for_sha(metrics.get_sha_for_date(timestamp)),
+        )
+        for (time_name, timestamp) in offsets
+    )
 
-    start_timestamp = calendar.timegm(start_date.utctimetuple())
-    end_timestamp = calendar.timegm(end_date.utctimetuple())
-
-    most_recent_metrics = [metrics.most_recent_metric(m) for m in metrics.get_metric_ids_from_database()]
-
-    return render_template('index.mako', metrics=[
-        {
-            'title': m.name,
-            'occurrences': m.value,
-            'change': 0,
-            'href': flask.url_for(
-                'graph.show',
-                name=m.name,
-                start=str(start_timestamp),
-                end=str(end_timestamp),
-            ),
-        }
-        for m in most_recent_metrics
-    ])
+    return render_template(
+        'index.mako',
+        metric_names=metric_names,
+        today_timestamp=today_timestamp,
+        offsets=offsets,
+        current_values=current_values,
+        metric_data=metric_data,
+    )

@@ -24,7 +24,38 @@ td, th {
     border: 1px solid #ccc;
 }
 
+td {
+    text-align: left;
+    white-space: nowrap;
+}
+
+.metric-up, .metric-up a {
+    color: #911;
+    background-color: #f88;
+}
+
+.metric-up:before {
+    content: '▲';
+    text-decoration: none;
+}
+
+.metric-down, .metric-down a {
+    color: #070;
+    background-color: #cfc;
+}
+
+.metric-down:before {
+    content: '▼';
+    text-decoration: none;
+}
+
+.metric-none, .metric-none a {
+    color: #333;
+    background-color: #ccc;
+}
+
 .date-picker {
     margin: 20px;
     text-align: center;
 }
+

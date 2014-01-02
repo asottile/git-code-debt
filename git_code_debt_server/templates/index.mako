@@ -1,3 +1,7 @@
+<%!
+import flask
+%>
+
 <%inherit file="base.mako" />
 
 <%block name="title">Index</%block>
@@ -16,14 +20,33 @@
 <table>
     <tr>
         <th>Metric</th>
-        <th>Value</th>
-        <th>Today's Change</th>
+        <th>Current Value</th>
+        % for time_name, _ in offsets:
+            <th>${time_name}</th>
+        % endfor
     </tr>
-    % for metric in metrics:
+
+    % for metric in metric_names:
         <tr>
-            <td><a href="${metric['href']}">${metric['title']}</a></td>
-            <td>${metric['occurrences']}</td>
-            <td>${metric['change']}</td>
+            <td>${metric}</td>
+            <td>${current_values[metric]}</td>
+            % for time_name, timestamp in offsets:
+                <%
+                    delta = current_values[metric] - metric_data[time_name][metric]
+                    classname = 'metric-up' if delta > 0 else 'metric-down' if delta < 0 else 'metric-none'
+                %>
+                <td class="${classname}">
+                    <a target="_blank" href="${flask.url_for(
+                        'graph.show',
+                        name=metric,
+                        start=str(timestamp),
+                        end=str(today_timestamp),
+                    )}">
+                        ${delta}
+                    </a>
+                </td>
+            % endfor
         </tr>
     % endfor
+
 </table>
