@@ -80,6 +80,6 @@ def metrics_for_dates(repo, metric_name, dates):
         if result:
             return Metric(metric_name, *result)
         else:
-            return Metric(metric_name, 0, 'No Data', date)
+            return Metric(metric_name, 0, date)
 
     return [get_metric_for_timestamp(date) for date in dates]
