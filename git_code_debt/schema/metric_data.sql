@@ -8,3 +8,4 @@ CREATE TABLE metric_data (
 );
 
 CREATE INDEX metric_data__timestamp_idx ON metric_data (timestamp);
+CREATE INDEX metric_data__sha_idx ON metric_data (sha);
