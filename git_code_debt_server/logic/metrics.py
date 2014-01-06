@@ -18,6 +18,18 @@ def get_metric_ids_from_database():
     return [name for name, in result]
 
 
+def get_latest_sha():
+    result = flask.g.db.execute('''
+        SELECT
+            sha
+        FROM metric_data
+        ORDER BY timestamp DESC
+        LIMIT 1
+    ''').fetchone()
+
+    # If the date is too far in the past (before data) there won't be a result
+    return result[0] if result else None
+
 def get_sha_for_date(date):
     result = flask.g.db.execute(
         '''

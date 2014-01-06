@@ -29,7 +29,7 @@ def show():
         for (time_name, offset) in DATE_NAMES_TO_TIMEDELTAS
     ]
     current_values = metrics.get_metrics_for_sha(
-        metrics.get_sha_for_date(today_timestamp),
+        metrics.get_latest_sha(),
     )
     metric_data = dict(
         (
