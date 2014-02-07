@@ -1,5 +1,9 @@
 <%inherit file="base.mako" />
 
+<%!
+    import flask
+%>
+
 <%block name="title">${metric_name}</%block>
 
 <%block name="css">
@@ -20,6 +24,9 @@
 <h1>${metric_name}</h1>
 <canvas id="graph" width="800" height="600"></canvas>
 <div class="date-picker">
+    <form action="${flask.url_for('graph.all_data', metric_name=metric_name)}" method="GET" style="display: inline-block">
+       <input type="submit" value="All Data">
+    </form>
     From: <input type="text" id="datepicker-from" data-timestamp="${start_timestamp}">
     To: <input type="text" id="datepicker-to" data-timestamp="${end_timestamp}">
 </div>

@@ -95,3 +95,31 @@ def metrics_for_dates(repo, metric_name, dates):
             return Metric(metric_name, 0, date)
 
     return [get_metric_for_timestamp(date) for date in dates]
+
+
+def get_first_data_timestamp(metric_name):
+    result = flask.g.db.execute(
+        '''
+        SELECT metric_data.timestamp
+        FROM metric_data
+        INNER JOIN metric_names ON metric_names.id = metric_data.metric_id
+        WHERE
+            metric_names.name = ? AND
+            metric_data.timestamp < (
+                SELECT metric_data.timestamp
+                FROM metric_data
+                INNER JOIN metric_names ON metric_names.id = metric_data.metric_id
+                WHERE
+                    metric_names.name = ? AND
+                    metric_data.running_value > 0
+                ORDER BY metric_data.timestamp
+                LIMIT 1
+            )
+        ORDER BY metric_data.timestamp DESC
+        LIMIT 1;
+        ''',
+        [metric_name, metric_name],
+    ).fetchone()
+
+    if result:
+        return result[0]
