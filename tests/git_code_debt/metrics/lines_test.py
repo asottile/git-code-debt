@@ -20,4 +20,7 @@ class LinesOfCodeParserTest(T.TestCase):
             'TotalLinesOfCode_Yaml': 2,
         }
         for metric in metrics:
-            T.assert_equal(metric.value, expected_value.get(metric.metric_name, 0))
+            T.assert_equal(
+                metric.value,
+                expected_value.get(metric.name, 0),
+            )

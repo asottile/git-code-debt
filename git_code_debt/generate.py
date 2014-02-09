@@ -25,7 +25,7 @@ def get_metrics(diff, metric_parsers):
 
 def increment_metric_values(metric_values, metrics):
     for metric in metrics:
-        metric_values[metric.metric_name] += metric.value
+        metric_values[metric.name] += metric.value
 
 def load_data(database_file, repo, package_names, skip_defaults, tempdir_location, debug):
     metric_parsers = get_metric_parsers_from_args(package_names, skip_defaults)
