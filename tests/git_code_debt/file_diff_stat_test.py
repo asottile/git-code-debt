@@ -135,14 +135,6 @@ class TestDiffParser(T.TestCase):
         T.assert_length(ret[0].lines_added, 1)
 
 class TestAllMetricParsersDefinePossibleMetrics(T.TestCase):
-
     def test_all_have_possible_metrics(self):
         for metric_parser_cls in get_metric_parsers():
-            try:
-                assert metric_parser_cls().get_possible_metric_ids()
-            except Exception:
-                raise AssertionError(
-                    '{0} does not implement get_possible_metric_ids'.format(
-                        metric_parser_cls.__name__
-                    )
-                )
+            assert metric_parser_cls().get_possible_metric_ids()

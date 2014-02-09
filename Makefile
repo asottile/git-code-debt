@@ -27,7 +27,7 @@ coverage: py_env
 		coverage erase && \
 		coverage run `which testify` tests $(TEST_TARGETS) && \
 		coverage combine && \
-		coverage report -m --omit="/usr/*,py_env/*,*/__init__.py,tests/*,pre-commit.py,*_mako"'
+		coverage report -m --omit="/usr/*,py_env/*,*/__init__.py,pre-commit.py,*_mako"'
 
 tables: py_env clean_tables
 	bash -c 'source py_env/bin/activate && \
