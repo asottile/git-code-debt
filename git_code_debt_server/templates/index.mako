@@ -38,7 +38,7 @@ import flask
                 <td class="${classname}">
                     <a target="_blank" href="${flask.url_for(
                         'graph.show',
-                        name=metric,
+                        metric_name=metric,
                         start=str(timestamp),
                         end=str(today_timestamp),
                     )}">
