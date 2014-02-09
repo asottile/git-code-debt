@@ -7,6 +7,7 @@ from git_code_debt.generate import main
 from git_code_debt.metric import Metric
 from testing.base_classes.sandbox_test_case import SandboxTestCase
 
+
 class TestIncrementMetricValues(T.TestCase):
 
     def test_increment_metrics_first_time(self):

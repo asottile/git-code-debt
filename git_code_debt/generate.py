@@ -40,7 +40,7 @@ def load_data(database_file, repo, package_names, skip_defaults, tempdir_locatio
             commits = repo_parser.get_commit_shas(since_sha=previous_sha)
 
             # If there is nothing to check gtfo
-            if not commits:
+            if len(commits) == 1:
                 return
 
             # Maps metric_name to a running value
