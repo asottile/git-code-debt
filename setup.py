@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='Code Debt Metrics',
-    version='0.3.3',
+    version='0.3.4',
     packages=find_packages('.', exclude=('tests*', 'testing*')),
     package_data={
         'git_code_debt': [
@@ -16,8 +16,12 @@ setup(
         ],
     },
     install_requires=[
+        'argparse',
         'flask',
         'mako',
+        'PyStaticConfiguration',
+        # TODO: remove pyyaml when PyStaticConfiguration supports [yaml]
+        'pyyaml',
         'simplejson',
     ],
 )

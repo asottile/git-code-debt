@@ -1,9 +1,14 @@
 argparse
-coverage
 flask
-ipdb
 mako
+PyStaticConfiguration
+# TODO: remove pyyaml when PyStaticConfiguration supports [yaml]
+pyyaml
+simplejson
+
+# Testing requirements
+coverage
+ipdb
 mock
 pyquery
-simplejson
 testify

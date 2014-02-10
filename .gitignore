@@ -2,7 +2,6 @@
 .pydevproject
 .project
 .coverage
-ca.pem
 /py_env
 *.db
 .idea

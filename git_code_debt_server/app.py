@@ -2,19 +2,24 @@ import argparse
 import flask
 import sqlite3
 
+from git_code_debt_server.metric_config import metric_config_watcher
 from git_code_debt_server.servlets.graph import graph
 from git_code_debt_server.servlets.index import index
 
-app = flask.Flask('git_code_debt_server')
 
+app = flask.Flask('git_code_debt_server')
 app.register_blueprint(index)
 app.register_blueprint(graph)
 
+
 database_path = './database.db'
+
 
 @app.before_request
 def before_request():
+    metric_config_watcher.reload_if_changed()
     flask.g.db = sqlite3.connect(database_path)
+
 
 @app.teardown_request
 def teardown_request(exception):
