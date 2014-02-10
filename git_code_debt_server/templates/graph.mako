@@ -14,7 +14,7 @@
 <%block name="scripts">
     ${parent.scripts()}
     <script src="../static/js/chart.js"></script>
-    <script src="../static/js/git_code_debt.js"></script>
+    <script src="../static/js/graph.js"></script>
 </%block>
 
 <script>

@@ -1,5 +1,5 @@
 <%!
-import flask
+from git_code_debt_server.servlets.index import DATE_NAMES_TO_TIMEDELTAS
 %>
 
 <%inherit file="base.mako" />
@@ -12,41 +12,52 @@ import flask
 
 <%block name="scripts">
     ${parent.scripts()}
-    <script src="static/js/chart.js"></script>
+    <script src="../static/js/index.js"></script>
 </%block>
 
 <h1>Technical Debt</h1>
 
 <table>
-    <tr>
+    <thead>
+        <th class="dummy-cell"></th>
         <th>Metric</th>
         <th>Current Value</th>
-        % for time_name, _ in offsets:
+        % for time_name, _ in DATE_NAMES_TO_TIMEDELTAS:
             <th>${time_name}</th>
         % endfor
-    </tr>
-
-    % for metric in metric_names:
-        <tr>
-            <td>${metric}</td>
-            <td>${current_values[metric]}</td>
-            % for time_name, timestamp in offsets:
-                <%
-                    delta = current_values[metric] - metric_data[time_name][metric]
-                    classname = 'metric-up' if delta > 0 else 'metric-down' if delta < 0 else 'metric-none'
-                %>
-                <td class="${classname}">
-                    <a target="_blank" href="${flask.url_for(
-                        'graph.show',
-                        metric_name=metric,
-                        start=str(timestamp),
-                        end=str(today_timestamp),
-                    )}">
-                        ${delta}
-                    </a>
-                </td>
+    </thead>
+    % for group in groups:
+        <% first = True %>
+        <tbody data-group="${group.name}" class="expanded">
+            % for metric in group.metrics:
+                <tr>
+                    % if first:
+                        <% first = False %>
+                        <th class="group-name" rowspan="${len(group.metrics)}">
+                            ${group.name}
+                        </th>
+                    % endif
+                    <td>${metric.name}</td>
+                    <td>${metric.current_value}</td>
+                    % for delta in metric.historic_deltas:
+                        <td class="${delta.classname}">
+                            <a target="_blank href="${delta.url}">
+                                ${delta.value}
+                            </a>
+                        </td>
+                    % endfor
+                </tr>
             % endfor
-        </tr>
+            <tr class="dummy-row">
+                <th class="group-name">
+                    ${group.name}
+                </th>
+                <td
+                    class="dummy-cell"
+                    rowspan="${len(group.metrics)}"
+                    colspan="${len(DATE_NAMES_TO_TIMEDELTAS) + 2}"
+                ></td>
+            </tr>
+        </tbody>
     % endfor
-
 </table>

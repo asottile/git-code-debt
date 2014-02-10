@@ -14,7 +14,7 @@
 
 Groups:
     - Cheetah:
-        metrics: []
+        metrics: ['TotalLinesOfCode_Template']
         metric_expressions:
             - ^.*Cheetah.*$
     - Python:

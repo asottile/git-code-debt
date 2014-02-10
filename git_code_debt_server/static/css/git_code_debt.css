@@ -12,11 +12,62 @@ h1 {
 }
 
 table {
-    border: 1px solid #ccc;
     border-collapse: collapse;
     width: 640px;
     margin: auto;
     text-align: center;
+    border-right: 1px solid #ccc;
+    width: 95%;
+}
+
+tbody {
+    border-top: 3px solid #ccc;
+}
+
+tbody.collapsed {
+    border-top: 0;
+}
+
+tbody .dummy-row {
+    display: none;
+}
+
+tbody.collapsed tr {
+    display: none;
+}
+
+tbody.collapsed .dummy-row {
+    display: table-row;
+}
+
+.group-name {
+    text-align: left;
+    vertical-align: top;
+    white-space: nowrap;
+}
+
+.group-name:before {
+    background: linear-gradient(to bottom, #999999 0%, #666666 75%, #333333 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+    border: 1px solid #333;
+    border-radius: 3px;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 0.75em;
+    line-height: 0.75em;
+    padding: 3px;
+    width: 0.75em;
+    height: 0.75em;
+    text-align: center;
+    content: '-';
+}
+
+.collapsed .group-name:before {
+    content: '+';
+}
+
+
+.collapsed td {
+    display: none;
 }
 
 td, th {
@@ -27,6 +78,10 @@ td, th {
 td {
     text-align: left;
     white-space: nowrap;
+}
+
+.dummy-cell {
+    border: 0;
 }
 
 .metric-up, .metric-up a {
@@ -51,7 +106,7 @@ td {
 
 .metric-none, .metric-none a {
     color: #333;
-    background-color: #ccc;
+    background-color: #ddd;
 }
 
 .date-picker {
