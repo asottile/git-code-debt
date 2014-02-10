@@ -2,17 +2,19 @@
 import collections
 import re
 
+import staticconf
 import staticconf.errors
 import staticconf.getters
 
-from git_code_debt_util.config import get_config_watcher
-
 
 CONFIG_NAMESPACE = 'metric_config'
-metric_config_watcher = get_config_watcher(
+metric_config_watcher = staticconf.ConfigFacade.load(
     'metric_config.yaml',
     CONFIG_NAMESPACE,
+    staticconf.YamlConfiguration,
+    min_interval=30,
 )
+metric_config_getter = staticconf.NamespaceGetters(CONFIG_NAMESPACE)
 
 
 class Group(collections.namedtuple('Group', ['name', 'metrics', 'metric_expressions'])):
@@ -57,3 +59,5 @@ groups = staticconf.getters.build_getter(
     _get_groups_from_yaml,
     getter_namespace='metric_config',
 )('Groups')
+
+color_overrides = metric_config_getter.get_set('ColorOverrides')

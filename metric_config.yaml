@@ -27,3 +27,12 @@ Groups:
     - LinesOfCode:
         metric_expressions:
             - ^TotalLinesOfCode.*$
+
+
+# Sample ColorOverrides definition:
+# ColorOverrides:
+#     - PartialTemplateCount
+#
+# This indicates that PartialTemplateCount should be colored the opposite of
+# the usual coloring (the usual coloring is up = red, down = green).
+ColorOverrides: []

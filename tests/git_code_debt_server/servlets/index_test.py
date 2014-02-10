@@ -3,6 +3,7 @@ import flask
 import testify as T
 
 from git_code_debt_server.servlets.index import DeltaPresenter
+from git_code_debt_server.servlets.index import MetricPresenter
 from testing.assertions.response import assert_no_response_errors
 from testing.base_classes.git_code_debt_server_test_case import GitCodeDebtServerTestCase
 from testing.base_classes.git_code_debt_server_test_case import GitCodeDebtServerWithDataTestCase
@@ -33,3 +34,14 @@ def test_delta_classname_zero():
 def test_delta_classname_positive():
     delta = DeltaPresenter('url', 9001)
     T.assert_equal(delta.classname, 'metric-up')
+
+
+@test
+def test_metric_classname_overriden():
+    metric = MetricPresenter('metric', True, 0, tuple())
+    T.assert_equal(metric.classname, 'color-override')
+
+@test
+def test_metric_classname_normal():
+    metric = MetricPresenter('metric', False, 0, tuple())
+    T.assert_equal(metric.classname, '')

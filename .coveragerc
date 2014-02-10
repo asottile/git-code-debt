@@ -12,6 +12,9 @@ omit =
     py_env/*
     */__init__.py
 
+    # Ignore test coverage
+    tests/*
+
     # Don't complain about our pre-commit file
     pre-commit.py
 

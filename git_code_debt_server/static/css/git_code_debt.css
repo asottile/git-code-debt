@@ -84,7 +84,10 @@ td {
     border: 0;
 }
 
-.metric-up, .metric-up a {
+.metric-up,
+.metric-up a,
+.color-override .metric-down,
+.color-override .metric-down a {
     color: #911;
     background-color: #f88;
 }
@@ -94,7 +97,10 @@ td {
     text-decoration: none;
 }
 
-.metric-down, .metric-down a {
+.metric-down,
+.metric-down a,
+.color-override .metric-up,
+.color-override .metric-up a {
     color: #070;
     background-color: #cfc;
 }

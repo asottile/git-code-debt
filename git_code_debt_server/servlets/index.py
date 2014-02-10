@@ -3,6 +3,7 @@ import collections
 import datetime
 import flask
 
+from git_code_debt_server.metric_config import color_overrides
 from git_code_debt_server.metric_config import groups
 from git_code_debt_server.render_mako import render_template
 from git_code_debt_server.logic import metrics
@@ -46,9 +47,17 @@ class DeltaPresenter(collections.namedtuple(
 
 
 class MetricPresenter(collections.namedtuple(
-    'MetricPresenter', ['name', 'current_value', 'historic_deltas'],
+    'MetricPresenter',
+    ['name', 'color_override', 'current_value', 'historic_deltas'],
 )):
     __slots__ = ()
+
+    @property
+    def classname(self):
+        if self.color_override:
+            return 'color-override'
+        else:
+            return ''
 
     @classmethod
     def from_data(
@@ -61,6 +70,7 @@ class MetricPresenter(collections.namedtuple(
     ):
         return cls(
             metric_name,
+            metric_name in color_overrides,
             current_values[metric_name],
             tuple(
                 DeltaPresenter(

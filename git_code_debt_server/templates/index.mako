@@ -30,7 +30,7 @@ from git_code_debt_server.servlets.index import DATE_NAMES_TO_TIMEDELTAS
         <% first = True %>
         <tbody data-group="${group.name}" class="expanded">
             % for metric in group.metrics:
-                <tr>
+                <tr class="${metric.classname}">
                     % if first:
                         <% first = False %>
                         <th class="group-name" rowspan="${len(group.metrics)}">
