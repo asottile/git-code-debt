@@ -2,6 +2,7 @@
 import collections
 import re
 
+import staticconf.errors
 import staticconf.getters
 
 from git_code_debt_util.config import get_config_watcher
@@ -25,6 +26,11 @@ class Group(collections.namedtuple('Group', ['name', 'metrics', 'metric_expressi
 
     @classmethod
     def from_yaml(cls, name, metrics, metric_expressions):
+        if not metrics and not metric_expressions:
+            raise staticconf.errors.ValidationError(
+                'Group {0} must define at least one of '
+                '`metrics` or `metric_expressions`'.format(name)
+            )
         return cls(
             name,
             set(metrics),
@@ -38,7 +44,11 @@ def _get_groups_from_yaml(yaml):
     # Here's an example yaml:
     # [{'Bar': {'metrics': ['Foo', 'Bar'], 'metric_expressions': ['^Baz']}}]
     return tuple(
-        Group.from_yaml(*group_dict.keys(), **group_dict.values()[0])
+        Group.from_yaml(
+            group_dict.keys()[0],
+            group_dict.values()[0].get('metrics', []),
+            group_dict.values()[0].get('metric_expressions', []),
+        )
         for group_dict in yaml
     )
 

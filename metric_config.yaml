@@ -11,6 +11,7 @@
 #
 # This defines a group named Group1 which explicitly includes the metrics
 # FooMetric and BarMetric and also includes all metrics which match ^.*Baz.*$.
+# NOTE: metrics and metric_expressions may be omitted
 
 Groups:
     - Cheetah:
@@ -18,14 +19,11 @@ Groups:
         metric_expressions:
             - ^.*Cheetah.*$
     - Python:
-        metrics: []
         metric_expressions:
             - ^.*Python.*$
     - CurseWords:
-        metrics: []
         metric_expressions:
             - ^TotalCurseWords.*$
     - LinesOfCode:
-        metrics: []
         metric_expressions:
             - ^TotalLinesOfCode.*$
