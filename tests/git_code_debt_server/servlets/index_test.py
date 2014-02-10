@@ -14,6 +14,8 @@ class TestIndexLoadsMixin(object):
     def test_index_loads(self):
         response = self.client.get(flask.url_for('index.show'))
         assert_no_response_errors(response)
+        # Should have a nonzero number of links to things
+        T.assert_gt(len(response.pq.find('a[href]')), 0)
 
 
 class TestIndexNoData(GitCodeDebtServerTestCase, TestIndexLoadsMixin): pass

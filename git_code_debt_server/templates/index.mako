@@ -41,7 +41,7 @@ from git_code_debt_server.servlets.index import DATE_NAMES_TO_TIMEDELTAS
                     <td>${metric.current_value}</td>
                     % for delta in metric.historic_deltas:
                         <td class="${delta.classname}">
-                            <a target="_blank href="${delta.url}">
+                            <a target="_blank" href="${delta.url}">
                                 ${delta.value}
                             </a>
                         </td>
