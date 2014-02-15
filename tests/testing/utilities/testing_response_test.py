@@ -1,22 +1,25 @@
 
 import testify as T
 
+from testing.base_classes.test import test
 from testing.utilities.testing_response import TestingResponse
 from testing.utilities.auto_namedtuple import auto_namedtuple
 
-class TestTestingResponse(T.TestCase):
 
-    def test_ctor(self):
-        response = object()
-        instance = TestingResponse(response)
-        T.assert_equal(instance.response, response)
+@test
+def test_ctor():
+    response = object()
+    instance = TestingResponse(response)
+    T.assert_equal(instance.response, response)
 
-    def test_pq(self):
-        response = auto_namedtuple('Response', data='<p>Oh hai!</p>')
-        instance = TestingResponse(response)
-        T.assert_equal(instance.pq.__html__(), response.data)
+@test
+def test_pq():
+    response = auto_namedtuple('Response', data='<p>Oh hai!</p>')
+    instance = TestingResponse(response)
+    T.assert_equal(instance.pq.__html__(), response.data)
 
-    def test_json(self):
-        response = auto_namedtuple('Response', data='{"foo": "bar"}')
-        instance = TestingResponse(response)
-        T.assert_equal(instance.json, {'foo': 'bar'})
+@test
+def test_json():
+    response = auto_namedtuple('Response', data='{"foo": "bar"}')
+    instance = TestingResponse(response)
+    T.assert_equal(instance.json, {'foo': 'bar'})

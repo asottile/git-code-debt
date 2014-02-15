@@ -6,33 +6,30 @@ import testify as T
 
 from git_code_debt.repo_parser import Commit
 from git_code_debt.repo_parser import RepoParser
+from testing.base_classes.test import test
 
 @T.suite('integration')
-class RepoParserRepoCheckedOutTest(T.TestCase):
+@test
+def test_repo_checked_out():
+    repo_parser = RepoParser('.')
+    T.assert_is(repo_parser.tempdir, None)
 
-    def get_repo_parser(self):
-        return RepoParser('.')
+    with repo_parser.repo_checked_out():
+        T.assert_is_not(repo_parser.tempdir, None)
 
-    def test_repo_checked_out(self):
-        repo_parser = self.get_repo_parser()
-        T.assert_is(repo_parser.tempdir, None)
+        tempdir_path = repo_parser.tempdir
+        T.assert_equal(os.path.exists(tempdir_path), True)
+        T.assert_is(
+            os.path.exists(os.path.join(tempdir_path, '.git')),
+            True,
+        )
 
-        with repo_parser.repo_checked_out():
-            T.assert_is_not(repo_parser.tempdir, None)
+    T.assert_is(repo_parser.tempdir, None)
+    T.assert_is(os.path.exists(tempdir_path), False)
 
-            tempdir_path = repo_parser.tempdir
-            T.assert_equal(os.path.exists(tempdir_path), True)
-            T.assert_equal(
-                os.path.exists(os.path.join(tempdir_path, '.git')),
-                True,
-            )
-
-        T.assert_is(repo_parser.tempdir, None)
-        T.assert_equal(os.path.exists(tempdir_path), False)
 
 @T.suite('integration')
 class RepoParserTest(T.TestCase):
-
     @T.class_setup_teardown
     def check_out_repo(self):
         self.repo_parser = RepoParser('.')

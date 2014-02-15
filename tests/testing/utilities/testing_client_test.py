@@ -6,8 +6,8 @@ import testify as T
 from testing.utilities.testing_client import TestingClient
 from testing.utilities.testing_response import TestingResponse
 
-class TestTestingClient(T.TestCase):
 
+class TestTestingClient(T.TestCase):
     @T.setup_teardown
     def patch_out_base_open_method(self):
         with mock.patch.object(
