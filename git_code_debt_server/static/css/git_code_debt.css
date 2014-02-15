@@ -40,6 +40,7 @@ tbody.collapsed .dummy-row {
 }
 
 .group-name {
+    cursor: pointer;
     text-align: left;
     vertical-align: top;
     white-space: nowrap;
@@ -49,7 +50,6 @@ tbody.collapsed .dummy-row {
     background: linear-gradient(to bottom, #999999 0%, #666666 75%, #333333 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
     border: 1px solid #333;
     border-radius: 3px;
-    cursor: pointer;
     display: inline-block;
     font-size: 0.75em;
     line-height: 0.75em;
