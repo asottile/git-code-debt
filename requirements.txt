@@ -11,4 +11,5 @@ coverage
 ipdb
 mock
 pyquery
+pytest
 testify

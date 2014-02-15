@@ -11,6 +11,8 @@ integration:
 unit:
 	$(eval TEST_TARGETS := $(UTEST_TARGETS))
 
+utests: test
+utest: test
 tests: test
 test: unit _tests
 itests: itest
