@@ -27,7 +27,7 @@ def get_latest_sha():
         LIMIT 1
     ''').fetchone()
 
-    # If the date is too far in the past (before data) there won't be a result
+    # If there is no data result will be None
     return result[0] if result else None
 
 def get_sha_for_date(date):
@@ -71,7 +71,6 @@ def get_metrics_for_sha(sha):
 
 
 def metrics_for_dates(repo, metric_name, dates):
-
     def get_metric_for_timestamp(timestamp):
         result = flask.g.db.execute(
             '''
@@ -123,3 +122,16 @@ def get_first_data_timestamp(metric_name):
 
     if result:
         return result[0]
+    else:
+        # Otherwise return the first timestamp in the db (or 0 for no data)
+        return flask.g.db.execute(
+            '''
+            SELECT
+                IFNULL(MIN(metric_data.timestamp), 0)
+            FROM metric_data
+            INNER JOIN metric_names ON metric_names.id = metric_data.metric_id
+            WHERE
+                metric_names.name = ?
+            ''',
+            [metric_name]
+        ).fetchone()[0]

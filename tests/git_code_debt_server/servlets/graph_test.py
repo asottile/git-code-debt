@@ -1,10 +1,11 @@
 
 import flask
+import mock
 import pytest
-import urlparse
 
 from git_code_debt.metrics.imports import PythonImportCount
 from testing.assertions.response import assert_no_response_errors
+from testing.assertions.response import assert_redirect
 
 
 @pytest.mark.integration
@@ -15,14 +16,32 @@ def test_all_data(server_with_data):
     ))
 
     # Should redirect to a show url
-    assert resp.response.status_code == 302
-    parsed = urlparse.urlparse(resp.response.location)
-    assert (
-        parsed.path ==
+    assert_redirect(
+        resp,
         flask.url_for('graph.show', metric_name=PythonImportCount.__name__),
+        {
+            'start': ['1384445142'],
+            'end': [mock.ANY],
+        },
     )
-    parsed_qs = urlparse.parse_qs(parsed.query)
-    assert parsed_qs['start'] == ['1384445142']
+
+
+@pytest.mark.integration
+def test_all_data_no_data(server):
+    resp = server.client.get(flask.url_for(
+        'graph.all_data',
+        metric_name=PythonImportCount.__name__,
+    ))
+
+    # Should redirect to start of 0
+    assert_redirect(
+        resp,
+        flask.url_for('graph.show', metric_name=PythonImportCount.__name__),
+        {
+            'start': ['0'],
+            'end': [mock.ANY],
+        },
+    )
 
 
 @pytest.mark.integration
