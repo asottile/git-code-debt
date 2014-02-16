@@ -1,5 +1,6 @@
 body {
     font-family: sans-serif;
+    text-align: center;
 }
 
 canvas {
@@ -119,3 +120,21 @@ td {
     text-align: center;
 }
 
+/** Graph specific styles */
+
+#graph {
+    margin-bottom: 40px;
+    display: inline-block;
+    width: 1000px;
+    height: 600px;
+}
+
+.xAxis .tickLabel {
+    margin-top: 40px;
+    white-space: nowrap;
+    -ms-transform:rotate(-90deg); /* IE 9 */
+    -moz-transform:rotate(-90deg); /* Firefox */
+    -webkit-transform:rotate(-90deg); /* Safari and Chrome */
+    -o-transform:rotate(-90deg); /* Opera */
+    transform: rotate(-90deg);
+}

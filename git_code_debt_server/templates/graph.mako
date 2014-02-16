@@ -13,7 +13,8 @@
 
 <%block name="scripts">
     ${parent.scripts()}
-    <script src="../static/js/chart.js"></script>
+    <script src="../static/js/jquery.flot.min.js"></script>
+    <script src="../static/js/jquery.flot.time.min.js"></script>
     <script src="../static/js/graph.js"></script>
 </%block>
 
@@ -22,7 +23,7 @@
 </script>
 
 <h1>${metric_name}</h1>
-<canvas id="graph" width="800" height="600"></canvas>
+<div id="graph" style="width: 900px; height: 600px;"></div>
 <div class="date-picker">
     <form action="${flask.url_for('graph.all_data', metric_name=metric_name)}" method="GET" style="display: inline-block">
        <input type="submit" value="All Data">

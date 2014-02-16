@@ -1,31 +1,12 @@
-(function() {
-    var canvas = document.getElementById('graph');
-    var context = canvas.getContext('2d');
-
-    var data = [];
-    var labels = [];
-
-    for (var i = 0; i < metrics.length; i++) {
-        data.push(metrics[i][0]);
-        labels.push(metrics[i][1]);
-    }
-
-    var data = {
-        labels: labels,
-        datasets: [{
-            fillColor: "rgba(151, 187, 205, 0.5)",
-            strokeColor: "rgba(151, 187, 205, 1)",
-            pointColor: "rgba(151, 187, 205, 1)",
-            pointStrokeColor: "#fff",
-            data: data
-        }]
-    };
-
-    var options = {
-        bezierCurve: false
-    };
-
-    new Chart(context).Line(data, options);
+$(function() {
+    $.plot(
+        $('#graph'),
+        [window.metrics],
+        {
+            xaxis: {mode: 'time', timeformat: '%Y-%m-%d'},
+            series: {points: {show: true}, lines: {show: true, fill: true}}
+        }
+    );
 
     function setupDatePicker(datePicker, onSelect) {
         datePicker.datepicker({
@@ -46,4 +27,4 @@
 
     setupDatePicker($("#datepicker-from"));
     setupDatePicker($("#datepicker-to"));
-} ());
+});
