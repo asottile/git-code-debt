@@ -1,7 +1,7 @@
 
 TEST_TARGETS =
-ITEST_TARGETS = -i integration
-UTEST_TARGETS = -x integration
+ITEST_TARGETS = -m integration
+UTEST_TARGETS = -m "not(integration)"
 
 all: tables _tests
 
@@ -19,7 +19,7 @@ itests: itest
 itest: integration _tests
 
 _tests: py_env
-	bash -c "source py_env/bin/activate && testify tests $(TEST_TARGETS)"
+	bash -c 'source py_env/bin/activate && py.test tests $(TEST_TARGETS)'
 
 ucoverage: unit coverage
 icoverage: integration coverage
@@ -27,7 +27,7 @@ icoverage: integration coverage
 coverage: py_env
 	bash -c 'source py_env/bin/activate && \
 		coverage erase && \
-		coverage run `which testify` tests $(TEST_TARGETS) && \
+		coverage run `which py.test` tests $(TEST_TARGETS) && \
 		coverage report -m'
 
 tables: py_env clean_tables

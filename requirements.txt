@@ -12,4 +12,3 @@ ipdb
 mock
 pyquery
 pytest
-testify

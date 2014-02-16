@@ -1,11 +1,9 @@
 
-import testify as T
-
 from git_code_debt.discovery import get_metric_parsers
 from git_code_debt.file_diff_stat import FileDiffStat
 from git_code_debt.file_diff_stat import Status
 from git_code_debt.file_diff_stat import get_file_diff_stats_from_output
-from testing.base_classes.test import test
+
 
 SAMPLE_OUTPUT = """diff --git a/README.md b/README.md
 index 17b5d50..6daaaeb 100644
@@ -85,11 +83,10 @@ index herp...derp
 +\r+
 """
 
-@test
 def test_get_file_diff_stats_from_output():
     ret = get_file_diff_stats_from_output(SAMPLE_OUTPUT)
-    T.assert_equal(
-        ret,
+    assert (
+        ret ==
         [FileDiffStat(
             'README.md',
             ['bar', 'hello world'],
@@ -98,48 +95,42 @@ def test_get_file_diff_stats_from_output():
         )]
     )
 
-@test
 def test_does_not_choke_on_empty():
     ret = get_file_diff_stats_from_output(MERGE_COMMIT_OUTPUT)
-    T.assert_equal(ret, [])
+    assert ret == []
 
-@test
 def test_added_file():
     ret = get_file_diff_stats_from_output(FILE_ADDED_COMMIT)
-    T.assert_equal(
-        ret,
+    assert (
+        ret ==
         [FileDiffStat(
             'example_config.yaml',
             ['', '# Git repo url', 'foo', 'bar'],
             [],
             Status.ADDED,
-        )],
+        )]
     )
 
-@test
 def test_removed_file():
     ret = get_file_diff_stats_from_output(FILE_REMOVED_COMMIT)
-    T.assert_equal(
-        ret,
+    assert (
+        ret ==
         [FileDiffStat(
             'example_config.yaml',
             [],
             ['', '# Git repo url', 'foo', 'bar'],
             Status.DELETED,
-        )],
+        )]
     )
 
-@test
 def test_binary_files():
     ret = get_file_diff_stats_from_output(COMMIT_ENDING_WITH_BINARY_FILES)
-    T.assert_length(ret, 1)
+    assert len(ret) == 1
 
-@test
 def test_commit_with_terrible():
     ret = get_file_diff_stats_from_output(COMMIT_WITH_TERRIBLE)
-    T.assert_length(ret[0].lines_added, 1)
+    assert len(ret[0].lines_added) == 1
 
-@test
 def test_all_metric_parsers_have_possible_metrics():
      for metric_parser_cls in get_metric_parsers():
         assert metric_parser_cls().get_possible_metric_ids()

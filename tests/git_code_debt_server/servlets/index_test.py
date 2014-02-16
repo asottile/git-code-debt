@@ -1,49 +1,44 @@
 
 import flask
-import testify as T
+import pytest
 
 from git_code_debt_server.servlets.index import DeltaPresenter
 from git_code_debt_server.servlets.index import MetricPresenter
 from testing.assertions.response import assert_no_response_errors
-from testing.base_classes.git_code_debt_server_test_case import GitCodeDebtServerTestCase
-from testing.base_classes.git_code_debt_server_test_case import GitCodeDebtServerWithDataTestCase
-from testing.base_classes.test import test
 
 
-class TestIndexLoadsMixin(object):
-    def test_index_loads(self):
-        response = self.client.get(flask.url_for('index.show'))
-        assert_no_response_errors(response)
-        # Should have a nonzero number of links to things
-        T.assert_gt(len(response.pq.find('a[href]')), 0)
+def _test_it_loads(server):
+    response = server.client.get(flask.url_for('index.show'))
+    assert_no_response_errors(response)
+    # Should have a nonzero number of links to things
+    assert len(response.pq.find('a[href]')) > 0
+
+@pytest.mark.integration
+def test_it_loads_no_data(server):
+    _test_it_loads(server)
+
+@pytest.mark.integration
+def test_it_loads_with_data(server_with_data):
+    _test_it_loads(server_with_data)
 
 
-class TestIndexNoData(GitCodeDebtServerTestCase, TestIndexLoadsMixin): pass
-class TestIndex(GitCodeDebtServerWithDataTestCase, TestIndexLoadsMixin): pass
-
-
-@test
 def test_delta_classname_negative():
     delta = DeltaPresenter('url', -9001)
-    T.assert_equal(delta.classname, 'metric-down')
+    assert delta.classname == 'metric-down'
 
-@test
 def test_delta_classname_zero():
     delta = DeltaPresenter('url', 0)
-    T.assert_equal(delta.classname, 'metric-none')
+    assert delta.classname == 'metric-none'
 
-@test
 def test_delta_classname_positive():
     delta = DeltaPresenter('url', 9001)
-    T.assert_equal(delta.classname, 'metric-up')
+    assert delta.classname == 'metric-up'
 
 
-@test
 def test_metric_classname_overriden():
     metric = MetricPresenter('metric', True, 0, tuple())
-    T.assert_equal(metric.classname, 'color-override')
+    assert metric.classname == 'color-override'
 
-@test
 def test_metric_classname_normal():
     metric = MetricPresenter('metric', False, 0, tuple())
-    T.assert_equal(metric.classname, '')
+    assert metric.classname == ''
