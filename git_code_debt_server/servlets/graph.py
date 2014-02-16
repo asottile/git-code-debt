@@ -16,7 +16,11 @@ def show(metric_name):
     start_timestamp = int(flask.request.args.get('start'))
     end_timestamp = int(flask.request.args.get('end'))
 
-    data_points = data_points_for_time_range(start_timestamp, end_timestamp, data_points=50)
+    data_points = data_points_for_time_range(
+        start_timestamp,
+        end_timestamp,
+        data_points=250,
+    )
     metrics_for_dates = metrics.metrics_for_dates(repo, metric_name, data_points)
 
     metrics_for_js = [

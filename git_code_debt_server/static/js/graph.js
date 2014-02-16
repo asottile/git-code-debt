@@ -4,7 +4,7 @@ $(function() {
         [window.metrics],
         {
             xaxis: {mode: 'time', timeformat: '%Y-%m-%d'},
-            series: {points: {show: true}, lines: {show: true, fill: true}}
+            series: {lines: {show: true, fill: true}}
         }
     );
 
