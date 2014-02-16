@@ -1,44 +1,40 @@
 
 import collections
-import testify as T
+import pytest
 
 from git_code_debt.generate import increment_metric_values
 from git_code_debt.generate import main
 from git_code_debt.metric import Metric
-from testing.base_classes.sandbox_test_case import SandboxTestCase
-from testing.base_classes.test import test
 
 
-@test
 def test_increment_metrics_first_time():
     metrics = collections.defaultdict(int)
     increment_metric_values(metrics, [Metric('foo', 1), Metric('bar', 2)])
-    T.assert_equal(metrics, {'foo': 1, 'bar': 2})
+    assert metrics == {'foo': 1, 'bar': 2}
 
-@test
+
 def test_increment_metrics_already_there():
     metrics = collections.defaultdict(int, {'foo': 2, 'bar': 3})
     increment_metric_values(metrics, [Metric('foo', 1), Metric('bar', 2)])
-    T.assert_equal(metrics, {'foo': 3, 'bar': 5})
+    assert metrics == {'foo': 3, 'bar': 5}
 
 
-@T.suite('integration')
-class TestGenerateIntegration(SandboxTestCase):
-    def test_generate_integration(self):
-        main(['.', self.db_path])
+@pytest.mark.integration
+def test_generate_integration(sandbox):
+    main(['.', sandbox.db_path])
 
-    def test_generate_integration_with_debug(self):
-        main(['.', self.db_path, '--debug'])
+@pytest.mark.integration
+def test_generate_integration_with_debug(sandbox):
+    main(['.', sandbox.db_path, '--debug'])
 
-    def get_metric_data_count(self):
-        with self.db() as db:
-            return db.execute(
-                'SELECT COUNT(*) FROM metric_data'
-            ).fetchone()[0]
+def get_metric_data_count(sandbox):
+    with sandbox.db() as db:
+        return db.execute('SELECT COUNT(*) FROM metric_data').fetchone()[0]
 
-    def test_generate_integration_previous_data(self):
-        main(['.', self.db_path])
-        before_data_count = self.get_metric_data_count()
-        main(['.', self.db_path])
-        after_data_count = self.get_metric_data_count()
-        T.assert_equal(before_data_count, after_data_count)
+@pytest.mark.integration
+def test_generate_integration_previous_data(sandbox):
+    main(['.', sandbox.db_path])
+    before_data_count = get_metric_data_count(sandbox)
+    main(['.', sandbox.db_path])
+    after_data_count = get_metric_data_count(sandbox)
+    assert before_data_count == after_data_count

@@ -3,11 +3,10 @@ import contextlib
 import flask.testing
 import mock
 
-from testing.utilities.testing_response import TestingResponse
+from testing.utilities.response import Response
 
-class TestingClient(flask.testing.FlaskClient):
-    """A TestingClient wraps the client given by flask to add other utilities.
-    """
+class Client(flask.testing.FlaskClient):
+    """A Client wraps the client given by flask to add other utilities."""
 
     @contextlib.contextmanager
     def patch_ip(self, ip_address):
@@ -16,7 +15,7 @@ class TestingClient(flask.testing.FlaskClient):
             yield
 
     def __init__(self, *args, **kwargs):
-        super(TestingClient, self).__init__(*args, **kwargs)
+        super(Client, self).__init__(*args, **kwargs)
 
         self.__environ_base = {}
 
@@ -30,6 +29,4 @@ class TestingClient(flask.testing.FlaskClient):
 
     def open(self, *args, **kwargs):
         self._update_environment(kwargs)
-        return TestingResponse(
-            super(TestingClient, self).open(*args, **kwargs),
-        )
+        return Response(super(Client, self).open(*args, **kwargs))

@@ -4,8 +4,9 @@ import simplejson
 
 from git_code_debt_util.decorators import cached_property
 
-class TestingResponse(object):
-    """A TestingResponse wraps a response from a testing Client."""
+
+class Response(object):
+    """A Response wraps a response from a testing Client."""
 
     def __init__(self, response):
         self.response = response

@@ -65,7 +65,7 @@ TESTS = [
         True, 'testipdb',
     ),
     Test(
-        "%s | grep 'tests' | grep -v '_test.py$' | grep -v '__init__.py'" % PY_FILES,
+        "%s | grep 'tests' | grep -v '_test.py$' | grep -v '__init__.py' | grep -v '/conftest.py'" % PY_FILES,
         'Py    - Test files should end in _test.py',
         True, 'testtestnames',
     ),

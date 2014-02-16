@@ -1,20 +1,16 @@
 
-import testify as T
+import pytest
 
 from git_code_debt_util.iter import chunk_iter
-from testing.base_classes.test import test
 
 
-INPUTS_TO_EXPECTED_OUTPUTS = (
+@pytest.mark.parametrize(('input', 'n', 'expected_output'), (
     ([], 1, []),
     ([1, 2], 1, [(1,), (2,)]),
     ([1, 2], 2, [(1, 2)]),
     ([1, 2, 3, 4], 2, [(1, 2), (3, 4)]),
     ([1, 2, 3, 4, 5, 6], 3, [(1, 2, 3), (4, 5, 6)]),
-)
-
-@test
-def test_chunk_iter():
-    for input, n, expected_output in INPUTS_TO_EXPECTED_OUTPUTS:
-        output = list(chunk_iter(input, n))
-        T.assert_equal(output, expected_output)
+))
+def test_chunk_iter(input, n, expected_output):
+    output = list(chunk_iter(input, n))
+    assert output == expected_output
