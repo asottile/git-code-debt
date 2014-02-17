@@ -3,7 +3,7 @@ TEST_TARGETS =
 ITEST_TARGETS = -m integration
 UTEST_TARGETS = -m "not(integration)"
 
-all: tables _tests
+all: _tests
 
 integration:
 	$(eval TEST_TARGETS := $(ITEST_TARGETS))

@@ -9,12 +9,13 @@ from testing.utilities.client import Client
 
 
 class GitCodeDebtServer(object):
-    def __init__(self, client):
+    def __init__(self, client, sandbox):
         self.client = client
+        self.sandbox = sandbox
 
 
 @pytest.yield_fixture
-def server():
+def server(sandbox):
     app = git_code_debt_server.app.app
     with contextlib.nested(
         mock.patch.object(app, 'test_client_class', Client),
@@ -26,21 +27,16 @@ def server():
         ),
     ):
         with contextlib.nested(
-            app.test_request_context(), app.test_client()
-        ) as (_, client):
-            yield GitCodeDebtServer(client)
-
-
-class GitCodeDebtServerWithData(GitCodeDebtServer):
-    def __init__(self, base_server, sandbox):
-        super(GitCodeDebtServerWithData, self).__init__(base_server.client)
-        self.sandbox = sandbox
+            app.test_request_context(),
+            app.test_client(),
+            mock.patch.object(
+                git_code_debt_server.app, 'database_path', sandbox.db_path,
+            ),
+        ) as (_, client, _):
+            yield GitCodeDebtServer(client, sandbox)
 
 
 @pytest.yield_fixture
-def server_with_data(server, sandbox):
-    main(['.', sandbox.db_path])
-    with mock.patch.object(
-        git_code_debt_server.app, 'database_path', sandbox.db_path,
-    ):
-        yield GitCodeDebtServerWithData(server, sandbox)
+def server_with_data(server):
+    main(['.', server.sandbox.db_path])
+    yield server
