@@ -54,6 +54,7 @@ def test_get_commit_shas_after_date(checked_out_repo):
             check_output_mock.call_args[0][0]
         )
 
+@pytest.mark.integration
 def test_get_commits_since_commit_includes_that_commit(checked_out_repo):
     previous_sha = '29d0d321f43950fd2aa1d1df9fc81dee0e9046b3'
     all_commits = checked_out_repo.get_commit_shas(previous_sha)
@@ -61,6 +62,7 @@ def test_get_commits_since_commit_includes_that_commit(checked_out_repo):
     assert previous_sha in shas
     assert len(shas) == len(set(shas))
 
+@pytest.mark.integration
 def test_get_commit(checked_out_repo):
     # Smoke test
     sha = '29d0d321f43950fd2aa1d1df9fc81dee0e9046b3'
