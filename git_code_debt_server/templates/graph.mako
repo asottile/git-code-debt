@@ -14,6 +14,7 @@
 <%block name="scripts">
     ${parent.scripts()}
     <script src="../static/js/jquery.flot.min.js"></script>
+    <script src="../static/js/jquery.flot.selection.min.js"></script>
     <script src="../static/js/jquery.flot.time.min.js"></script>
     <script src="../static/js/graph.js"></script>
 </%block>
