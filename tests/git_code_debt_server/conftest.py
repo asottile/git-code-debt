@@ -37,6 +37,6 @@ def server(sandbox):
 
 
 @pytest.yield_fixture
-def server_with_data(server):
-    main(['.', server.sandbox.db_path])
+def server_with_data(server, cloneable):
+    main([cloneable, server.sandbox.db_path])
     yield server

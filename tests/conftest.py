@@ -8,6 +8,7 @@ import sqlite3
 
 from git_code_debt.create_tables import create_schema
 from git_code_debt.create_tables import populate_metric_ids
+from git_code_debt.repo_parser import RepoParser
 
 
 class Sandbox(object):
@@ -32,3 +33,10 @@ def sandbox(tmpdir):
         populate_metric_ids(db, tuple(), False)
 
     return ret
+
+
+@pytest.yield_fixture(scope='session')
+def cloneable():
+    repo_parser = RepoParser('git@github.com:asottile/git-code-debt')
+    with repo_parser.repo_checked_out():
+        yield repo_parser.tempdir

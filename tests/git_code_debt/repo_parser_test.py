@@ -9,8 +9,8 @@ from git_code_debt.repo_parser import RepoParser
 
 
 @pytest.mark.integration
-def test_repo_checked_out():
-    repo_parser = RepoParser('.')
+def test_repo_checked_out(cloneable):
+    repo_parser = RepoParser(cloneable)
     assert repo_parser.tempdir is None
 
     with repo_parser.repo_checked_out():
@@ -25,8 +25,8 @@ def test_repo_checked_out():
 
 
 @pytest.yield_fixture(scope='module')
-def checked_out_repo():
-    repo_parser = RepoParser('.')
+def checked_out_repo(cloneable):
+    repo_parser = RepoParser(cloneable)
     with repo_parser.repo_checked_out():
         yield repo_parser
 
