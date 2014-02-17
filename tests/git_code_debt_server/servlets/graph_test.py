@@ -53,3 +53,14 @@ def test_show(server_with_data):
         end='1385445142',
     ))
     assert_no_response_errors(resp)
+
+
+@pytest.mark.integration
+def test_show_succeeds_for_empty_range(server):
+    resp = server.client.get(flask.url_for(
+        'graph.show',
+        metric_name=PythonImportCount.__name__,
+        start='0',
+        end='0',
+    ))
+    assert_no_response_errors(resp)
