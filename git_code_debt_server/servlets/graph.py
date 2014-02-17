@@ -23,10 +23,10 @@ def show(metric_name):
     )
     metrics_for_dates = metrics.metrics_for_dates(repo, metric_name, data_points)
 
-    metrics_for_js = [
+    metrics_for_js = sorted(set(
         (m.date * 1000, m.value)
         for m in metrics_for_dates
-    ]
+    ))
 
     return render_template(
         'graph.mako',

@@ -7,12 +7,12 @@ from git_code_debt_server.servlets.index import DATE_NAMES_TO_TIMEDELTAS
 <%block name="title">Index</%block>
 
 <%block name="css">
-    <link rel="stylesheet" type="text/css" href="static/css/git_code_debt.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/git_code_debt.css">
 </%block>
 
 <%block name="scripts">
     ${parent.scripts()}
-    <script src="../static/js/index.js"></script>
+    <script src="/static/js/index.js"></script>
 </%block>
 
 <h1>Technical Debt</h1>

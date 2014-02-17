@@ -8,15 +8,15 @@
 
 <%block name="css">
     ${parent.css()}
-    <link rel="stylesheet" type="text/css" href="../static/css/git_code_debt.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/git_code_debt.css">
 </%block>
 
 <%block name="scripts">
     ${parent.scripts()}
-    <script src="../static/js/jquery.flot.min.js"></script>
-    <script src="../static/js/jquery.flot.selection.min.js"></script>
-    <script src="../static/js/jquery.flot.time.min.js"></script>
-    <script src="../static/js/graph.js"></script>
+    <script src="/static/js/jquery.flot.min.js"></script>
+    <script src="/static/js/jquery.flot.selection.min.js"></script>
+    <script src="/static/js/jquery.flot.time.min.js"></script>
+    <script src="/static/js/graph.js"></script>
 </%block>
 
 <script>
