@@ -37,6 +37,6 @@ def sandbox(tmpdir):
 
 @pytest.yield_fixture(scope='session')
 def cloneable():
-    repo_parser = RepoParser('git@github.com:asottile/git-code-debt')
+    repo_parser = RepoParser('git://github.com/asottile/git-code-debt')
     with repo_parser.repo_checked_out():
         yield repo_parser.tempdir
