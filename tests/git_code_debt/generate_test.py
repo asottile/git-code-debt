@@ -20,21 +20,21 @@ def test_increment_metrics_already_there():
 
 
 @pytest.mark.integration
-def test_generate_integration(sandbox):
-    main(['.', sandbox.db_path])
+def test_generate_integration(sandbox, cloneable):
+    main([cloneable, sandbox.db_path])
 
 @pytest.mark.integration
-def test_generate_integration_with_debug(sandbox):
-    main(['.', sandbox.db_path, '--debug'])
+def test_generate_integration_with_debug(sandbox, cloneable):
+    main([cloneable, sandbox.db_path, '--debug'])
 
 def get_metric_data_count(sandbox):
     with sandbox.db() as db:
         return db.execute('SELECT COUNT(*) FROM metric_data').fetchone()[0]
 
 @pytest.mark.integration
-def test_generate_integration_previous_data(sandbox):
-    main(['.', sandbox.db_path])
+def test_generate_integration_previous_data(sandbox, cloneable):
+    main([cloneable, sandbox.db_path])
     before_data_count = get_metric_data_count(sandbox)
-    main(['.', sandbox.db_path])
+    main([cloneable, sandbox.db_path])
     after_data_count = get_metric_data_count(sandbox)
     assert before_data_count == after_data_count

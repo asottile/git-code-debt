@@ -9,8 +9,8 @@ from git_code_debt.repo_parser import RepoParser
 
 
 @pytest.mark.integration
-def test_repo_checked_out():
-    repo_parser = RepoParser('.')
+def test_repo_checked_out(cloneable):
+    repo_parser = RepoParser(cloneable)
     assert repo_parser.tempdir is None
 
     with repo_parser.repo_checked_out():
@@ -25,8 +25,8 @@ def test_repo_checked_out():
 
 
 @pytest.yield_fixture(scope='module')
-def checked_out_repo():
-    repo_parser = RepoParser('.')
+def checked_out_repo(cloneable):
+    repo_parser = RepoParser(cloneable)
     with repo_parser.repo_checked_out():
         yield repo_parser
 
@@ -54,6 +54,7 @@ def test_get_commit_shas_after_date(checked_out_repo):
             check_output_mock.call_args[0][0]
         )
 
+@pytest.mark.integration
 def test_get_commits_since_commit_includes_that_commit(checked_out_repo):
     previous_sha = '29d0d321f43950fd2aa1d1df9fc81dee0e9046b3'
     all_commits = checked_out_repo.get_commit_shas(previous_sha)
@@ -61,6 +62,7 @@ def test_get_commits_since_commit_includes_that_commit(checked_out_repo):
     assert previous_sha in shas
     assert len(shas) == len(set(shas))
 
+@pytest.mark.integration
 def test_get_commit(checked_out_repo):
     # Smoke test
     sha = '29d0d321f43950fd2aa1d1df9fc81dee0e9046b3'
