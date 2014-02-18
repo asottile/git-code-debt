@@ -10,7 +10,7 @@ class Status(object):
     ALREADY_EXISTING = object()
 
 
-Symlink = collections.namedtuple('Symlink', ['before', 'after'])
+Symlink = collections.namedtuple('Symlink', ['added', 'removed'])
 
 
 class FileDiffStat(collections.namedtuple(
@@ -20,7 +20,8 @@ class FileDiffStat(collections.namedtuple(
     __slots__ = ()
 
     def __new__(cls, *args, **kwargs):
-        # Default symlink to None in the case it is not provided
+        # Default symlink to None in the case it is not provided (mostly for
+        # backwards compatibility)
         kwargs.setdefault('symlink', None)
         return super(FileDiffStat, cls).__new__(cls, *args, **kwargs)
 
@@ -31,6 +32,9 @@ class FileDiffStat(collections.namedtuple(
     @property
     def filename(self):
         return os.path.split(self.path)[1]
+
+
+SYMLINK_MODE = '120000'
 
 
 def _to_file_diff_stat(file_diff):
@@ -49,7 +53,7 @@ def _to_file_diff_stat(file_diff):
         # It has three forms:
         # 1. 'new file mode 100644'
         # 2. 'deleted file mode 100644'
-        # 3. 'index dc7827c..7b8b995 10644'
+        # 3. 'index dc7827c..7b8b995 100644'
         if line.startswith('new file mode '):
             assert status is None
             assert mode is None
@@ -79,11 +83,23 @@ def _to_file_diff_stat(file_diff):
 
     assert mode is not None
     assert status is not None
+
+    # Process symlinks
+    symlink = None
+    if mode == SYMLINK_MODE:
+        symlink = Symlink(
+            added=lines_added[0] if lines_added else None,
+            removed=lines_removed[0] if lines_removed else None,
+        )
+        lines_added = []
+        lines_removed = []
+
     return FileDiffStat(
         diff_line_filename,
         lines_added,
         lines_removed,
         status,
+        symlink=symlink,
     )
 
 

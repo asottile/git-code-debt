@@ -1,6 +1,4 @@
 
-import pytest
-
 from git_code_debt.discovery import get_metric_parsers
 from git_code_debt.file_diff_stat import FileDiffStat
 from git_code_debt.file_diff_stat import get_file_diff_stats_from_output
@@ -200,7 +198,6 @@ def test_all_metric_parsers_have_possible_metrics():
         assert metric_parser_cls().get_possible_metric_ids()
 
 
-@pytest.mark.xfail
 def test_adding_symlink():
     ret = get_file_diff_stats_from_output(COMMIT_ADDING_SYMLINK)
     assert ret == [
@@ -209,29 +206,27 @@ def test_adding_symlink():
             [], [],
             Status.ADDED,
             symlink=Symlink(
-                before=None,
-                after='apache/html1/2mJe7Zhz/pa2/',
+                added='apache/html1/2mJe7Zhz/pa2/',
+                removed=None,
             ),
         ),
     ]
 
-@pytest.mark.xfail
 def test_removing_symlink():
     ret = get_file_diff_stats_from_output(COMMIT_REMOVING_SYMLINK)
     assert ret == [
         FileDiffStat(
             'pa2',
             [], [],
-            Status.REMOVED,
+            Status.DELETED,
             symlink=Symlink(
-                before='apache/html1/2mJe7Zhz/pa2/',
-                after=None,
+                added=None,
+                removed='apache/html1/2mJe7Zhz/pa2/',
             ),
         ),
     ]
 
 
-@pytest.mark.xfail
 def test_moving_symlink():
     ret = get_file_diff_stats_from_output(COMMIT_MOVING_SYMLINK)
     assert ret == [
@@ -240,8 +235,8 @@ def test_moving_symlink():
             [], [],
             Status.ALREADY_EXISTING,
             symlink=Symlink(
-                before='apache/html1/2mJe7Zhz/pa2/',
-                after='apache/',
+                added='apache/',
+                removed='apache/html1/2mJe7Zhz/pa2/',
             ),
         ),
     ]
