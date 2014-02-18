@@ -16,13 +16,14 @@ Symlink = collections.namedtuple('Symlink', ['added', 'removed'])
 
 class FileDiffStat(collections.namedtuple(
     'FileStat',
-    ['path', 'lines_added', 'lines_removed', 'status', 'symlink'],
+    ['path', 'lines_added', 'lines_removed', 'status', 'submodule', 'symlink'],
 )):
     __slots__ = ()
 
     def __new__(cls, *args, **kwargs):
-        # Default symlink to None in the case it is not provided (mostly for
-        # backwards compatibility)
+        # Default submodule/symlink to None in the case it is not provided
+        # (mostly for backwards compatibility)
+        kwargs.setdefault('submodule', None)
         kwargs.setdefault('symlink', None)
         return super(FileDiffStat, cls).__new__(cls, *args, **kwargs)
 
@@ -35,6 +36,7 @@ class FileDiffStat(collections.namedtuple(
         return os.path.split(self.path)[1]
 
 
+SUBMODULE_MODE = '160000'
 SYMLINK_MODE = '120000'
 
 
@@ -92,9 +94,17 @@ def _to_file_diff_stat(file_diff):
     assert mode is not None
     assert status is not None
 
-    # Process symlinks
+    # Process symlinks and submodules
+    submodule = None
     symlink = None
-    if mode == SYMLINK_MODE:
+    if mode == SUBMODULE_MODE:
+        submodule = Submodule(
+            added=lines_added[0].split()[-1] if lines_added else None,
+            removed=lines_removed[0].split()[-1] if lines_removed else None,
+        )
+        lines_added = []
+        lines_removed = []
+    elif mode == SYMLINK_MODE:
         symlink = Symlink(
             added=lines_added[0] if lines_added else None,
             removed=lines_removed[0] if lines_removed else None,
@@ -107,6 +117,7 @@ def _to_file_diff_stat(file_diff):
         lines_added,
         lines_removed,
         status,
+        submodule=submodule,
         symlink=symlink,
     )
 

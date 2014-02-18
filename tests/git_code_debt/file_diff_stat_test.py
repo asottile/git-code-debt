@@ -306,9 +306,6 @@ def test_mode_change_diff():
     ]
 
 
-import pytest
-
-@pytest.mark.xfail
 def test_add_submodule():
     ret = get_file_diff_stats_from_output(ADD_SUBMODULE_COMMIT)
     assert ret == [
@@ -332,7 +329,6 @@ def test_add_submodule():
     ]
 
 
-@pytest.mark.xfail
 def test_remove_submodule():
     ret = get_file_diff_stats_from_output(REMOVE_SUBMODULE_COMMIT)
     assert ret == [
@@ -356,7 +352,6 @@ def test_remove_submodule():
     ]
 
 
-@pytest.mark.xfail
 def test_bump_submodule():
     ret = get_file_diff_stats_from_output(BUMP_SUBMODULE_COMMIT)
     assert ret == [
