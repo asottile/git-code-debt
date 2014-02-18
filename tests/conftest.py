@@ -1,6 +1,7 @@
 
 from __future__ import absolute_import
 
+import collections
 import contextlib
 import os.path
 import pytest
@@ -11,9 +12,8 @@ from git_code_debt.create_tables import populate_metric_ids
 from git_code_debt.repo_parser import RepoParser
 
 
-class Sandbox(object):
-    def __init__(self, directory):
-        self.directory = directory
+class Sandbox(collections.namedtuple('Sandbox', ['directory'])):
+    __slots__ = ()
 
     @property
     def db_path(self):

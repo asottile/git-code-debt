@@ -47,13 +47,7 @@ index 0000000..dc7827c
 +bar
 """
 
-FILE_REMOVED_COMMIT = """commit f229b4c3e7aded483dab246af49396c538c0ce04
-Author: Anthony Sottile <asottile@umich.edu>
-Date:   Thu Nov 14 13:35:00 2013 -0800
-
-    Revert adding config
-
-diff --git a/example_config.yaml b/example_config.yaml
+FILE_REMOVED_COMMIT = """diff --git a/example_config.yaml b/example_config.yaml
 deleted file mode 100644
 index dc7827c..0000000
 --- a/example_config.yaml
@@ -64,6 +58,8 @@ index dc7827c..0000000
 -foo
 -bar
 """
+
+SAMPLE_OUTPUT_MULTIPLE_FILES = FILE_ADDED_COMMIT + FILE_REMOVED_COMMIT
 
 COMMIT_ENDING_WITH_BINARY_FILES = """diff --git a/htdocs/css/base.css b/htdocs/css/base.css
 index f0f7eac..ca3d0a2 100644
@@ -80,7 +76,7 @@ Binary files /dev/null and b/htdocs/i/p.gif differ
 COMMIT_WITH_TERRIBLE = """commit blahblahblah
 
 diff --git a/herpderp b/herpderp
-index herp...derp
+index herp...derp 100644
 --- a/herpderp
 +++ b/herpderp
 +\r+
@@ -117,18 +113,25 @@ index 989c69d..7b8b995 120000
 \ No newline at end of file
 """
 
+MULTIPLE_EMPTY_FILES = """diff --git a/foo/__init__.py b/foo/__init__.py
+new file mode 100644
+index 0000000..e69de29
+diff --git a/bar/__init__.py b/bar/__init__.py
+new file mode 100644
+index 0000000..e69de29
+"""
+
 
 def test_get_file_diff_stats_from_output():
     ret = get_file_diff_stats_from_output(SAMPLE_OUTPUT)
-    assert (
-        ret ==
-        [FileDiffStat(
+    assert ret == [
+        FileDiffStat(
             'README.md',
             ['bar', 'hello world'],
             ['foo'],
             Status.ALREADY_EXISTING,
-        )]
-    )
+        ),
+    ]
 
 def test_does_not_choke_on_empty():
     ret = get_file_diff_stats_from_output(MERGE_COMMIT_OUTPUT)
@@ -136,31 +139,57 @@ def test_does_not_choke_on_empty():
 
 def test_added_file():
     ret = get_file_diff_stats_from_output(FILE_ADDED_COMMIT)
-    assert (
-        ret ==
-        [FileDiffStat(
+    assert ret == [
+        FileDiffStat(
             'example_config.yaml',
             ['', '# Git repo url', 'foo', 'bar'],
             [],
             Status.ADDED,
-        )]
-    )
+        ),
+    ]
 
 def test_removed_file():
     ret = get_file_diff_stats_from_output(FILE_REMOVED_COMMIT)
-    assert (
-        ret ==
-        [FileDiffStat(
+    assert ret == [
+        FileDiffStat(
             'example_config.yaml',
             [],
             ['', '# Git repo url', 'foo', 'bar'],
             Status.DELETED,
-        )]
-    )
+        ),
+    ]
+
+def test_removed_and_added():
+    ret = get_file_diff_stats_from_output(SAMPLE_OUTPUT_MULTIPLE_FILES)
+    assert ret == [
+        FileDiffStat(
+            'example_config.yaml',
+            ['', '# Git repo url', 'foo', 'bar'],
+            [],
+            Status.ADDED,
+        ),
+        FileDiffStat(
+            'example_config.yaml',
+            [],
+            ['', '# Git repo url', 'foo', 'bar'],
+            Status.DELETED,
+        ),
+    ]
 
 def test_binary_files():
     ret = get_file_diff_stats_from_output(COMMIT_ENDING_WITH_BINARY_FILES)
-    assert len(ret) == 1
+    assert ret == [
+        FileDiffStat(
+            'htdocs/css/base.css',
+            ['foo'], [],
+            Status.ALREADY_EXISTING,
+        ),
+        FileDiffStat(
+            'htdocs/i/p.gif',
+            [], [],
+            Status.ADDED,
+        ),
+    ]
 
 def test_commit_with_terrible():
     ret = get_file_diff_stats_from_output(COMMIT_WITH_TERRIBLE)
@@ -215,4 +244,12 @@ def test_moving_symlink():
                 after='apache/',
             ),
         ),
+    ]
+
+
+def test_multiple_empty_files():
+    ret = get_file_diff_stats_from_output(MULTIPLE_EMPTY_FILES)
+    assert ret == [
+        FileDiffStat('foo/__init__.py', [], [], Status.ADDED),
+        FileDiffStat('bar/__init__.py', [], [], Status.ADDED),
     ]
