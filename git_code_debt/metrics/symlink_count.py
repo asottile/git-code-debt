@@ -1,0 +1,21 @@
+
+from git_code_debt.file_diff_stat import Status
+from git_code_debt.metrics.base import DiffParserBase
+from git_code_debt.metric import Metric
+
+
+class SymlinkCount(DiffParserBase):
+    def get_metrics_from_stat(self, file_diff_stats):
+        symlink_delta = 0
+
+        for file_diff_stat in file_diff_stats:
+            if file_diff_stat.symlink is not None:
+                if file_diff_stat.status is Status.ADDED:
+                    symlink_delta += 1
+                elif file_diff_stat.status is Status.DELETED:
+                    symlink_delta -= 1
+
+        yield Metric(type(self).__name__, symlink_delta)
+
+    def get_possible_metric_ids(self):
+        return [type(self).__name__]

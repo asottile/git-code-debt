@@ -46,7 +46,7 @@ class SimpleLineCounterBase(DiffParserBase):
         """Override me or make a class-level metric_name attribute to set the
         metric name.
         """
-        return self.__class__.__name__
+        return type(self).__name__
 
     def should_include_file(self, file_diff_stat):
         """Implement me to return whether a filename should be included.
