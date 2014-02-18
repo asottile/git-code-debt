@@ -122,7 +122,10 @@ def _to_file_diff_stat(file_diff):
     )
 
 
+GIT_DIFF_RE = re.compile('^diff --git', flags=re.MULTILINE)
+
+
 def get_file_diff_stats_from_output(output):
-    files = re.split('^diff --git ', output, flags=re.MULTILINE)
+    files = GIT_DIFF_RE.split(output)
     assert not files[0].strip() or files[0].startswith('commit ')
     return map(_to_file_diff_stat, files[1:])
