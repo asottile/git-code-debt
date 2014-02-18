@@ -36,9 +36,9 @@ def test_delta_classname_positive():
 
 
 def test_metric_classname_overriden():
-    metric = MetricPresenter('metric', True, 0, tuple())
+    metric = MetricPresenter('metric', True, 0, tuple(), '')
     assert metric.classname == 'color-override'
 
 def test_metric_classname_normal():
-    metric = MetricPresenter('metric', False, 0, tuple())
+    metric = MetricPresenter('metric', False, 0, tuple(), '')
     assert metric.classname == ''

@@ -48,7 +48,13 @@ class DeltaPresenter(collections.namedtuple(
 
 class MetricPresenter(collections.namedtuple(
     'MetricPresenter',
-    ['name', 'color_override', 'current_value', 'historic_deltas'],
+    [
+        'name',
+        'color_override',
+        'current_value',
+        'historic_deltas',
+        'all_data_url',
+    ],
 )):
     __slots__ = ()
 
@@ -86,7 +92,8 @@ class MetricPresenter(collections.namedtuple(
                     ),
                 )
                 for time_name, timestamp in offsets
-            )
+            ),
+            flask.url_for('graph.all_data', metric_name=metric_name),
         )
 
 

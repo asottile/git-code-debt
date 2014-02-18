@@ -3,6 +3,10 @@ body {
     text-align: center;
 }
 
+a {
+    color: #000;
+}
+
 canvas {
     display: block;
     margin: auto;
