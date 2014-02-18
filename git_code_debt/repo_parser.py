@@ -81,13 +81,6 @@ class RepoParser(object):
         )
         return output
 
-    def get_original_diff_stat(self, sha):
-        assert self.tempdir
-        return subprocess.check_output(
-            ['git', 'show', sha, '--oneline', '--stat'],
-            cwd=self.tempdir
-        )
-
     def get_commit_diff(self, previous_sha, sha):
         assert self.tempdir
         output = subprocess.check_output(
@@ -95,10 +88,3 @@ class RepoParser(object):
             cwd=self.tempdir,
         )
         return output
-
-    def get_commit_diff_stat(self, previous_sha, sha):
-        assert self.tempdir
-        return subprocess.check_output(
-            ['git', 'diff', previous_sha, sha, '--stat'],
-            cwd=self.tempdir,
-        )
