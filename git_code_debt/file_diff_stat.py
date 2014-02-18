@@ -10,6 +10,7 @@ class Status(object):
     ALREADY_EXISTING = object()
 
 
+Submodule = collections.namedtuple('Submodule', ['added', 'removed'])
 Symlink = collections.namedtuple('Symlink', ['added', 'removed'])
 
 
