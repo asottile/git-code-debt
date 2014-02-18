@@ -10,21 +10,27 @@ class Status(object):
     ALREADY_EXISTING = object()
 
 
-Submodule = collections.namedtuple('Submodule', ['added', 'removed'])
-Symlink = collections.namedtuple('Symlink', ['added', 'removed'])
+class SpecialFileType(object):
+    SUBMODULE = object()
+    SYMLINK = object()
+
+
+SpecialFile = collections.namedtuple(
+    'SpecialFile',
+    ['file_type', 'added', 'removed'],
+)
 
 
 class FileDiffStat(collections.namedtuple(
     'FileStat',
-    ['path', 'lines_added', 'lines_removed', 'status', 'submodule', 'symlink'],
+    ['path', 'lines_added', 'lines_removed', 'status', 'special_file'],
 )):
     __slots__ = ()
 
     def __new__(cls, *args, **kwargs):
-        # Default submodule/symlink to None in the case it is not provided
+        # Default special_file to None in the case it is not provided
         # (mostly for backwards compatibility)
-        kwargs.setdefault('submodule', None)
-        kwargs.setdefault('symlink', None)
+        kwargs.setdefault('special_file', None)
         return super(FileDiffStat, cls).__new__(cls, *args, **kwargs)
 
     @property
@@ -95,17 +101,18 @@ def _to_file_diff_stat(file_diff):
     assert status is not None
 
     # Process symlinks and submodules
-    submodule = None
-    symlink = None
+    special_file = None
     if mode == SUBMODULE_MODE:
-        submodule = Submodule(
+        special_file = SpecialFile(
+            file_type=SpecialFileType.SUBMODULE,
             added=lines_added[0].split()[-1] if lines_added else None,
             removed=lines_removed[0].split()[-1] if lines_removed else None,
         )
         lines_added = []
         lines_removed = []
     elif mode == SYMLINK_MODE:
-        symlink = Symlink(
+        special_file = SpecialFile(
+            file_type=SpecialFileType.SYMLINK,
             added=lines_added[0] if lines_added else None,
             removed=lines_removed[0] if lines_removed else None,
         )
@@ -117,8 +124,7 @@ def _to_file_diff_stat(file_diff):
         lines_added,
         lines_removed,
         status,
-        submodule=submodule,
-        symlink=symlink,
+        special_file=special_file,
     )
 
 

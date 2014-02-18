@@ -1,4 +1,5 @@
 
+from git_code_debt.file_diff_stat import SpecialFileType
 from git_code_debt.file_diff_stat import Status
 from git_code_debt.metrics.base import DiffParserBase
 from git_code_debt.metric import Metric
@@ -9,7 +10,10 @@ class SubmoduleCount(DiffParserBase):
         submodule_delta = 0
 
         for file_diff_stat in file_diff_stats:
-            if file_diff_stat.submodule is not None:
+            if (
+                file_diff_stat.special_file is not None and
+                file_diff_stat.special_file.file_type is SpecialFileType.SUBMODULE
+            ):
                 if file_diff_stat.status is Status.ADDED:
                     submodule_delta += 1
                 elif file_diff_stat.status is Status.DELETED:

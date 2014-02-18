@@ -2,9 +2,9 @@
 from git_code_debt.discovery import get_metric_parsers
 from git_code_debt.file_diff_stat import FileDiffStat
 from git_code_debt.file_diff_stat import get_file_diff_stats_from_output
+from git_code_debt.file_diff_stat import SpecialFile
+from git_code_debt.file_diff_stat import SpecialFileType
 from git_code_debt.file_diff_stat import Status
-from git_code_debt.file_diff_stat import Submodule
-from git_code_debt.file_diff_stat import Symlink
 
 
 SAMPLE_OUTPUT = """diff --git a/README.md b/README.md
@@ -254,7 +254,8 @@ def test_adding_symlink():
             'pa2',
             [], [],
             Status.ADDED,
-            symlink=Symlink(
+            special_file=SpecialFile(
+                file_type=SpecialFileType.SYMLINK,
                 added='apache/html1/2mJe7Zhz/pa2/',
                 removed=None,
             ),
@@ -268,7 +269,8 @@ def test_removing_symlink():
             'pa2',
             [], [],
             Status.DELETED,
-            symlink=Symlink(
+            special_file=SpecialFile(
+                file_type=SpecialFileType.SYMLINK,
                 added=None,
                 removed='apache/html1/2mJe7Zhz/pa2/',
             ),
@@ -283,7 +285,8 @@ def test_moving_symlink():
             'pa2',
             [], [],
             Status.ALREADY_EXISTING,
-            symlink=Symlink(
+            special_file=SpecialFile(
+                file_type=SpecialFileType.SYMLINK,
                 added='apache/',
                 removed='apache/html1/2mJe7Zhz/pa2/',
             ),
@@ -321,7 +324,8 @@ def test_add_submodule():
         ),
         FileDiffStat(
             'verifycppbraces', [], [], Status.ADDED,
-            submodule=Submodule(
+            special_file=SpecialFile(
+                file_type=SpecialFileType.SUBMODULE,
                 added='72053d85133aa854e2762a4b604976da825750fb',
                 removed=None,
             ),
@@ -344,7 +348,8 @@ def test_remove_submodule():
         ),
         FileDiffStat(
             'verifycppbraces', [], [], Status.DELETED,
-            submodule=Submodule(
+            special_file=SpecialFile(
+                file_type=SpecialFileType.SUBMODULE,
                 added=None,
                 removed='72053d85133aa854e2762a4b604976da825750fb',
             ),
@@ -357,7 +362,8 @@ def test_bump_submodule():
     assert ret == [
         FileDiffStat(
             'verifycppbraces', [], [], Status.ALREADY_EXISTING,
-            submodule=Submodule(
+            special_file=SpecialFile(
+                file_type=SpecialFileType.SUBMODULE,
                 added='d7c12e294428b60667dedd46ed7f00c04e36b7e4',
                 removed='72053d85133aa854e2762a4b604976da825750fb',
             ),
