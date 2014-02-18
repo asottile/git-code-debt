@@ -50,10 +50,12 @@ def _to_file_diff_stat(file_diff):
     for line in lines[1:]:
         # Mode will be indicated somewhere between diff --git line
         # and the file added / removed lines
-        # It has three forms:
+        # It has these forms:
         # 1. 'new file mode 100644'
         # 2. 'deleted file mode 100644'
         # 3. 'index dc7827c..7b8b995 100644'
+        # 4. 'old mode 100755'
+        #    'new mode 100644'
         if line.startswith('new file mode '):
             assert status is None
             assert mode is None
@@ -63,6 +65,11 @@ def _to_file_diff_stat(file_diff):
             assert status is None
             assert mode is None
             status = Status.DELETED
+            mode = line.split()[-1]
+        elif line.startswith('new mode '):
+            assert status is None
+            assert mode is None
+            status = Status.ALREADY_EXISTING
             mode = line.split()[-1]
         elif line.startswith('index') and len(line.split()) == 3:
             assert status is None

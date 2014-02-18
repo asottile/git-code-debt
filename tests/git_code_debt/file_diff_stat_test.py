@@ -119,6 +119,11 @@ new file mode 100644
 index 0000000..e69de29
 """
 
+MODE_CHANGE_COMMIT = """diff --git a/EECS485PA3_W13.pdf b/EECS485PA3_W13.pdf
+old mode 100755
+new mode 100644
+"""
+
 
 def test_get_file_diff_stats_from_output():
     ret = get_file_diff_stats_from_output(SAMPLE_OUTPUT)
@@ -247,4 +252,11 @@ def test_multiple_empty_files():
     assert ret == [
         FileDiffStat('foo/__init__.py', [], [], Status.ADDED),
         FileDiffStat('bar/__init__.py', [], [], Status.ADDED),
+    ]
+
+
+def test_mode_change_diff():
+    ret = get_file_diff_stats_from_output(MODE_CHANGE_COMMIT)
+    assert ret == [
+        FileDiffStat('EECS485PA3_W13.pdf', [], [], Status.ALREADY_EXISTING),
     ]
