@@ -1,8 +1,11 @@
 
+import pytest
+
 from git_code_debt.discovery import get_metric_parsers
 from git_code_debt.file_diff_stat import FileDiffStat
-from git_code_debt.file_diff_stat import Status
 from git_code_debt.file_diff_stat import get_file_diff_stats_from_output
+from git_code_debt.file_diff_stat import Status
+from git_code_debt.file_diff_stat import Symlink
 
 
 SAMPLE_OUTPUT = """diff --git a/README.md b/README.md
@@ -83,6 +86,38 @@ index herp...derp
 +\r+
 """
 
+COMMIT_ADDING_SYMLINK = """diff --git a/pa2 b/pa2
+new file mode 120000
+index 0000000..989c69d
+--- /dev/null
++++ b/pa2
+@@ -0,0 +1 @@
++apache/html1/2mJe7Zhz/pa2/
+\ No newline at end of file
+"""
+
+COMMIT_REMOVING_SYMLINK = """diff --git a/pa2 b/pa2
+deleted file mode 120000
+index 989c69d..0000000
+--- a/pa2
++++ /dev/null
+@@ -1 +0,0 @@
+-apache/html1/2mJe7Zhz/pa2/
+\ No newline at end of file
+"""
+
+COMMIT_MOVING_SYMLINK = """diff --git a/pa2 b/pa2
+index 989c69d..7b8b995 120000
+--- a/pa2
++++ b/pa2
+@@ -1 +1 @@
+-apache/html1/2mJe7Zhz/pa2/
+\ No newline at end of file
++apache/
+\ No newline at end of file
+"""
+
+
 def test_get_file_diff_stats_from_output():
     ret = get_file_diff_stats_from_output(SAMPLE_OUTPUT)
     assert (
@@ -134,3 +169,50 @@ def test_commit_with_terrible():
 def test_all_metric_parsers_have_possible_metrics():
      for metric_parser_cls in get_metric_parsers():
         assert metric_parser_cls().get_possible_metric_ids()
+
+
+@pytest.mark.xfail
+def test_adding_symlink():
+    ret = get_file_diff_stats_from_output(COMMIT_ADDING_SYMLINK)
+    assert ret == [
+        FileDiffStat(
+            'pa2',
+            [], [],
+            Status.ADDED,
+            symlink=Symlink(
+                before=None,
+                after='apache/html1/2mJe7Zhz/pa2/',
+            ),
+        ),
+    ]
+
+@pytest.mark.xfail
+def test_removing_symlink():
+    ret = get_file_diff_stats_from_output(COMMIT_REMOVING_SYMLINK)
+    assert ret == [
+        FileDiffStat(
+            'pa2',
+            [], [],
+            Status.REMOVED,
+            symlink=Symlink(
+                before='apache/html1/2mJe7Zhz/pa2/',
+                after=None,
+            ),
+        ),
+    ]
+
+
+@pytest.mark.xfail
+def test_moving_symlink():
+    ret = get_file_diff_stats_from_output(COMMIT_MOVING_SYMLINK)
+    assert ret == [
+        FileDiffStat(
+            'pa2',
+            [], [],
+            Status.ALREADY_EXISTING,
+            symlink=Symlink(
+                before='apache/html1/2mJe7Zhz/pa2/',
+                after='apache/',
+            ),
+        ),
+    ]

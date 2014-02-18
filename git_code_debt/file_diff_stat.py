@@ -7,11 +7,20 @@ class Status(object):
     DELETED = object()
     ALREADY_EXISTING = object()
 
+
+Symlink = collections.namedtuple('Symlink', ['before', 'after'])
+
+
 class FileDiffStat(collections.namedtuple(
     'FileStat',
-    ['path', 'lines_added', 'lines_removed', 'status'],
+    ['path', 'lines_added', 'lines_removed', 'status', 'symlink'],
 )):
     __slots__ = ()
+
+    def __new__(cls, *args, **kwargs):
+        # Default symlink to None in the case it is not provided
+        kwargs.setdefault('symlink', None)
+        return super(FileDiffStat, cls).__new__(cls, *args, **kwargs)
 
     @property
     def extension(self):
