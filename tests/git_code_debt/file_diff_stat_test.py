@@ -1,8 +1,10 @@
 
 from git_code_debt.discovery import get_metric_parsers
 from git_code_debt.file_diff_stat import FileDiffStat
-from git_code_debt.file_diff_stat import Status
 from git_code_debt.file_diff_stat import get_file_diff_stats_from_output
+from git_code_debt.file_diff_stat import SpecialFile
+from git_code_debt.file_diff_stat import SpecialFileType
+from git_code_debt.file_diff_stat import Status
 
 
 SAMPLE_OUTPUT = """diff --git a/README.md b/README.md
@@ -44,13 +46,7 @@ index 0000000..dc7827c
 +bar
 """
 
-FILE_REMOVED_COMMIT = """commit f229b4c3e7aded483dab246af49396c538c0ce04
-Author: Anthony Sottile <asottile@umich.edu>
-Date:   Thu Nov 14 13:35:00 2013 -0800
-
-    Revert adding config
-
-diff --git a/example_config.yaml b/example_config.yaml
+FILE_REMOVED_COMMIT = """diff --git a/example_config.yaml b/example_config.yaml
 deleted file mode 100644
 index dc7827c..0000000
 --- a/example_config.yaml
@@ -61,6 +57,8 @@ index dc7827c..0000000
 -foo
 -bar
 """
+
+SAMPLE_OUTPUT_MULTIPLE_FILES = FILE_ADDED_COMMIT + FILE_REMOVED_COMMIT
 
 COMMIT_ENDING_WITH_BINARY_FILES = """diff --git a/htdocs/css/base.css b/htdocs/css/base.css
 index f0f7eac..ca3d0a2 100644
@@ -77,23 +75,110 @@ Binary files /dev/null and b/htdocs/i/p.gif differ
 COMMIT_WITH_TERRIBLE = """commit blahblahblah
 
 diff --git a/herpderp b/herpderp
-index herp...derp
+index herp...derp 100644
 --- a/herpderp
 +++ b/herpderp
 +\r+
 """
 
+COMMIT_ADDING_SYMLINK = """diff --git a/pa2 b/pa2
+new file mode 120000
+index 0000000..989c69d
+--- /dev/null
++++ b/pa2
+@@ -0,0 +1 @@
++apache/html1/2mJe7Zhz/pa2/
+\ No newline at end of file
+"""
+
+COMMIT_REMOVING_SYMLINK = """diff --git a/pa2 b/pa2
+deleted file mode 120000
+index 989c69d..0000000
+--- a/pa2
++++ /dev/null
+@@ -1 +0,0 @@
+-apache/html1/2mJe7Zhz/pa2/
+\ No newline at end of file
+"""
+
+COMMIT_MOVING_SYMLINK = """diff --git a/pa2 b/pa2
+index 989c69d..7b8b995 120000
+--- a/pa2
++++ b/pa2
+@@ -1 +1 @@
+-apache/html1/2mJe7Zhz/pa2/
+\ No newline at end of file
++apache/
+\ No newline at end of file
+"""
+
+MULTIPLE_EMPTY_FILES = """diff --git a/foo/__init__.py b/foo/__init__.py
+new file mode 100644
+index 0000000..e69de29
+diff --git a/bar/__init__.py b/bar/__init__.py
+new file mode 100644
+index 0000000..e69de29
+"""
+
+MODE_CHANGE_COMMIT = """diff --git a/EECS485PA3_W13.pdf b/EECS485PA3_W13.pdf
+old mode 100755
+new mode 100644
+"""
+
+ADD_SUBMODULE_COMMIT = """diff --git a/.gitmodules b/.gitmodules
+index e69de29..c8af28a 100644
+--- a/.gitmodules
++++ b/.gitmodules
+@@ -0,0 +1,3 @@
++[submodule "verifycppbraces"]
++       path = verifycppbraces
++       url = git://github.com/asottile/verifycppbraces.git
+diff --git a/verifycppbraces b/verifycppbraces
+new file mode 160000
+index 0000000..72053d8
+--- /dev/null
++++ b/verifycppbraces
+@@ -0,0 +1 @@
++Subproject commit 72053d85133aa854e2762a4b604976da825750fb
+"""
+
+REMOVE_SUBMODULE_COMMIT = """diff --git a/.gitmodules b/.gitmodules
+index e69de29..c8af28a 100644
+--- a/.gitmodules
++++ b/.gitmodules
+@@ -0,0 +1,3 @@
+-[submodule "verifycppbraces"]
+-       path = verifycppbraces
+-       url = git://github.com/asottile/verifycppbraces.git
+diff --git a/verifycppbraces b/verifycppbraces
+deleted file mode 160000
+index 72053d8..0000000
+--- a/verifycppbraces
++++ /dev/null
+@@ -0,0 +1 @@
+-Subproject commit 72053d85133aa854e2762a4b604976da825750fb
+"""
+
+BUMP_SUBMODULE_COMMIT = """diff --git a/verifycppbraces b/verifycppbraces
+index 72053d8..d7c12e2 160000
+--- a/verifycppbraces
++++ b/verifycppbraces
+@@ -1 +1 @@
+-Subproject commit 72053d85133aa854e2762a4b604976da825750fb
++Subproject commit d7c12e294428b60667dedd46ed7f00c04e36b7e4
+"""
+
+
 def test_get_file_diff_stats_from_output():
     ret = get_file_diff_stats_from_output(SAMPLE_OUTPUT)
-    assert (
-        ret ==
-        [FileDiffStat(
+    assert ret == [
+        FileDiffStat(
             'README.md',
             ['bar', 'hello world'],
             ['foo'],
             Status.ALREADY_EXISTING,
-        )]
-    )
+        ),
+    ]
 
 def test_does_not_choke_on_empty():
     ret = get_file_diff_stats_from_output(MERGE_COMMIT_OUTPUT)
@@ -101,31 +186,57 @@ def test_does_not_choke_on_empty():
 
 def test_added_file():
     ret = get_file_diff_stats_from_output(FILE_ADDED_COMMIT)
-    assert (
-        ret ==
-        [FileDiffStat(
+    assert ret == [
+        FileDiffStat(
             'example_config.yaml',
             ['', '# Git repo url', 'foo', 'bar'],
             [],
             Status.ADDED,
-        )]
-    )
+        ),
+    ]
 
 def test_removed_file():
     ret = get_file_diff_stats_from_output(FILE_REMOVED_COMMIT)
-    assert (
-        ret ==
-        [FileDiffStat(
+    assert ret == [
+        FileDiffStat(
             'example_config.yaml',
             [],
             ['', '# Git repo url', 'foo', 'bar'],
             Status.DELETED,
-        )]
-    )
+        ),
+    ]
+
+def test_removed_and_added():
+    ret = get_file_diff_stats_from_output(SAMPLE_OUTPUT_MULTIPLE_FILES)
+    assert ret == [
+        FileDiffStat(
+            'example_config.yaml',
+            ['', '# Git repo url', 'foo', 'bar'],
+            [],
+            Status.ADDED,
+        ),
+        FileDiffStat(
+            'example_config.yaml',
+            [],
+            ['', '# Git repo url', 'foo', 'bar'],
+            Status.DELETED,
+        ),
+    ]
 
 def test_binary_files():
     ret = get_file_diff_stats_from_output(COMMIT_ENDING_WITH_BINARY_FILES)
-    assert len(ret) == 1
+    assert ret == [
+        FileDiffStat(
+            'htdocs/css/base.css',
+            ['foo'], [],
+            Status.ALREADY_EXISTING,
+        ),
+        FileDiffStat(
+            'htdocs/i/p.gif',
+            [], [],
+            Status.ADDED,
+        ),
+    ]
 
 def test_commit_with_terrible():
     ret = get_file_diff_stats_from_output(COMMIT_WITH_TERRIBLE)
@@ -134,3 +245,127 @@ def test_commit_with_terrible():
 def test_all_metric_parsers_have_possible_metrics():
      for metric_parser_cls in get_metric_parsers():
         assert metric_parser_cls().get_possible_metric_ids()
+
+
+def test_adding_symlink():
+    ret = get_file_diff_stats_from_output(COMMIT_ADDING_SYMLINK)
+    assert ret == [
+        FileDiffStat(
+            'pa2',
+            [], [],
+            Status.ADDED,
+            special_file=SpecialFile(
+                file_type=SpecialFileType.SYMLINK,
+                added='apache/html1/2mJe7Zhz/pa2/',
+                removed=None,
+            ),
+        ),
+    ]
+
+def test_removing_symlink():
+    ret = get_file_diff_stats_from_output(COMMIT_REMOVING_SYMLINK)
+    assert ret == [
+        FileDiffStat(
+            'pa2',
+            [], [],
+            Status.DELETED,
+            special_file=SpecialFile(
+                file_type=SpecialFileType.SYMLINK,
+                added=None,
+                removed='apache/html1/2mJe7Zhz/pa2/',
+            ),
+        ),
+    ]
+
+
+def test_moving_symlink():
+    ret = get_file_diff_stats_from_output(COMMIT_MOVING_SYMLINK)
+    assert ret == [
+        FileDiffStat(
+            'pa2',
+            [], [],
+            Status.ALREADY_EXISTING,
+            special_file=SpecialFile(
+                file_type=SpecialFileType.SYMLINK,
+                added='apache/',
+                removed='apache/html1/2mJe7Zhz/pa2/',
+            ),
+        ),
+    ]
+
+
+def test_multiple_empty_files():
+    ret = get_file_diff_stats_from_output(MULTIPLE_EMPTY_FILES)
+    assert ret == [
+        FileDiffStat('foo/__init__.py', [], [], Status.ADDED),
+        FileDiffStat('bar/__init__.py', [], [], Status.ADDED),
+    ]
+
+
+def test_mode_change_diff():
+    ret = get_file_diff_stats_from_output(MODE_CHANGE_COMMIT)
+    assert ret == [
+        FileDiffStat('EECS485PA3_W13.pdf', [], [], Status.ALREADY_EXISTING),
+    ]
+
+
+def test_add_submodule():
+    ret = get_file_diff_stats_from_output(ADD_SUBMODULE_COMMIT)
+    assert ret == [
+        FileDiffStat(
+            '.gitmodules',
+            [
+                '[submodule "verifycppbraces"]',
+                '       path = verifycppbraces',
+                '       url = git://github.com/asottile/verifycppbraces.git',
+            ],
+            [],
+            Status.ALREADY_EXISTING,
+        ),
+        FileDiffStat(
+            'verifycppbraces', [], [], Status.ADDED,
+            special_file=SpecialFile(
+                file_type=SpecialFileType.SUBMODULE,
+                added='72053d85133aa854e2762a4b604976da825750fb',
+                removed=None,
+            ),
+        ),
+    ]
+
+
+def test_remove_submodule():
+    ret = get_file_diff_stats_from_output(REMOVE_SUBMODULE_COMMIT)
+    assert ret == [
+        FileDiffStat(
+            '.gitmodules',
+            [],
+            [
+                '[submodule "verifycppbraces"]',
+                '       path = verifycppbraces',
+                '       url = git://github.com/asottile/verifycppbraces.git',
+            ],
+            Status.ALREADY_EXISTING,
+        ),
+        FileDiffStat(
+            'verifycppbraces', [], [], Status.DELETED,
+            special_file=SpecialFile(
+                file_type=SpecialFileType.SUBMODULE,
+                added=None,
+                removed='72053d85133aa854e2762a4b604976da825750fb',
+            ),
+        ),
+    ]
+
+
+def test_bump_submodule():
+    ret = get_file_diff_stats_from_output(BUMP_SUBMODULE_COMMIT)
+    assert ret == [
+        FileDiffStat(
+            'verifycppbraces', [], [], Status.ALREADY_EXISTING,
+            special_file=SpecialFile(
+                file_type=SpecialFileType.SUBMODULE,
+                added='d7c12e294428b60667dedd46ed7f00c04e36b7e4',
+                removed='72053d85133aa854e2762a4b604976da825750fb',
+            ),
+        ),
+    ]
