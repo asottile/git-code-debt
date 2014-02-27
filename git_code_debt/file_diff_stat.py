@@ -22,7 +22,7 @@ SpecialFile = collections.namedtuple(
 
 
 class FileDiffStat(collections.namedtuple(
-    'FileStat',
+    'FileDiffStat',
     ['path', 'lines_added', 'lines_removed', 'status', 'special_file'],
 )):
     __slots__ = ()
