@@ -168,6 +168,23 @@ index 72053d8..d7c12e2 160000
 +Subproject commit d7c12e294428b60667dedd46ed7f00c04e36b7e4
 """
 
+ADD_BINARY_COMMIT = """diff --git a/foo.pdf b/foo.pdf
+new file mode 100644
+index 0000000..2aaa277
+Binary files /dev/null and b/foo.pdf differ
+"""
+
+REMOVE_BINARY_COMMIT = """diff --git a/foo.pdf b/foo.pdf
+deleted file mode 100644
+index 2aaa277..0000000
+Binary files a/foo.pdf and /dev/null differ
+"""
+
+MODIFY_BINARY_COMMIT = """diff --git a/foo.pdf b/foo.pdf
+index 2aaa277..86e041d 100644
+Binary files a/foo.pdf and b/foo.pdf differ
+"""
+
 
 def test_get_file_diff_stats_from_output():
     ret = get_file_diff_stats_from_output(SAMPLE_OUTPUT)
@@ -235,6 +252,11 @@ def test_binary_files():
             'htdocs/i/p.gif',
             [], [],
             Status.ADDED,
+            special_file=SpecialFile(
+                file_type=SpecialFileType.BINARY,
+                added='htdocs/i/p.gif',
+                removed=None,
+            ),
         ),
     ]
 
@@ -366,6 +388,48 @@ def test_bump_submodule():
                 file_type=SpecialFileType.SUBMODULE,
                 added='d7c12e294428b60667dedd46ed7f00c04e36b7e4',
                 removed='72053d85133aa854e2762a4b604976da825750fb',
+            ),
+        ),
+    ]
+
+
+def test_add_binary_commit():
+    ret = get_file_diff_stats_from_output(ADD_BINARY_COMMIT)
+    assert ret == [
+        FileDiffStat(
+            'foo.pdf', [], [], Status.ADDED,
+            special_file=SpecialFile(
+                file_type=SpecialFileType.BINARY,
+                added='foo.pdf',
+                removed=None,
+            ),
+        ),
+    ]
+
+
+def test_remove_binary_commit():
+    ret = get_file_diff_stats_from_output(REMOVE_BINARY_COMMIT)
+    assert ret == [
+        FileDiffStat(
+            'foo.pdf', [], [], Status.DELETED,
+            special_file=SpecialFile(
+                file_type=SpecialFileType.BINARY,
+                added=None,
+                removed='foo.pdf',
+            ),
+        ),
+    ]
+
+
+def test_modified_binary_commit():
+    ret = get_file_diff_stats_from_output(MODIFY_BINARY_COMMIT)
+    assert ret == [
+        FileDiffStat(
+            'foo.pdf',  [], [], Status.ALREADY_EXISTING,
+            special_file=SpecialFile(
+                file_type=SpecialFileType.BINARY,
+                added='foo.pdf',
+                removed='foo.pdf',
             ),
         ),
     ]
