@@ -13,6 +13,7 @@ class Status(object):
 class SpecialFileType(object):
     SUBMODULE = object()
     SYMLINK = object()
+    BINARY = object()
 
 
 SpecialFile = collections.namedtuple(
@@ -50,6 +51,7 @@ def _to_file_diff_stat(file_diff):
     NEWLINE = '\n'
     lines = file_diff.split(NEWLINE)
     diff_line_filename = lines[0].split()[-1].lstrip('b').lstrip('/')
+    is_binary = False
     in_diff = False
     mode = None
     status = None
@@ -85,6 +87,8 @@ def _to_file_diff_stat(file_diff):
             assert mode is None
             status = Status.ALREADY_EXISTING
             mode = line.split()[-1]
+        elif line.startswith('Binary files'):
+            is_binary = True
         # A diff contains lines that look like:
         # --- foo/bar
         # +++ foo/bar
@@ -118,6 +122,12 @@ def _to_file_diff_stat(file_diff):
         )
         lines_added = []
         lines_removed = []
+    elif is_binary:
+        special_file = SpecialFile(
+            file_type=SpecialFileType.BINARY,
+            added=diff_line_filename if status is not Status.DELETED else None,
+            removed=diff_line_filename if status is not Status.ADDED else None,
+        )
 
     return FileDiffStat(
         diff_line_filename,
