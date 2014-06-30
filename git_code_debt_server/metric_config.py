@@ -17,7 +17,9 @@ metric_config_watcher = staticconf.ConfigFacade.load(
 metric_config_getter = staticconf.NamespaceGetters(CONFIG_NAMESPACE)
 
 
-class Group(collections.namedtuple('Group', ['name', 'metrics', 'metric_expressions'])):
+class Group(collections.namedtuple(
+        'Group', ['name', 'metrics', 'metric_expressions'],
+)):
     __slots__ = ()
 
     def contains(self, metric_name):

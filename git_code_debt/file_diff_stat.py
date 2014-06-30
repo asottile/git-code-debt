@@ -93,7 +93,8 @@ def _to_file_diff_stat(file_diff):
         # --- foo/bar
         # +++ foo/bar
         # Which kind of look like diff lines but are definitely not
-        elif line.startswith('--- ') and not in_diff: pass
+        elif line.startswith('--- ') and not in_diff:
+            pass
         elif line.startswith('+++ ') and not in_diff:
             in_diff = True
         elif in_diff and line.startswith('+'):

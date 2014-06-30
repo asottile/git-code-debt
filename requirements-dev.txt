@@ -1,8 +1,9 @@
 -e .
 
-# Testing requirements
 coverage
+flake8
 mock
 pre-commit
+pylint
 pyquery
 pytest

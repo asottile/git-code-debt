@@ -197,9 +197,11 @@ def test_get_file_diff_stats_from_output():
         ),
     ]
 
+
 def test_does_not_choke_on_empty():
     ret = get_file_diff_stats_from_output(MERGE_COMMIT_OUTPUT)
     assert ret == []
+
 
 def test_added_file():
     ret = get_file_diff_stats_from_output(FILE_ADDED_COMMIT)
@@ -212,6 +214,7 @@ def test_added_file():
         ),
     ]
 
+
 def test_removed_file():
     ret = get_file_diff_stats_from_output(FILE_REMOVED_COMMIT)
     assert ret == [
@@ -222,6 +225,7 @@ def test_removed_file():
             Status.DELETED,
         ),
     ]
+
 
 def test_removed_and_added():
     ret = get_file_diff_stats_from_output(SAMPLE_OUTPUT_MULTIPLE_FILES)
@@ -239,6 +243,7 @@ def test_removed_and_added():
             Status.DELETED,
         ),
     ]
+
 
 def test_binary_files():
     ret = get_file_diff_stats_from_output(COMMIT_ENDING_WITH_BINARY_FILES)
@@ -260,12 +265,14 @@ def test_binary_files():
         ),
     ]
 
+
 def test_commit_with_terrible():
     ret = get_file_diff_stats_from_output(COMMIT_WITH_TERRIBLE)
     assert len(ret[0].lines_added) == 1
 
+
 def test_all_metric_parsers_have_possible_metrics():
-     for metric_parser_cls in get_metric_parsers():
+    for metric_parser_cls in get_metric_parsers():
         assert metric_parser_cls().get_possible_metric_ids()
 
 
@@ -283,6 +290,7 @@ def test_adding_symlink():
             ),
         ),
     ]
+
 
 def test_removing_symlink():
     ret = get_file_diff_stats_from_output(COMMIT_REMOVING_SYMLINK)

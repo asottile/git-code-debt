@@ -30,6 +30,7 @@ def get_latest_sha():
     # If there is no data result will be None
     return result[0] if result else None
 
+
 def get_sha_for_date(date):
     result = flask.g.db.execute(
         '''
@@ -107,7 +108,8 @@ def get_first_data_timestamp(metric_name):
             metric_data.timestamp < (
                 SELECT metric_data.timestamp
                 FROM metric_data
-                INNER JOIN metric_names ON metric_names.id = metric_data.metric_id
+                INNER JOIN metric_names
+                    ON metric_names.id = metric_data.metric_id
                 WHERE
                     metric_names.name = ? AND
                     metric_data.running_value > 0

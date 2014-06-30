@@ -13,7 +13,10 @@ class LinesOfCodeParser(DiffParserBase):
         lines_by_file_type = collections.defaultdict(int)
 
         for file_diff_stat in file_diff_stats:
-            lines_changed = len(file_diff_stat.lines_added) - len(file_diff_stat.lines_removed)
+            lines_changed = (
+                len(file_diff_stat.lines_added) -
+                len(file_diff_stat.lines_removed)
+            )
 
             # Track total overall
             total_lines += lines_changed
@@ -26,7 +29,10 @@ class LinesOfCodeParser(DiffParserBase):
         yield Metric('TotalLinesOfCode', total_lines)
         for file_type in set(FILE_TYPE_MAP.values() + ['unknown']):
             lines_changed = lines_by_file_type.get(file_type, 0)
-            yield Metric('TotalLinesOfCode_{0}'.format(file_type), lines_changed)
+            yield Metric(
+                'TotalLinesOfCode_{0}'.format(file_type),
+                lines_changed,
+            )
 
     def get_possible_metric_ids(self):
         return ['TotalLinesOfCode'] + [

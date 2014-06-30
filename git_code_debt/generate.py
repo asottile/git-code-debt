@@ -12,6 +12,7 @@ from git_code_debt.logic import get_previous_sha
 from git_code_debt.logic import insert_metric_values
 from git_code_debt.repo_parser import RepoParser
 
+
 def get_metrics(diff, metric_parsers):
     def get_all_metrics(file_diff_stats):
         for metric_parser_cls in metric_parsers:
@@ -22,11 +23,19 @@ def get_metrics(diff, metric_parsers):
     file_diff_stats = get_file_diff_stats_from_output(diff)
     return list(get_all_metrics(file_diff_stats))
 
+
 def increment_metric_values(metric_values, metrics):
     for metric in metrics:
         metric_values[metric.name] += metric.value
 
-def load_data(database_file, repo, package_names, skip_defaults, tempdir_location):
+
+def load_data(
+        database_file,
+        repo,
+        package_names,
+        skip_defaults,
+        tempdir_location,
+):
     metric_parsers = get_metric_parsers_from_args(package_names, skip_defaults)
 
     with sqlite3.connect(database_file) as db:
@@ -56,17 +65,26 @@ def load_data(database_file, repo, package_names, skip_defaults, tempdir_locatio
                 if compare_commit is None:
                     diff = repo_parser.get_original_commit(commit.sha)
                 else:
-                    diff = repo_parser.get_commit_diff(compare_commit.sha, commit.sha)
+                    diff = repo_parser.get_commit_diff(
+                        compare_commit.sha, commit.sha,
+                    )
 
                 metrics = get_metrics(diff, metric_parsers)
                 increment_metric_values(metric_values, metrics)
-                insert_metric_values(db, metric_values, metric_mapping, repo, commit)
+                insert_metric_values(
+                    db, metric_values, metric_mapping, repo, commit,
+                )
 
                 compare_commit = commit
 
+
 def main(argv):
-    parser = argparse.ArgumentParser(description='Generates metrics from a git repo')
-    parser.add_argument('repo', help='Repository link to generate metrics from')
+    parser = argparse.ArgumentParser(
+        description='Generates metrics from a git repo',
+    )
+    parser.add_argument(
+        'repo', help='Repository link to generate metrics from',
+    )
     parser.add_argument('database', help='Database file')
     parser.add_argument(
         '--skip-default-metrics',
@@ -95,6 +113,7 @@ def main(argv):
         args.skip_default_metrics,
         args.tempdir_location,
     )
+
 
 if __name__ == '__main__':
     main(sys.argv[1:])
