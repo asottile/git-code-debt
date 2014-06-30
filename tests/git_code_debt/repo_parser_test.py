@@ -6,6 +6,7 @@ import subprocess
 
 from git_code_debt.repo_parser import Commit
 from git_code_debt.repo_parser import RepoParser
+from testing.utilities.auto_namedtuple import auto_namedtuple
 
 
 @pytest.mark.integration
@@ -24,11 +25,15 @@ def test_repo_checked_out(cloneable):
     assert not os.path.exists(tempdir_path)
 
 
-@pytest.yield_fixture(scope='module')
-def checked_out_repo(cloneable):
-    repo_parser = RepoParser(cloneable)
+@pytest.yield_fixture
+def checked_out_repo(cloneable_with_commits):
+    repo_parser = RepoParser(cloneable_with_commits.path)
     with repo_parser.repo_checked_out():
-        yield repo_parser
+        yield auto_namedtuple(
+            repo_parser=repo_parser,
+            cloneable_with_commits=cloneable_with_commits,
+        )
+
 
 @pytest.mark.integration
 def test_get_commit_shas_all_of_them(checked_out_repo):
@@ -37,8 +42,9 @@ def test_get_commit_shas_all_of_them(checked_out_repo):
         check_output_mock.return_value = '\n'.join(
             unicode(part) for part in commit
         ) + '\n'
-        all_commits = checked_out_repo.get_commit_shas()
+        all_commits = checked_out_repo.repo_parser.get_commit_shas()
         assert all_commits == [commit]
+
 
 @pytest.mark.integration
 def test_get_commit_shas_after_date(checked_out_repo):
@@ -48,23 +54,26 @@ def test_get_commit_shas_after_date(checked_out_repo):
         check_output_mock.return_value = '\n'.join(
             unicode(part) for part in commit
         ) + '\n'
-        checked_out_repo.get_commit_shas(previous_sha)
+        checked_out_repo.repo_parser.get_commit_shas(previous_sha)
         assert (
             '{0}..HEAD'.format(previous_sha) in
             check_output_mock.call_args[0][0]
         )
 
+
 @pytest.mark.integration
 def test_get_commits_since_commit_includes_that_commit(checked_out_repo):
-    previous_sha = '29d0d321f43950fd2aa1d1df9fc81dee0e9046b3'
-    all_commits = checked_out_repo.get_commit_shas(previous_sha)
+    previous_sha = checked_out_repo.cloneable_with_commits.commits[0].sha
+    all_commits = checked_out_repo.repo_parser.get_commit_shas(previous_sha)
     shas = [commit.sha for commit in all_commits]
     assert previous_sha in shas
     assert len(shas) == len(set(shas))
 
+
 @pytest.mark.integration
 def test_get_commit(checked_out_repo):
     # Smoke test
-    sha = '29d0d321f43950fd2aa1d1df9fc81dee0e9046b3'
-    ret = checked_out_repo.get_commit(sha)
-    assert ret == Commit(sha, 1385346958, 'Anthony Sottile')
+    first_commit = checked_out_repo.cloneable_with_commits.commits[0]
+    sha = first_commit.sha
+    ret = checked_out_repo.repo_parser.get_commit(sha)
+    assert ret == first_commit
