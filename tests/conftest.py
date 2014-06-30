@@ -14,6 +14,7 @@ from git_code_debt.create_tables import populate_metric_ids
 from git_code_debt.repo_parser import Commit
 from git_code_debt.repo_parser import COMMIT_FORMAT
 from git_code_debt_util import five
+from git_code_debt_util.subprocess import cmd_output
 from testing.utilities.auto_namedtuple import auto_namedtuple
 from testing.utilities.cwd import cwd
 
@@ -77,8 +78,10 @@ def cloneable_with_commits(cloneable):
             file_obj.write(contents)
 
         subprocess.check_call(['git', 'add', filename])
-        subprocess.check_call(['git', 'commit', '-m', 'Add {0}'.format(filename)])
-        output = subprocess.check_output(['git', 'show', COMMIT_FORMAT])
+        subprocess.check_call([
+            'git', 'commit', '-m', 'Add {0}'.format(filename),
+        ])
+        output = cmd_output('git', 'show', COMMIT_FORMAT)
         sha, date, author = output.splitlines()[:3]
         commits.append(Commit(sha, int(date), author))
 
