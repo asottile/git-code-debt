@@ -1,6 +1,7 @@
 
 import collections
 
+
 def auto_namedtuple(classname='auto_namedtuple', **kwargs):
     """Returns an automatic namedtuple object.
 

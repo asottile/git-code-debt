@@ -5,6 +5,7 @@ import mock
 
 from testing.utilities.response import Response
 
+
 class Client(flask.testing.FlaskClient):
     """A Client wraps the client given by flask to add other utilities."""
 

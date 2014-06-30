@@ -3,6 +3,7 @@ import inspect
 import pkgutil
 import sys
 
+
 def discover(package, cls_match_func):
     """Returns a set of classes in the directory matched by cls_match_func
 

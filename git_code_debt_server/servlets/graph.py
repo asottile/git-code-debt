@@ -10,6 +10,7 @@ from git_code_debt_util.time import to_timestamp
 
 graph = flask.Blueprint('graph', __name__)
 
+
 @graph.route('/graph/<metric_name>')
 def show(metric_name):
     repo = flask.request.args.get('repo')
@@ -21,7 +22,9 @@ def show(metric_name):
         end_timestamp,
         data_points=250,
     )
-    metrics_for_dates = metrics.metrics_for_dates(repo, metric_name, data_points)
+    metrics_for_dates = metrics.metrics_for_dates(
+        repo, metric_name, data_points,
+    )
 
     metrics_for_js = sorted(set(
         (m.date * 1000, m.value)
@@ -35,6 +38,7 @@ def show(metric_name):
         start_timestamp=start_timestamp,
         end_timestamp=end_timestamp,
     )
+
 
 @graph.route('/graph/<metric_name>/all_data')
 def all_data(metric_name):
