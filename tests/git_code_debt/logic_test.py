@@ -21,8 +21,9 @@ def test_get_metric_mapping(sandbox):
 
         assert (
             set(ret.keys()) ==
-            set(get_metric_ids(get_metric_parsers())),
+            set(get_metric_ids(get_metric_parsers()))
         )
+
 
 @pytest.mark.integration
 def test_get_previous_sha_no_previous_sha(sandbox):
@@ -30,13 +31,16 @@ def test_get_previous_sha_no_previous_sha(sandbox):
         ret = get_previous_sha(db, repo)
         assert ret is None
 
+
 def get_fake_metrics(metric_mapping):
     return dict(
         (metric_name, 1) for metric_name in metric_mapping.keys()
     )
 
+
 def get_fake_commit():
     return Commit(sha, 1, 'foo')
+
 
 def insert_fake_metrics(db):
     metric_mapping = get_metric_mapping(db)
@@ -44,12 +48,14 @@ def insert_fake_metrics(db):
     commit = get_fake_commit()
     insert_metric_values(db, metric_values, metric_mapping, repo, commit)
 
+
 @pytest.mark.integration
 def test_get_previous_sha_previous_existing_sha(sandbox):
     with sandbox.db() as db:
         insert_fake_metrics(db)
         ret = get_previous_sha(db, repo)
         assert ret == sha
+
 
 @pytest.mark.integration
 def test_insert_and_get_metric_values(sandbox):

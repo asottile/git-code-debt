@@ -1,51 +1,27 @@
 
-TEST_TARGETS =
-ITEST_TARGETS = -m integration
-UTEST_TARGETS = -m "not(integration)"
+REBUILD_FLAG =
 
-all: _tests
+.PHONY: all
+all: venv test
 
-integration:
-	$(eval TEST_TARGETS := $(ITEST_TARGETS))
+.PHONY: venv
+venv: .venv.touch
+	tox -e venv $(REBUILD_FLAG)
 
-unit:
-	$(eval TEST_TARGETS := $(UTEST_TARGETS))
-
-utests: test
-utest: test
+.PHONY: tests test
 tests: test
-test: unit _tests
-itests: itest
-itest: integration _tests
+test: .venv.touch
+	tox $(REBUILD_FLAG)
 
-_tests: py_env
-	bash -c 'source py_env/bin/activate && py.test tests $(TEST_TARGETS)'
 
-ucoverage: unit coverage
-icoverage: integration coverage
+.venv.touch: setup.py requirements-dev.txt
+	$(eval REBUILD_FLAG := --recreate)
+	touch .venv.touch
 
-coverage: py_env
-	bash -c 'source py_env/bin/activate && \
-		coverage erase && \
-		coverage run `which py.test` tests $(TEST_TARGETS) && \
-		coverage report -m'
 
-tables: py_env clean_tables
-	bash -c 'source py_env/bin/activate && \
-		python -m git_code_debt.create_tables ./database.db'
-
-start: py_env
-	bash -c 'source py_env/bin/activate && \
-		PYTHONPATH=. python -m git_code_debt_server.app ./database.db'
-
-py_env: requirements.txt
-	rm -rf py_env
-	virtualenv py_env
-	bash -c 'source py_env/bin/activate && \
-		pip install -r requirements.txt'
-
-clean: clean_tables
-	rm -rf py_env
-
-clean_tables:
-	rm -f ./database.db
+.PHONY: clean
+clean:
+	find . -iname '*.pyc' | xargs rm -f
+	rm -rf .tox
+	rm -rf ./venv-*
+	rm -f .venv.touch

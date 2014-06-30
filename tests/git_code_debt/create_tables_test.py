@@ -38,7 +38,7 @@ def test_populate_metric_ids(tmpdir):
         # Smoke test assertion
         assert (
             len(results) ==
-            len(get_metric_ids(get_metric_parsers_from_args(tuple(), False))),
+            len(get_metric_ids(get_metric_parsers_from_args(tuple(), False)))
         )
 
 
