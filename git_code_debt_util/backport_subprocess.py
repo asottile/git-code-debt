@@ -1,15 +1,21 @@
 import subprocess
 
+
 def backport_check_output():
     def check_output(*popenargs, **kwargs):
         r"""Run command with arguments and return its output as a byte string.
 
-        Backported from Python 2.7 as it's implemented as pure python on stdlib.
+        Backported from Python 2.7 as it's implemented as pure python on
+        stdlib.
 
         >>> check_output(['/usr/bin/python', '--version'])
         Python 2.6.2
         """
-        process = subprocess.Popen(stdout=subprocess.PIPE, *popenargs, **kwargs)
+        process = subprocess.Popen(
+            stdout=subprocess.PIPE,
+            *popenargs,
+            **kwargs
+        )
         output, unused_err = process.communicate()
         retcode = process.poll()
         if retcode:
@@ -23,4 +29,3 @@ def backport_check_output():
 
     if not hasattr(subprocess, 'check_output'):
         setattr(subprocess, 'check_output', check_output)
-

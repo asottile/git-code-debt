@@ -3,5 +3,6 @@
 # Testing requirements
 coverage
 mock
+pre-commit
 pyquery
 pytest

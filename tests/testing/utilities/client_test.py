@@ -37,8 +37,8 @@ def test_takes_environment(client_open_mock):
         environ_base=environ_base,
     )
 
+
 def test_return_value_is_testing_response(client_open_mock):
     instance = Client(None)
     ret = instance.open('/')
     assert isinstance(ret, Response)
-
