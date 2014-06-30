@@ -33,7 +33,7 @@ def test_python_imports(line, expected):
     ('herpderp', False),
 ))
 def test_template_imports(line, expected):
-   assert is_template_import(line) == expected
+    assert is_template_import(line) == expected
 
 
 def test_python_import_parser():

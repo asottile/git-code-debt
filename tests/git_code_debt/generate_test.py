@@ -23,9 +23,11 @@ def test_increment_metrics_already_there():
 def test_generate_integration(sandbox, cloneable):
     main([cloneable, sandbox.db_path])
 
+
 def get_metric_data_count(sandbox):
     with sandbox.db() as db:
         return db.execute('SELECT COUNT(*) FROM metric_data').fetchone()[0]
+
 
 @pytest.mark.integration
 def test_generate_integration_previous_data(sandbox, cloneable):

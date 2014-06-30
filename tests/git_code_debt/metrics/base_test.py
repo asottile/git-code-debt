@@ -10,6 +10,7 @@ def test_simple_base_counter():
     class TestCounter(SimpleLineCounterBase):
         def should_include_file(self, file_diff_stat):
             return True
+
         def line_matches_metric(self, line, file_diff_stat):
             return True
 

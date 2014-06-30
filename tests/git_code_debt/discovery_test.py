@@ -11,29 +11,40 @@ from git_code_debt_util.discovery import discover
 def test_is_metric_parser_is_DiffParserBase():
     assert not is_metric_cls(DiffParserBase)
 
+
 def test_is_metric_parser_not_DiffParserBase():
-    class Foo(DiffParserBase): pass
+    class Foo(DiffParserBase):
+        pass
+
     assert is_metric_cls(Foo)
 
+
 def test_is_metric_parser_definitely_isnt_DiffParserBase():
-    class Bar(object): pass
+    class Bar(object):
+        pass
+
     assert not is_metric_cls(Bar)
+
 
 def test_is_metric_parser_is_a_DiffParserBase_but_has__metric__False():
     class Baz(DiffParserBase):
         __metric__ = False
     assert not is_metric_cls(Baz)
 
-class MetricParserInTests(DiffParserBase): pass
+
+class MetricParserInTests(DiffParserBase):
+    pass
 
 
 @pytest.mark.integration
 def test_returns_no_metrics_when_defaults_are_off():
     assert set() == get_metric_parsers(include_defaults=False)
 
+
 @pytest.mark.integration
 def test_get_metric_parsers_returns_something():
     assert len(get_metric_parsers()) > 0
+
 
 @pytest.mark.integration
 def test_returns_metrics_defined_in_tests_when_specified():
@@ -53,6 +64,7 @@ def test_returns_metrics_defined_in_tests_when_specified():
 def test_get_modules_no_modules():
     ret = get_modules([])
     assert ret == []
+
 
 def test_get_modules_some_modules():
     ret = get_modules([
