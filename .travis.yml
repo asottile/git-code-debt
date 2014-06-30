@@ -6,3 +6,7 @@ python:
 
 install: pip install virtualenv
 script: make
+# Special snowflake.  Our tests depend on making real commits.
+before_install:
+  - git config --global user.name "Travis CI"
+  - git config --global user.email "user@example.com"
