@@ -23,4 +23,3 @@ def test_curse_words_parser():
     metrics = list(parser.get_metrics_from_stat(input))
     assert Metric('TotalCurseWords_Template', 1) in metrics
     assert Metric('TotalCurseWords_Python', 0) in metrics
-

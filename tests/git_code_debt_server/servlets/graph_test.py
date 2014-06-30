@@ -10,17 +10,18 @@ from testing.assertions.response import assert_redirect
 
 @pytest.mark.integration
 def test_all_data(server_with_data):
-    resp = server_with_data.client.get(flask.url_for(
+    resp = server_with_data.server.client.get(flask.url_for(
         'graph.all_data',
         metric_name=PythonImportCount.__name__,
     ))
 
     # Should redirect to a show url
+    timestamp = server_with_data.cloneable_with_commits.commits[0].date
     assert_redirect(
         resp,
         flask.url_for('graph.show', metric_name=PythonImportCount.__name__),
         {
-            'start': ['1384445142'],
+            'start': [unicode(timestamp)],
             'end': [mock.ANY],
         },
     )
@@ -46,11 +47,12 @@ def test_all_data_no_data(server):
 
 @pytest.mark.integration
 def test_show(server_with_data):
-    resp = server_with_data.client.get(flask.url_for(
+    timestamp = server_with_data.cloneable_with_commits.commits[0].date
+    resp = server_with_data.server.client.get(flask.url_for(
         'graph.show',
         metric_name=PythonImportCount.__name__,
-        start='1384445142',
-        end='1385445142',
+        start=unicode(timestamp - 1000),
+        end=unicode(timestamp + 1000),
     ))
     assert_no_response_errors(resp)
 

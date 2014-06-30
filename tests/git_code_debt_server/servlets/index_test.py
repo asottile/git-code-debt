@@ -19,7 +19,7 @@ def test_it_loads_no_data(server):
 
 @pytest.mark.integration
 def test_it_loads_with_data(server_with_data):
-    _test_it_loads(server_with_data)
+    _test_it_loads(server_with_data.server)
 
 
 def test_delta_classname_negative():

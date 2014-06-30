@@ -15,11 +15,5 @@ omit =
     # Ignore test coverage
     tests/*
 
-    # Don't complain about our pre-commit file
-    pre-commit.py
-
     # Mako templates have unrunnable code
     *_mako
-
-    # Don't complain about our compatibility shim
-    */backport_subprocess.py

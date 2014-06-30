@@ -5,16 +5,15 @@ import shutil
 import subprocess
 import tempfile
 
-from git_code_debt_util.backport_subprocess import backport_check_output
 from git_code_debt_util.iter import chunk_iter
+from git_code_debt_util.subprocess import cmd_output
 
-# XXX: Python 2.6 compatibility
-backport_check_output()
 
 # TODO: remove name since we can't really do anything useful with it
 Commit = collections.namedtuple('Commit', ['sha', 'date', 'name'])
 
 COMMIT_FORMAT = '--format=%H%n%at%n%cN'
+
 
 class RepoParser(object):
 
@@ -26,7 +25,9 @@ class RepoParser(object):
     @contextlib.contextmanager
     def repo_checked_out(self):
         assert not self.tempdir
-        self.tempdir = tempfile.mkdtemp(suffix='temp-repo', dir=self.tempdir_location)
+        self.tempdir = tempfile.mkdtemp(
+            suffix='temp-repo', dir=self.tempdir_location,
+        )
         try:
             subprocess.check_call(
                 ['git', 'clone', '--no-checkout', self.git_repo, self.tempdir],
@@ -38,8 +39,8 @@ class RepoParser(object):
             self.tempdir = None
 
     def get_commit(self, sha):
-        output = subprocess.check_output(
-            ['git', 'show', COMMIT_FORMAT, sha],
+        output = cmd_output(
+            'git', 'show', COMMIT_FORMAT, sha,
             cwd=self.tempdir,
         )
         sha, date, name, = output.splitlines()[:3]
@@ -63,10 +64,7 @@ class RepoParser(object):
             commits = []
             cmd.append('HEAD')
 
-        output = subprocess.check_output(
-            cmd,
-            cwd=self.tempdir,
-        )
+        output = cmd_output(*cmd, cwd=self.tempdir)
 
         for sha, date, name in chunk_iter(output.splitlines(), 3):
             commits.append(Commit(sha, int(date), name))
@@ -75,16 +73,10 @@ class RepoParser(object):
 
     def get_original_commit(self, sha):
         assert self.tempdir
-        output = subprocess.check_output(
-            ['git', 'show', sha],
-            cwd=self.tempdir,
-        )
+        output = cmd_output('git', 'show', sha, cwd=self.tempdir)
         return output
 
     def get_commit_diff(self, previous_sha, sha):
         assert self.tempdir
-        output = subprocess.check_output(
-            ['git', 'diff', previous_sha, sha],
-            cwd=self.tempdir,
-        )
+        output = cmd_output('git', 'diff', previous_sha, sha, cwd=self.tempdir)
         return output
