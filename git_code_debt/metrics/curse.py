@@ -5,6 +5,7 @@ from git_code_debt.metrics.base import DiffParserBase
 from git_code_debt.metrics.common import FILE_TYPE_MAP
 from git_code_debt.metrics.curse_words import word_list
 
+
 def count_curse_words(lines):
     curses = 0
     for line in lines:
@@ -37,7 +38,10 @@ class CurseWordsParser(DiffParserBase):
         yield Metric('TotalCurseWords', total_curses)
         for file_type in set(FILE_TYPE_MAP.values() + ['unknown']):
             curses_changed = curses_by_file_type.get(file_type, 0)
-            yield Metric('TotalCurseWords_{0}'.format(file_type), curses_changed)
+            yield Metric(
+                'TotalCurseWords_{0}'.format(file_type),
+                curses_changed,
+            )
 
     def get_possible_metric_ids(self):
         return ['TotalCurseWords'] + [

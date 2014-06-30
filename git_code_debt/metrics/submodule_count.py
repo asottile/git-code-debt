@@ -12,7 +12,8 @@ class SubmoduleCount(DiffParserBase):
         for file_diff_stat in file_diff_stats:
             if (
                 file_diff_stat.special_file is not None and
-                file_diff_stat.special_file.file_type is SpecialFileType.SUBMODULE
+                file_diff_stat.special_file.file_type is
+                    SpecialFileType.SUBMODULE
             ):
                 if file_diff_stat.status is Status.ADDED:
                     submodule_delta += 1

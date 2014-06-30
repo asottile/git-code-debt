@@ -8,6 +8,7 @@ import sys
 
 from git_code_debt.discovery import get_metric_parsers_from_args
 
+
 def create_schema(db):
     """Creates the database schema."""
     schema_dir = pkg_resources.resource_filename('git_code_debt', 'schema')
@@ -18,12 +19,14 @@ def create_schema(db):
         with open(resource_filename, 'r') as resource:
             db.executescript(resource.read())
 
+
 def get_metric_ids(metric_parsers):
     metric_ids = set([])
     for metric_parser_cls in metric_parsers:
         for metric_id in metric_parser_cls().get_possible_metric_ids():
             metric_ids.add(metric_id)
     return sorted(metric_ids)
+
 
 def populate_metric_ids(db, package_names, skip_defaults):
     metric_parsers = get_metric_parsers_from_args(package_names, skip_defaults)
@@ -33,6 +36,7 @@ def populate_metric_ids(db, package_names, skip_defaults):
         db.execute(
             "INSERT INTO metric_names ('name') VALUES (?)", [metric_id]
         )
+
 
 def main(argv):
     parser = argparse.ArgumentParser(description='Set up schema')
@@ -58,6 +62,7 @@ def main(argv):
             args.metric_package_names,
             args.skip_default_metrics,
         )
+
 
 if __name__ == '__main__':
     main(sys.argv[1:])

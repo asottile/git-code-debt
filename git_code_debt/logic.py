@@ -4,6 +4,7 @@ def get_metric_mapping(db):
     results = db.execute('SELECT name, id FROM metric_names').fetchall()
     return dict(results)
 
+
 def get_previous_sha(db, repo):
     """Gets the latest inserted SHA for a specific repo."""
     result = db.execute(
@@ -19,6 +20,7 @@ def get_previous_sha(db, repo):
     ).fetchone()
 
     return result[0] if result else None
+
 
 def get_metric_values(db, commit):
     """Gets the metric values from a specific commit.
@@ -40,6 +42,7 @@ def get_metric_values(db, commit):
         [commit.sha],
     )
     return dict(results)
+
 
 def insert_metric_values(db, metric_values, metric_mapping, repo, commit):
     for metric_name, value in metric_values.iteritems():

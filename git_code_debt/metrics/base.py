@@ -1,5 +1,6 @@
 from git_code_debt.metric import Metric
 
+
 class DiffParserBase(object):
     """Generates metrics from git show"""
     # Specify __metric__ = False to not be included
@@ -19,6 +20,7 @@ class DiffParserBase(object):
 
     def get_possible_metric_ids(self):
         raise NotImplementedError
+
 
 class SimpleLineCounterBase(DiffParserBase):
     """Simple counter for various file types and line types."""

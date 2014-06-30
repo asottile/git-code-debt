@@ -6,14 +6,17 @@ import sys
 
 from git_code_debt.discovery import get_metric_parsers_from_args
 
+
 CYAN = '\033[1;36m'
 NORMAL = '\033[0m'
+
 
 def color(text, color, color_setting):
     if not color_setting:
         return text
 
     return '{0}{1}{2}'.format(color, text, NORMAL)
+
 
 def main(argv):
     parser = argparse.ArgumentParser(description='List metric parsers')
@@ -56,6 +59,7 @@ def main(argv):
                 sorted(metric_parser_cls().get_possible_metric_ids()),
             )
         )
+
 
 if __name__ == '__main__':
     main(sys.argv[1:])
