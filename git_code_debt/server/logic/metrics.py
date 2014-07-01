@@ -71,7 +71,7 @@ def get_metrics_for_sha(sha):
     return dict(result)
 
 
-def metrics_for_dates(repo, metric_name, dates):
+def metrics_for_dates(metric_name, dates):
     def get_metric_for_timestamp(timestamp):
         result = flask.g.db.execute(
             '''

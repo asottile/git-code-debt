@@ -13,7 +13,6 @@ graph = flask.Blueprint('graph', __name__)
 
 @graph.route('/graph/<metric_name>')
 def show(metric_name):
-    repo = flask.request.args.get('repo')
     start_timestamp = int(flask.request.args.get('start'))
     end_timestamp = int(flask.request.args.get('end'))
 
@@ -23,7 +22,7 @@ def show(metric_name):
         data_points=250,
     )
     metrics_for_dates = metrics.metrics_for_dates(
-        repo, metric_name, data_points,
+        metric_name, data_points,
     )
 
     metrics_for_js = sorted(set(

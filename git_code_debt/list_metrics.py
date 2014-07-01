@@ -4,6 +4,7 @@ from __future__ import print_function
 import argparse
 import sys
 
+from git_code_debt import options
 from git_code_debt.discovery import get_metric_parsers_from_args
 
 
@@ -11,32 +12,19 @@ CYAN = '\033[1;36m'
 NORMAL = '\033[0m'
 
 
-def color(text, color, color_setting):
+def color(text, color_value, color_setting):
     if not color_setting:
         return text
 
-    return '{0}{1}{2}'.format(color, text, NORMAL)
+    return '{0}{1}{2}'.format(color_value, text, NORMAL)
 
 
 def main(argv):
     parser = argparse.ArgumentParser(description='List metric parsers')
-    parser.add_argument(
-        '--skip-default-metrics',
-        default=False,
-        action='store_true',
-        help='Whether to skip default metrics',
-    )
-    parser.add_argument(
-        '--color',
-        default='auto',
-        choices=['always', 'never', 'auto'],
-    )
-    parser.add_argument(
-        'metric_package_names',
-        type=str,
-        nargs='*',
-        help='Metric Package Names (such as foo.metrics bar.metrics)',
-    )
+    # optional
+    options.add_color(parser)
+    options.add_skip_default_metrics(parser)
+    options.add_metric_package_names(parser)
     args = parser.parse_args(argv)
 
     color_setting = args.color in ('always', 'auto')

@@ -6,6 +6,7 @@ import pkg_resources
 import sqlite3
 import sys
 
+from git_code_debt import options
 from git_code_debt.discovery import get_metric_parsers_from_args
 
 
@@ -40,19 +41,11 @@ def populate_metric_ids(db, package_names, skip_defaults):
 
 def main(argv):
     parser = argparse.ArgumentParser(description='Set up schema')
-    parser.add_argument('database', help='Path to database')
-    parser.add_argument(
-        '--skip-default-metrics',
-        default=False,
-        action='store_true',
-        help='Whether to skip default metrics',
-    )
-    parser.add_argument(
-        'metric_package_names',
-        type=str,
-        nargs='*',
-        help='Metric Package Names (such as foo.metrics bar.metrics)',
-    )
+    # optional
+    options.add_skip_default_metrics(parser)
+    # positional
+    options.add_database(parser)
+    options.add_metric_package_names(parser)
     args = parser.parse_args(argv)
 
     with sqlite3.connect(args.database) as db:
