@@ -5,7 +5,7 @@ import contextlib
 import mock
 import pytest
 
-import git_code_debt_server.app
+import git_code_debt.server.app
 from git_code_debt.generate import main
 from testing.utilities.auto_namedtuple import auto_namedtuple
 from testing.utilities.client import Client
@@ -19,7 +19,7 @@ class GitCodeDebtServer(object):
 
 @pytest.yield_fixture
 def server(sandbox):
-    app = git_code_debt_server.app.app
+    app = git_code_debt.server.app.app
     with contextlib.nested(
         mock.patch.object(app, 'test_client_class', Client),
         # Making the app always debug so it throws exceptions
@@ -33,7 +33,7 @@ def server(sandbox):
             app.test_request_context(),
             app.test_client(),
             mock.patch.object(
-                git_code_debt_server.app, 'database_path', sandbox.db_path,
+                git_code_debt.server.app, 'database_path', sandbox.db_path,
             ),
         ) as (_, client, _):
             yield GitCodeDebtServer(client, sandbox)

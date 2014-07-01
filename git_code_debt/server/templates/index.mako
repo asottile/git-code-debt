@@ -1,5 +1,5 @@
 <%!
-from git_code_debt_server.servlets.index import DATE_NAMES_TO_TIMEDELTAS
+from git_code_debt.server.servlets.index import DATE_NAMES_TO_TIMEDELTAS
 %>
 
 <%inherit file="base.mako" />

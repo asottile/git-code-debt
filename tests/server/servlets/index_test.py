@@ -2,8 +2,8 @@
 import flask
 import pytest
 
-from git_code_debt_server.servlets.index import DeltaPresenter
-from git_code_debt_server.servlets.index import MetricPresenter
+from git_code_debt.server.servlets.index import DeltaPresenter
+from git_code_debt.server.servlets.index import MetricPresenter
 from testing.assertions.response import assert_no_response_errors
 
 

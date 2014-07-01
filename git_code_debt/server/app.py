@@ -2,12 +2,12 @@ import argparse
 import flask
 import sqlite3
 
-from git_code_debt_server.metric_config import metric_config_watcher
-from git_code_debt_server.servlets.graph import graph
-from git_code_debt_server.servlets.index import index
+from git_code_debt.server.metric_config import metric_config_watcher
+from git_code_debt.server.servlets.graph import graph
+from git_code_debt.server.servlets.index import index
 
 
-app = flask.Flask('git_code_debt_server')
+app = flask.Flask(__name__)
 app.register_blueprint(index)
 app.register_blueprint(graph)
 

@@ -3,10 +3,10 @@ import collections
 import datetime
 import flask
 
-from git_code_debt_server.metric_config import color_overrides
-from git_code_debt_server.metric_config import groups
-from git_code_debt_server.render_mako import render_template
-from git_code_debt_server.logic import metrics
+from git_code_debt.server.metric_config import color_overrides
+from git_code_debt.server.metric_config import groups
+from git_code_debt.server.render_mako import render_template
+from git_code_debt.server.logic import metrics
 from git_code_debt_util.time import to_timestamp
 
 index = flask.Blueprint('index', __name__)

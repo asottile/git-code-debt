@@ -2,8 +2,8 @@ import datetime
 import flask
 import simplejson
 
-from git_code_debt_server.render_mako import render_template
-from git_code_debt_server.logic import metrics
+from git_code_debt.server.render_mako import render_template
+from git_code_debt.server.logic import metrics
 from git_code_debt_util.time import data_points_for_time_range
 from git_code_debt_util.time import to_timestamp
 

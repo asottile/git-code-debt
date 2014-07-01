@@ -9,7 +9,7 @@ setup(
         'git_code_debt': [
             'schema/*.sql',
         ],
-        'git_code_debt_server': [
+        'git_code_debt.server': [
             'templates/*.mako',
             'static/css/*.css',
             'static/js/*.js',

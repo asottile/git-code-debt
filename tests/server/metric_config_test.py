@@ -5,8 +5,8 @@ import re
 
 import staticconf.errors
 
-from git_code_debt_server.metric_config import _get_groups_from_yaml
-from git_code_debt_server.metric_config import Group
+from git_code_debt.server.metric_config import _get_groups_from_yaml
+from git_code_debt.server.metric_config import Group
 
 
 def test_Group_from_yaml():

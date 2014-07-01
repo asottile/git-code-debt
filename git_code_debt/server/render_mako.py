@@ -4,7 +4,7 @@ import pkg_resources
 
 template_lookup = mako.lookup.TemplateLookup(
     directories=[
-        pkg_resources.resource_filename('git_code_debt_server', 'templates'),
+        pkg_resources.resource_filename('git_code_debt.server', 'templates'),
     ],
 )
 
