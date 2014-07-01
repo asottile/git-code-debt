@@ -4,6 +4,7 @@ import collections
 import sqlite3
 import sys
 
+from git_code_debt import options
 from git_code_debt.discovery import get_metric_parsers_from_args
 from git_code_debt.file_diff_stat import get_file_diff_stats_from_output
 from git_code_debt.logic import get_metric_mapping
@@ -82,28 +83,13 @@ def main(argv):
     parser = argparse.ArgumentParser(
         description='Generates metrics from a git repo',
     )
-    parser.add_argument(
-        'repo', help='Repository link to generate metrics from',
-    )
-    parser.add_argument('database', help='Database file')
-    parser.add_argument(
-        '--skip-default-metrics',
-        default=False,
-        action='store_true',
-        help='Whether to skip the default metrics',
-    )
-    parser.add_argument(
-        'metric_package_names',
-        type=str,
-        nargs='*',
-        help='Metric Package Names (such as foo.metrics bar.metrics)',
-    )
-    parser.add_argument(
-        '--tempdir-location',
-        type=str,
-        default=None,
-        help='Override location of temp dirs, default is system default.',
-    )
+    # optional
+    options.add_skip_default_metrics(parser)
+    options.add_tempdir_location(parser)
+    # positional
+    options.add_repo(parser)
+    options.add_database(parser)
+    options.add_metric_package_names(parser)
     args = parser.parse_args(argv)
 
     load_data(

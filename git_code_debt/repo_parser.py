@@ -5,9 +5,10 @@ import shutil
 import subprocess
 import tempfile
 
-from git_code_debt_util.iter import chunk_iter
-from git_code_debt_util.subprocess import cmd_output
+from git_code_debt.util.iter import chunk_iter
+from git_code_debt.util.subprocess import cmd_output
 
+# pylint:disable=star-args
 
 # TODO: remove name since we can't really do anything useful with it
 Commit = collections.namedtuple('Commit', ['sha', 'date', 'name'])

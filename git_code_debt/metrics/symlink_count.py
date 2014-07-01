@@ -11,9 +11,10 @@ class SymlinkCount(DiffParserBase):
 
         for file_diff_stat in file_diff_stats:
             if (
-                file_diff_stat.special_file is not None and
-                file_diff_stat.special_file.file_type is
-                    SpecialFileType.SYMLINK
+                    file_diff_stat.special_file is not None and (
+                        file_diff_stat.special_file.file_type is
+                        SpecialFileType.SYMLINK
+                    )
             ):
                 if file_diff_stat.status is Status.ADDED:
                     symlink_delta += 1

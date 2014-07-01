@@ -13,8 +13,8 @@ from git_code_debt.create_tables import create_schema
 from git_code_debt.create_tables import populate_metric_ids
 from git_code_debt.repo_parser import Commit
 from git_code_debt.repo_parser import COMMIT_FORMAT
-from git_code_debt_util import five
-from git_code_debt_util.subprocess import cmd_output
+from git_code_debt.util import five
+from git_code_debt.util.subprocess import cmd_output
 from testing.utilities.auto_namedtuple import auto_namedtuple
 from testing.utilities.cwd import cwd
 

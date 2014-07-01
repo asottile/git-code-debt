@@ -23,8 +23,8 @@ SpecialFile = collections.namedtuple(
 
 
 class FileDiffStat(collections.namedtuple(
-    'FileDiffStat',
-    ['path', 'lines_added', 'lines_removed', 'status', 'special_file'],
+        'FileDiffStat',
+        ['path', 'lines_added', 'lines_removed', 'status', 'special_file'],
 )):
     __slots__ = ()
 
@@ -145,4 +145,4 @@ GIT_DIFF_RE = re.compile('^diff --git', flags=re.MULTILINE)
 def get_file_diff_stats_from_output(output):
     files = GIT_DIFF_RE.split(output)
     assert not files[0].strip() or files[0].startswith('commit ')
-    return map(_to_file_diff_stat, files[1:])
+    return [_to_file_diff_stat(file_diff) for file_diff in files[1:]]

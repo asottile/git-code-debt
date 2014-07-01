@@ -1,5 +1,5 @@
 [MESSAGES CONTROL]
-disable=missing-docstring,abstract-method,fixme,locally-disabled
+disable=missing-docstring,abstract-method,fixme,locally-disabled,invalid-name
 
 [REPORTS]
 output-format=colorized
