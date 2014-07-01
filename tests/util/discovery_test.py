@@ -1,7 +1,7 @@
 
 import testing.testing_package.package_a
 import testing.testing_package.package_b
-from git_code_debt_util.discovery import discover
+from git_code_debt.util.discovery import discover
 from testing.testing_package.package_a.foo import Base
 
 

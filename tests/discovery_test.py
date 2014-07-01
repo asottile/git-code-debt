@@ -6,7 +6,7 @@ from git_code_debt.discovery import get_metric_parsers
 from git_code_debt.discovery import get_modules
 from git_code_debt.discovery import is_metric_cls
 from git_code_debt.metrics.base import DiffParserBase
-from git_code_debt_util.discovery import discover
+from git_code_debt.util.discovery import discover
 
 
 def test_is_metric_parser_is_DiffParserBase():

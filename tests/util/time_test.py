@@ -1,8 +1,8 @@
 
 import datetime
 
-from git_code_debt_util.time import data_points_for_time_range
-from git_code_debt_util.time import to_timestamp
+from git_code_debt.util.time import data_points_for_time_range
+from git_code_debt.util.time import to_timestamp
 
 
 def test_to_timestamp():

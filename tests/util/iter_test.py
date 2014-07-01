@@ -1,7 +1,7 @@
 
 import pytest
 
-from git_code_debt_util.iter import chunk_iter
+from git_code_debt.util.iter import chunk_iter
 
 
 @pytest.mark.parametrize(('input', 'n', 'expected_output'), (

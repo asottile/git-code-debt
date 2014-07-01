@@ -4,8 +4,8 @@ import simplejson
 
 from git_code_debt.server.render_mako import render_template
 from git_code_debt.server.logic import metrics
-from git_code_debt_util.time import data_points_for_time_range
-from git_code_debt_util.time import to_timestamp
+from git_code_debt.util.time import data_points_for_time_range
+from git_code_debt.util.time import to_timestamp
 
 
 graph = flask.Blueprint('graph', __name__)

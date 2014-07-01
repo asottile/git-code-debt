@@ -2,7 +2,7 @@
 import sys
 
 from git_code_debt.metrics.base import DiffParserBase
-from git_code_debt_util.discovery import discover
+from git_code_debt.util.discovery import discover
 
 
 def is_metric_cls(cls):
