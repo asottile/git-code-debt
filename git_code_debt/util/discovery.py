@@ -14,9 +14,9 @@ def discover(package, cls_match_func):
     """
     matched_classes = set()
 
-    for importer, module_name, ispkg in pkgutil.walk_packages(
-        package.__path__,
-        prefix=package.__name__ + '.',
+    for _, module_name, _ in pkgutil.walk_packages(
+            package.__path__,
+            prefix=package.__name__ + '.',
     ):
         __import__(module_name)
         module = sys.modules[module_name]

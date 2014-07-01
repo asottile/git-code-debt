@@ -17,7 +17,7 @@ def test_simple_base_counter():
     parser = TestCounter()
     assert parser.get_possible_metric_ids() == ['TestCounter']
 
-    input = [
+    input_stats = [
         FileDiffStat(
             'test.py',
             ['a', 'b', 'c'],
@@ -26,7 +26,7 @@ def test_simple_base_counter():
         ),
     ]
 
-    metrics = list(parser.get_metrics_from_stat(input))
+    metrics = list(parser.get_metrics_from_stat(input_stats))
     assert metrics == [Metric('TestCounter', 2)]
 
 

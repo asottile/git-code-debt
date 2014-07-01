@@ -22,7 +22,7 @@ def before_request():
 
 
 @app.teardown_request
-def teardown_request(exception):
+def teardown_request(_):
     flask.g.db.close()
 
 if __name__ == '__main__':

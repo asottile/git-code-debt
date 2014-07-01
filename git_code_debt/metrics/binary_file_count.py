@@ -11,8 +11,10 @@ class BinaryFileCount(DiffParserBase):
 
         for file_diff_stat in file_diff_stats:
             if (
-                file_diff_stat.special_file is not None and
-                file_diff_stat.special_file.file_type is SpecialFileType.BINARY
+                    file_diff_stat.special_file is not None and (
+                        file_diff_stat.special_file.file_type is
+                        SpecialFileType.BINARY
+                    )
             ):
                 if file_diff_stat.status is Status.ADDED:
                     binary_delta += 1

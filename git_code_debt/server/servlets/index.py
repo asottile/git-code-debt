@@ -32,7 +32,7 @@ GroupPresenter = collections.namedtuple('GroupPresenter', ['name', 'metrics'])
 
 
 class DeltaPresenter(collections.namedtuple(
-    'DeltaPresenter', ['url', 'value'],
+        'DeltaPresenter', ['url', 'value'],
 )):
     __slots__ = ()
 
@@ -47,14 +47,14 @@ class DeltaPresenter(collections.namedtuple(
 
 
 class MetricPresenter(collections.namedtuple(
-    'MetricPresenter',
-    [
-        'name',
-        'color_override',
-        'current_value',
-        'historic_deltas',
-        'all_data_url',
-    ],
+        'MetricPresenter',
+        [
+            'name',
+            'color_override',
+            'current_value',
+            'historic_deltas',
+            'all_data_url',
+        ],
 )):
     __slots__ = ()
 
@@ -67,12 +67,12 @@ class MetricPresenter(collections.namedtuple(
 
     @classmethod
     def from_data(
-        cls,
-        metric_name,
-        today_timestamp,
-        offsets,
-        current_values,
-        metric_data,
+            cls,
+            metric_name,
+            today_timestamp,
+            offsets,
+            current_values,
+            metric_data,
     ):
         return cls(
             metric_name,
@@ -98,11 +98,11 @@ class MetricPresenter(collections.namedtuple(
 
 
 def format_groups(
-    metric_names,
-    today_timestamp,
-    offsets,
-    current_values,
-    metric_data,
+        metric_names,
+        today_timestamp,
+        offsets,
+        current_values,
+        metric_data,
 ):
     metric_presenters = dict(
         (metric_name, MetricPresenter.from_data(

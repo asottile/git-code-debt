@@ -81,7 +81,7 @@ index herp...derp 100644
 +\r+
 """
 
-COMMIT_ADDING_SYMLINK = """diff --git a/pa2 b/pa2
+COMMIT_ADDING_SYMLINK = r"""diff --git a/pa2 b/pa2
 new file mode 120000
 index 0000000..989c69d
 --- /dev/null
@@ -91,7 +91,7 @@ index 0000000..989c69d
 \ No newline at end of file
 """
 
-COMMIT_REMOVING_SYMLINK = """diff --git a/pa2 b/pa2
+COMMIT_REMOVING_SYMLINK = r"""diff --git a/pa2 b/pa2
 deleted file mode 120000
 index 989c69d..0000000
 --- a/pa2
@@ -101,7 +101,7 @@ index 989c69d..0000000
 \ No newline at end of file
 """
 
-COMMIT_MOVING_SYMLINK = """diff --git a/pa2 b/pa2
+COMMIT_MOVING_SYMLINK = r"""diff --git a/pa2 b/pa2
 index 989c69d..7b8b995 120000
 --- a/pa2
 +++ b/pa2
@@ -433,7 +433,7 @@ def test_modified_binary_commit():
     ret = get_file_diff_stats_from_output(MODIFY_BINARY_COMMIT)
     assert ret == [
         FileDiffStat(
-            'foo.pdf',  [], [], Status.ALREADY_EXISTING,
+            'foo.pdf', [], [], Status.ALREADY_EXISTING,
             special_file=SpecialFile(
                 file_type=SpecialFileType.BINARY,
                 added='foo.pdf',

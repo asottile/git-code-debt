@@ -38,7 +38,7 @@ def test_template_imports(line, expected):
 
 def test_python_import_parser():
     parser = PythonImportCount()
-    input = [
+    input_stats = [
         FileDiffStat(
             'test.py',
             ['import collections', 'from os import path'],
@@ -47,13 +47,13 @@ def test_python_import_parser():
         ),
     ]
 
-    metrics = list(parser.get_metrics_from_stat(input))
+    metrics = list(parser.get_metrics_from_stat(input_stats))
     assert metrics == [Metric('PythonImportCount', 1)]
 
 
 def test_template_import_parser():
     parser = CheetahTemplateImportCount()
-    input = [
+    input_stats = [
         FileDiffStat(
             'test.tmpl',
             ['#import collections', '#from os import path'],
@@ -62,5 +62,5 @@ def test_template_import_parser():
         ),
     ]
 
-    metrics = list(parser.get_metrics_from_stat(input))
+    metrics = list(parser.get_metrics_from_stat(input_stats))
     assert metrics == [Metric('CheetahTemplateImportCount', 1)]

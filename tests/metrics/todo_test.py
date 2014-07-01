@@ -6,7 +6,7 @@ from git_code_debt.metrics.todo import TODOCount
 
 def test_parser():
     parser = TODOCount()
-    input = [
+    input_stats = [
         FileDiffStat(
             'foo/bar.py',
             ['# TO' + 'DO: herp all the derps', 'womp'],
@@ -14,5 +14,5 @@ def test_parser():
             None,
         ),
     ]
-    metrics = list(parser.get_metrics_from_stat(input))
+    metrics = list(parser.get_metrics_from_stat(input_stats))
     assert metrics == [Metric('TODOCount', 1)]
