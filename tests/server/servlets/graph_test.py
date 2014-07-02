@@ -4,6 +4,7 @@ import mock
 import pytest
 
 from git_code_debt.metrics.imports import PythonImportCount
+from git_code_debt.util import five
 from testing.assertions.response import assert_no_response_errors
 from testing.assertions.response import assert_redirect
 
@@ -21,7 +22,7 @@ def test_all_data(server_with_data):
         resp,
         flask.url_for('graph.show', metric_name=PythonImportCount.__name__),
         {
-            'start': [unicode(timestamp)],
+            'start': [five.text(timestamp)],
             'end': [mock.ANY],
         },
     )
@@ -51,8 +52,8 @@ def test_show(server_with_data):
     resp = server_with_data.server.client.get(flask.url_for(
         'graph.show',
         metric_name=PythonImportCount.__name__,
-        start=unicode(timestamp - 1000),
-        end=unicode(timestamp + 1000),
+        start=five.text(timestamp - 1000),
+        end=five.text(timestamp + 1000),
     ))
     assert_no_response_errors(resp)
 

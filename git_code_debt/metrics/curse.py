@@ -36,7 +36,7 @@ class CurseWordsParser(DiffParserBase):
 
         # Yield overall metric and one per type of expected mapping types
         yield Metric('TotalCurseWords', total_curses)
-        for file_type in set(FILE_TYPE_MAP.values() + ['unknown']):
+        for file_type in set(FILE_TYPE_MAP.values()) | set(['unknown']):
             curses_changed = curses_by_file_type.get(file_type, 0)
             yield Metric(
                 'TotalCurseWords_{0}'.format(file_type),
@@ -46,5 +46,5 @@ class CurseWordsParser(DiffParserBase):
     def get_possible_metric_ids(self):
         return ['TotalCurseWords'] + [
             'TotalCurseWords_{0}'.format(file_type)
-            for file_type in set(FILE_TYPE_MAP.values() + ['unknown'])
+            for file_type in set(FILE_TYPE_MAP.values()) | set(['unknown'])
         ]
