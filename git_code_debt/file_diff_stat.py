@@ -4,6 +4,9 @@ import os.path
 import re
 
 
+# pylint:disable=too-many-branches,too-many-statements
+
+
 class Status(object):
     ADDED = object()
     DELETED = object()

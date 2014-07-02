@@ -3,6 +3,9 @@ import collections
 import flask
 
 
+# pylint:disable=star-args
+
+
 Metric = collections.namedtuple('Metric', ['name', 'value', 'date'])
 
 

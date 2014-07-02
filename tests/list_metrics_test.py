@@ -10,6 +10,9 @@ from git_code_debt.list_metrics import main
 from git_code_debt.list_metrics import NORMAL
 
 
+# pylint:disable=redefined-outer-name
+
+
 @pytest.yield_fixture
 def print_mock():
     with mock.patch.object(__builtin__, 'print', autospec=True) as print_mock:

@@ -11,10 +11,11 @@ from git_code_debt.server.metric_config import Group
 
 def test_Group_from_yaml():
     # Simulate a call we would get from yaml
-    group = Group.from_yaml('BazGroup', **{
-        'metrics': ['Foo', 'Bar'],
-        'metric_expressions': ['^.*Baz.*$'],
-    })
+    group = Group.from_yaml(
+        'BazGroup',
+        metrics=['Foo', 'Bar'],
+        metric_expressions=['^.*Baz.*$'],
+    )
 
     assert (
         group ==

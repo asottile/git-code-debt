@@ -1,6 +1,9 @@
 from git_code_debt.metric import Metric
 
 
+# pylint:disable=no-self-use,unused-argument
+
+
 class DiffParserBase(object):
     """Generates metrics from git show"""
     # Specify __metric__ = False to not be included

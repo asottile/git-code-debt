@@ -8,6 +8,9 @@ from git_code_debt import repo_parser
 from testing.utilities.auto_namedtuple import auto_namedtuple
 
 
+# pylint:disable=redefined-outer-name
+
+
 @pytest.mark.integration
 def test_repo_checked_out(cloneable):
     parser = repo_parser.RepoParser(cloneable)

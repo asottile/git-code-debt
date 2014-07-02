@@ -9,4 +9,4 @@ def auto_namedtuple(classname='auto_namedtuple', **kwargs):
         classname - The class name for the returned object.
         **kwargs - Properties to give the returned object.
     """
-    return (collections.namedtuple(classname, kwargs.keys())(**kwargs))
+    return collections.namedtuple(classname, kwargs.keys())(**kwargs)
