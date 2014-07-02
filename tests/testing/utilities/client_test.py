@@ -7,6 +7,9 @@ from testing.utilities.client import Client
 from testing.utilities.response import Response
 
 
+# pylint:disable=redefined-outer-name,unused-argument
+
+
 @pytest.yield_fixture
 def client_open_mock():
     with mock.patch.object(

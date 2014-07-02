@@ -11,6 +11,9 @@ from testing.utilities.auto_namedtuple import auto_namedtuple
 from testing.utilities.client import Client
 
 
+# pylint:disable=redefined-outer-name
+
+
 class GitCodeDebtServer(object):
     def __init__(self, client, sandbox):
         self.client = client

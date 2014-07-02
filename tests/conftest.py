@@ -19,6 +19,9 @@ from testing.utilities.auto_namedtuple import auto_namedtuple
 from testing.utilities.cwd import cwd
 
 
+# pylint:disable=redefined-outer-name
+
+
 @pytest.yield_fixture
 def tmpdir_factory(tmpdir):
     class TmpdirFactory(object):

@@ -14,6 +14,9 @@ from git_code_debt.logic import insert_metric_values
 from git_code_debt.repo_parser import RepoParser
 
 
+# pylint:disable=too-many-locals
+
+
 def get_metrics(diff, metric_parsers):
     def get_all_metrics(file_diff_stats):
         for metric_parser_cls in metric_parsers:

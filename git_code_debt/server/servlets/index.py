@@ -9,6 +9,10 @@ from git_code_debt.server.render_mako import render_template
 from git_code_debt.server.logic import metrics
 from git_code_debt.util.time import to_timestamp
 
+
+# pylint:disable=too-many-arguments
+
+
 index = flask.Blueprint('index', __name__)
 
 DATE_NAMES_TO_TIMEDELTAS = (
