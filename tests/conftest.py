@@ -89,7 +89,8 @@ def cloneable_with_commits(cloneable):
         commits.append(Commit(sha, int(date), author))
 
     with cwd(cloneable):
+        make_commit('bar.py', '')
         make_commit('test.py', 'import foo\nimport bar\n')
-        make_commit('foo.tmpl', '#import foo\b#import bar\n')
+        make_commit('foo.tmpl', '#import foo\n#import bar\n')
 
     yield auto_namedtuple(path=cloneable, commits=commits)
