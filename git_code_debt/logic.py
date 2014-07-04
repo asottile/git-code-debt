@@ -45,7 +45,7 @@ def get_metric_values(db, commit):
 
 
 def insert_metric_values(db, metric_values, metric_mapping, repo, commit):
-    for metric_name, value in metric_values.iteritems():
+    for metric_name, value in metric_values.items():
         metric_id = metric_mapping[metric_name]
         db.execute(
             """

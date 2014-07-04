@@ -19,5 +19,5 @@ def chunk_iter(iterable, n):
     assert n > 0
     iterable = iter(iterable)
     while True:
-        chunk = tuple([iterable.next() for _ in xrange(n)])
+        chunk = tuple([next(iterable) for _ in range(n)])
         yield chunk

@@ -1,3 +1,4 @@
+from __future__ import division
 
 import collections
 import datetime
@@ -45,7 +46,7 @@ class DeltaPresenter(collections.namedtuple(
         if not self.value:
             sign = 0
         else:
-            sign = self.value / abs(self.value)
+            sign = self.value // abs(self.value)
 
         return SIGNS_TO_CLASSNAMES[sign]
 

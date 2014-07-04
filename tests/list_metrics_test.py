@@ -1,5 +1,5 @@
-
-import __builtin__
+from __future__ import absolute_import
+from __future__ import unicode_literals
 
 import mock
 import pytest
@@ -8,6 +8,7 @@ from git_code_debt.list_metrics import color
 from git_code_debt.list_metrics import CYAN
 from git_code_debt.list_metrics import main
 from git_code_debt.list_metrics import NORMAL
+from git_code_debt.util.compat import builtins
 
 
 # pylint:disable=redefined-outer-name
@@ -15,7 +16,7 @@ from git_code_debt.list_metrics import NORMAL
 
 @pytest.yield_fixture
 def print_mock():
-    with mock.patch.object(__builtin__, 'print', autospec=True) as print_mock:
+    with mock.patch.object(builtins, 'print', autospec=True) as print_mock:
         yield print_mock
 
 
