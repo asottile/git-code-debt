@@ -8,6 +8,8 @@ class CalledProcessError(RuntimeError):
 
 
 def cmd_output(*cmd, **kwargs):
+    encoding = kwargs.pop('encoding', 'UTF-8')
+
     proc = subprocess.Popen(
         cmd,
         stdout=subprocess.PIPE,
@@ -19,5 +21,8 @@ def cmd_output(*cmd, **kwargs):
 
     if retcode:
         raise CalledProcessError(cmd, stdout, stderr)
+
+    if encoding is not None:
+        stdout = stdout.decode(encoding)
 
     return stdout
