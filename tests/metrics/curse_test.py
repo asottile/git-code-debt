@@ -8,14 +8,14 @@ def test_curse_words_parser():
     parser = CurseWordsParser()
     input_stats = [
         FileDiffStat(
-            'templates/foo.tmpl',
-            ['#man seriously, fuck cheetah'],
+            b'templates/foo.tmpl',
+            [b'#man seriously, fuck cheetah'],
             [],
             None,
         ),
         FileDiffStat(
-            'cmds/foo.py',
-            ["# I'm clean I swear"],
+            b'cmds/foo.py',
+            [b"# I'm clean I swear"],
             [],
             None,
         ),

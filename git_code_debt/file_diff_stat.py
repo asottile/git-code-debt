@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import collections
@@ -47,14 +48,13 @@ class FileDiffStat(collections.namedtuple(
         return os.path.split(self.path)[1]
 
 
-SUBMODULE_MODE = '160000'
-SYMLINK_MODE = '120000'
+SUBMODULE_MODE = b'160000'
+SYMLINK_MODE = b'120000'
 
 
 def _to_file_diff_stat(file_diff):
-    NEWLINE = '\n'
-    lines = file_diff.split(NEWLINE)
-    diff_line_filename = lines[0].split()[-1].lstrip('b').lstrip('/')
+    lines = file_diff.split(b'\n')
+    diff_line_filename = lines[0].split()[-1].lstrip(b'b').lstrip(b'/')
     is_binary = False
     in_diff = False
     mode = None
@@ -71,39 +71,39 @@ def _to_file_diff_stat(file_diff):
         # 3. 'index dc7827c..7b8b995 100644'
         # 4. 'old mode 100755'
         #    'new mode 100644'
-        if line.startswith('new file mode '):
+        if line.startswith(b'new file mode '):
             assert status is None
             assert mode is None
             status = Status.ADDED
             mode = line.split()[-1]
-        elif line.startswith('deleted file mode '):
+        elif line.startswith(b'deleted file mode '):
             assert status is None
             assert mode is None
             status = Status.DELETED
             mode = line.split()[-1]
-        elif line.startswith('new mode '):
+        elif line.startswith(b'new mode '):
             assert status is None
             assert mode is None
             status = Status.ALREADY_EXISTING
             mode = line.split()[-1]
-        elif line.startswith('index') and len(line.split()) == 3:
+        elif line.startswith(b'index') and len(line.split()) == 3:
             assert status is None
             assert mode is None
             status = Status.ALREADY_EXISTING
             mode = line.split()[-1]
-        elif line.startswith('Binary files'):
+        elif line.startswith(b'Binary files'):
             is_binary = True
         # A diff contains lines that look like:
         # --- foo/bar
         # +++ foo/bar
         # Which kind of look like diff lines but are definitely not
-        elif line.startswith('--- ') and not in_diff:
+        elif line.startswith(b'--- ') and not in_diff:
             pass
-        elif line.startswith('+++ ') and not in_diff:
+        elif line.startswith(b'+++ ') and not in_diff:
             in_diff = True
-        elif in_diff and line.startswith('+'):
+        elif in_diff and line.startswith(b'+'):
             lines_added.append(line[1:])
-        elif in_diff and line.startswith('-'):
+        elif in_diff and line.startswith(b'-'):
             lines_removed.append(line[1:])
 
     assert mode is not None
@@ -143,10 +143,11 @@ def _to_file_diff_stat(file_diff):
     )
 
 
-GIT_DIFF_RE = re.compile('^diff --git', flags=re.MULTILINE)
+GIT_DIFF_RE = re.compile(b'^diff --git', flags=re.MULTILINE)
 
 
 def get_file_diff_stats_from_output(output):
+    assert type(output) is bytes, (type(output), output)
     files = GIT_DIFF_RE.split(output)
-    assert not files[0].strip() or files[0].startswith('commit ')
+    assert not files[0].strip() or files[0].startswith(b'commit ')
     return [_to_file_diff_stat(file_diff) for file_diff in files[1:]]

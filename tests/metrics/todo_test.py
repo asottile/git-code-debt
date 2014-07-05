@@ -8,8 +8,8 @@ def test_parser():
     parser = TODOCount()
     input_stats = [
         FileDiffStat(
-            'foo/bar.py',
-            ['# TO' + 'DO: herp all the derps', 'womp'],
+            b'foo/bar.py',
+            [b'# TO' + b'DO: herp all the derps', b'womp'],
             [],
             None,
         ),
