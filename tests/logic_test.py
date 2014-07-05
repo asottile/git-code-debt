@@ -1,8 +1,6 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-import pytest
-
 from git_code_debt.create_tables import get_metric_ids
 from git_code_debt.discovery import get_metric_parsers
 from git_code_debt.logic import get_metric_mapping
@@ -16,7 +14,6 @@ sha = 'a' * 40
 repo = 'git@github.com:asottile/git-code-debt'
 
 
-@pytest.mark.integration
 def test_get_metric_mapping(sandbox):
     with sandbox.db() as db:
         ret = get_metric_mapping(db)
@@ -27,7 +24,6 @@ def test_get_metric_mapping(sandbox):
         )
 
 
-@pytest.mark.integration
 def test_get_previous_sha_no_previous_sha(sandbox):
     with sandbox.db() as db:
         ret = get_previous_sha(db, repo)
@@ -51,7 +47,6 @@ def insert_fake_metrics(db):
     insert_metric_values(db, metric_values, metric_mapping, repo, commit)
 
 
-@pytest.mark.integration
 def test_get_previous_sha_previous_existing_sha(sandbox):
     with sandbox.db() as db:
         insert_fake_metrics(db)
@@ -59,7 +54,6 @@ def test_get_previous_sha_previous_existing_sha(sandbox):
         assert ret == sha
 
 
-@pytest.mark.integration
 def test_insert_and_get_metric_values(sandbox):
     with sandbox.db() as db:
         fake_metrics = get_fake_metrics(get_metric_mapping(db))

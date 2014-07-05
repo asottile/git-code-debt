@@ -1,6 +1,5 @@
 
 import flask
-import pytest
 
 from git_code_debt.server.servlets.index import DeltaPresenter
 from git_code_debt.server.servlets.index import MetricPresenter
@@ -14,12 +13,10 @@ def _test_it_loads(server):
     assert len(response.pq.find('a[href]')) > 0
 
 
-@pytest.mark.integration
 def test_it_loads_no_data(server):
     _test_it_loads(server)
 
 
-@pytest.mark.integration
 def test_it_loads_with_data(server_with_data):
     _test_it_loads(server_with_data.server)
 

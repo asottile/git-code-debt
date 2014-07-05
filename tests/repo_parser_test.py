@@ -13,7 +13,6 @@ from testing.utilities.auto_namedtuple import auto_namedtuple
 # pylint:disable=redefined-outer-name
 
 
-@pytest.mark.integration
 def test_repo_checked_out(cloneable):
     parser = repo_parser.RepoParser(cloneable)
     assert parser.tempdir is None
@@ -39,7 +38,6 @@ def checked_out_repo(cloneable_with_commits):
         )
 
 
-@pytest.mark.integration
 def test_get_commit_shas_all_of_them(checked_out_repo):
     with mock.patch.object(repo_parser, 'cmd_output') as cmd_output_mock:
         commit = repo_parser.Commit('sha', 123, 'asottile')
@@ -50,7 +48,6 @@ def test_get_commit_shas_all_of_them(checked_out_repo):
         assert all_commits == [commit]
 
 
-@pytest.mark.integration
 def test_get_commit_shas_after_date(checked_out_repo):
     with mock.patch.object(repo_parser, 'cmd_output') as cmd_output_mock:
         previous_sha = '29d0d321f43950fd2aa1d1df9fc81dee0e9046b3'
@@ -65,7 +62,6 @@ def test_get_commit_shas_after_date(checked_out_repo):
         )
 
 
-@pytest.mark.integration
 def test_get_commits_since_commit_includes_that_commit(checked_out_repo):
     previous_sha = checked_out_repo.cloneable_with_commits.commits[0].sha
     all_commits = checked_out_repo.repo_parser.get_commit_shas(previous_sha)
@@ -74,7 +70,6 @@ def test_get_commits_since_commit_includes_that_commit(checked_out_repo):
     assert len(shas) == len(set(shas))
 
 
-@pytest.mark.integration
 def test_get_commit(checked_out_repo):
     # Smoke test
     first_commit = checked_out_repo.cloneable_with_commits.commits[0]

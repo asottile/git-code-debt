@@ -1,4 +1,5 @@
 from __future__ import absolute_import
+from __future__ import unicode_literals
 
 import subprocess
 
@@ -20,7 +21,7 @@ def cmd_output(*cmd, **kwargs):
     retcode = proc.returncode
 
     if retcode:
-        raise CalledProcessError(cmd, stdout, stderr)
+        raise CalledProcessError(cmd, retcode, stdout, stderr)
 
     if encoding is not None:
         stdout = stdout.decode(encoding)

@@ -100,8 +100,9 @@ def metrics_for_dates(metric_name, dates):
     return [get_metric_for_timestamp(date) for date in dates]
 
 
-def get_first_data_timestamp(metric_name):
-    result = flask.g.db.execute(
+def get_first_data_timestamp(metric_name, db=None):
+    db = db or flask.g.db
+    result = db.execute(
         '''
         SELECT metric_data.timestamp
         FROM metric_data
@@ -129,7 +130,7 @@ def get_first_data_timestamp(metric_name):
         return result[0]
     else:
         # Otherwise return the first timestamp in the db (or 0 for no data)
-        return flask.g.db.execute(
+        return db.execute(
             '''
             SELECT
                 IFNULL(MIN(metric_data.timestamp), 0)

@@ -20,19 +20,16 @@ def print_mock():
         yield print_mock
 
 
-@pytest.mark.integration
 def test_list_metrics_smoke(print_mock):
     # This test is just to make sure that it doesn't fail catastrophically
     main([])
     assert print_mock.called
 
 
-@pytest.mark.integration
 def test_list_metrics_no_color_smoke(print_mock):
     main(['--color', 'never'])
-    assert all([
-        '\033' not in call[0][0] for call in print_mock.call_args_list
-    ])
+    calls_args = [call[0][0] for call in print_mock.call_args_list]
+    assert all(['\033' not in calls_args])
 
 
 def test_color_no_color():

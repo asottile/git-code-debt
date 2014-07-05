@@ -52,7 +52,7 @@ def load_data(
             commits = repo_parser.get_commit_shas(since_sha=previous_sha)
 
             # If there is nothing to check gtfo
-            if len(commits) == 1:
+            if len(commits) == 1 and previous_sha is not None:
                 return
 
             # Maps metric_name to a running value

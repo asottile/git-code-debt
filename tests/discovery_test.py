@@ -1,8 +1,6 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-import pytest
-
 from git_code_debt.discovery import get_metric_parsers
 from git_code_debt.discovery import get_modules
 from git_code_debt.discovery import is_metric_cls
@@ -38,17 +36,14 @@ class MetricParserInTests(DiffParserBase):
     pass
 
 
-@pytest.mark.integration
 def test_returns_no_metrics_when_defaults_are_off():
     assert set() == get_metric_parsers(include_defaults=False)
 
 
-@pytest.mark.integration
 def test_get_metric_parsers_returns_something():
     assert len(get_metric_parsers()) > 0
 
 
-@pytest.mark.integration
 def test_returns_metrics_defined_in_tests_when_specified():
     import tests
     metrics_in_tests = discover(tests, is_metric_cls)

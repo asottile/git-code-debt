@@ -65,9 +65,7 @@ def cloneable(tmpdir_factory):
     repo_path = tmpdir_factory.get()
     with cwd(repo_path):
         subprocess.check_call(['git', 'init', '.'])
-        subprocess.check_call(['touch', 'foo.py'])
-        subprocess.check_call(['git', 'add', '.'])
-        subprocess.check_call(['git', 'commit', '-m', 'foo'])
+        subprocess.check_call(['git', 'commit', '-m', 'foo', '--allow-empty'])
 
     yield repo_path
 
@@ -76,7 +74,14 @@ def cloneable(tmpdir_factory):
 def cloneable_with_commits(cloneable):
     commits = []
 
+    def append_commit():
+        output = cmd_output('git', 'show', COMMIT_FORMAT)
+        sha, date, author = output.splitlines()[:3]
+        commits.append(Commit(sha, int(date), author))
+
     def make_commit(filename, contents):
+        # Make the graph tests more deterministic
+        # import time; time.sleep(2)
         with io.open(filename, 'w') as file_obj:
             file_obj.write(contents)
 
@@ -84,12 +89,13 @@ def cloneable_with_commits(cloneable):
         subprocess.check_call([
             'git', 'commit', '-m', 'Add {0}'.format(filename),
         ])
-        output = cmd_output('git', 'show', COMMIT_FORMAT)
-        sha, date, author = output.splitlines()[:3]
-        commits.append(Commit(sha, int(date), author))
+        append_commit()
 
     with cwd(cloneable):
+        # Append a commit for the inital commit
+        append_commit()
         make_commit('bar.py', '')
+        make_commit('baz.py', '')
         make_commit('test.py', 'import foo\nimport bar\n')
         make_commit('foo.tmpl', '#import foo\n#import bar\n')
 
