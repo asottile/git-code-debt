@@ -5,8 +5,8 @@ import contextlib
 import mock
 import pytest
 
-import git_code_debt.server.app
 from git_code_debt.generate import main
+from git_code_debt.server import app
 from testing.utilities.auto_namedtuple import auto_namedtuple
 from testing.utilities.client import Client
 
@@ -20,26 +20,29 @@ class GitCodeDebtServer(object):
         self.sandbox = sandbox
 
 
+@contextlib.contextmanager
+def _patch_app_with_client(application):
+    with mock.patch.object(application, 'test_client_class', Client):
+        # Make the app always debug so it throws exceptions
+        with mock.patch.object(
+            type(application), 'debug', mock.PropertyMock(return_value=True),
+        ):
+            yield
+
+
+@contextlib.contextmanager
+def _in_testing_app_context(application):
+    with application.test_request_context():
+        with application.test_client() as client:
+            yield client
+
+
 @pytest.yield_fixture
 def server(sandbox):
-    app = git_code_debt.server.app.app
-    with contextlib.nested(
-        mock.patch.object(app, 'test_client_class', Client),
-        # Making the app always debug so it throws exceptions
-        mock.patch.object(
-            type(app),
-            'debug',
-            mock.PropertyMock(return_value=True),
-        ),
-    ):
-        with contextlib.nested(
-            app.test_request_context(),
-            app.test_client(),
-            mock.patch.object(
-                git_code_debt.server.app, 'database_path', sandbox.db_path,
-            ),
-        ) as (_, client, _):
-            yield GitCodeDebtServer(client, sandbox)
+    with _patch_app_with_client(app.app):
+        with _in_testing_app_context(app.app) as client:
+            with mock.patch.object(app, 'database_path', sandbox.db_path):
+                yield GitCodeDebtServer(client, sandbox)
 
 
 @pytest.yield_fixture

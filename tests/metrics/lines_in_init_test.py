@@ -8,8 +8,8 @@ def test_lines_in_init():
     parser = Python__init__LineCount()
     input_stats = [
         FileDiffStat(
-            'testing/__init__.py',
-            ['from .foo import bar'],
+            b'testing/__init__.py',
+            [b'from .foo import bar'],
             [],
             None,
         ),

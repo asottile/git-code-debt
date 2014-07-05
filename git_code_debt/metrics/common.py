@@ -1,3 +1,6 @@
+from __future__ import absolute_import
+from __future__ import unicode_literals
+
 
 PYTHON = 'Python'
 YAML = 'Yaml'
@@ -16,38 +19,38 @@ SQL = 'SQL'
 # Maps a set of file extensions to a nice name.
 # Updating this will cause that file type to be tracked for LinesOfCode metric.
 FILE_TYPE_MAP = {
-    '.py': PYTHON,
+    b'.py': PYTHON,
 
-    '.yaml': YAML,
-    '.yml': YAML,
+    b'.yaml': YAML,
+    b'.yml': YAML,
 
-    '.css': CSS,
-    '.scss': CSS,
+    b'.css': CSS,
+    b'.scss': CSS,
 
-    '.tmpl': TEMPLATE,
+    b'.tmpl': TEMPLATE,
 
-    '.mako': MAKO_TEMPLATE,
+    b'.mako': MAKO_TEMPLATE,
 
-    '.js': JAVASCRIPT,
+    b'.js': JAVASCRIPT,
 
-    '.java': JAVA,
+    b'.java': JAVA,
 
-    '.ai': ILLUSTRATOR,
+    b'.ai': ILLUSTRATOR,
 
-    '.htm': HTML,
-    '.html': HTML,
+    b'.htm': HTML,
+    b'.html': HTML,
 
-    '.h': CCPP,
-    '.c': CCPP,
-    '.cpp': CCPP,
+    b'.h': CCPP,
+    b'.c': CCPP,
+    b'.cpp': CCPP,
 
-    '.md': TEXT,
-    '.rst': TEXT,
-    '.csv': TEXT,
-    '.log': TEXT,
-    '.json': TEXT,
-    '.xml': TEXT,
-    '.txt': TEXT,
+    b'.md': TEXT,
+    b'.rst': TEXT,
+    b'.csv': TEXT,
+    b'.log': TEXT,
+    b'.json': TEXT,
+    b'.xml': TEXT,
+    b'.txt': TEXT,
 
-    '.sql': SQL,
+    b'.sql': SQL,
 }

@@ -74,10 +74,14 @@ class RepoParser(object):
 
     def get_original_commit(self, sha):
         assert self.tempdir
-        output = cmd_output('git', 'show', sha, cwd=self.tempdir)
+        output = cmd_output(
+            'git', 'show', sha, cwd=self.tempdir, encoding=None,
+        )
         return output
 
     def get_commit_diff(self, previous_sha, sha):
         assert self.tempdir
-        output = cmd_output('git', 'diff', previous_sha, sha, cwd=self.tempdir)
+        output = cmd_output(
+            'git', 'diff', previous_sha, sha, cwd=self.tempdir, encoding=None,
+        )
         return output

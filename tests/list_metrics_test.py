@@ -16,7 +16,7 @@ from git_code_debt.util.compat import builtins
 
 @pytest.yield_fixture
 def print_mock():
-    with mock.patch.object(builtins, 'print', autospec=True) as print_mock:
+    with mock.patch.object(builtins, 'print') as print_mock:
         yield print_mock
 
 

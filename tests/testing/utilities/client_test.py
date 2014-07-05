@@ -12,9 +12,7 @@ from testing.utilities.response import Response
 
 @pytest.yield_fixture
 def client_open_mock():
-    with mock.patch.object(
-        flask.testing.FlaskClient, 'open', autospec=True,
-    ) as open_mock:
+    with mock.patch.object(flask.testing.FlaskClient, 'open') as open_mock:
         yield open_mock
 
 
@@ -24,7 +22,6 @@ def test_patch_ip_sends_along_ip(client_open_mock):
     with instance.patch_ip(remote_addr):
         instance.open('/')
         client_open_mock.assert_called_once_with(
-            instance,
             '/',
             environ_base={'REMOTE_ADDR': remote_addr},
         )
@@ -35,7 +32,6 @@ def test_takes_environment(client_open_mock):
     environ_base = {'foo': 'bar'}
     instance.open('/', environ_base=environ_base)
     client_open_mock.assert_called_once_with(
-        instance,
         '/',
         environ_base=environ_base,
     )
