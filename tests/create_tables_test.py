@@ -1,7 +1,6 @@
 from __future__ import unicode_literals
 
 import os.path
-import pytest
 import sqlite3
 
 from git_code_debt.create_tables import create_schema
@@ -11,7 +10,6 @@ from git_code_debt.create_tables import populate_metric_ids
 from git_code_debt.discovery import get_metric_parsers_from_args
 
 
-@pytest.mark.integration
 def test_create_schema(tmpdir):
     db_path = os.path.join(tmpdir.strpath, 'db.db')
 
@@ -27,7 +25,6 @@ def test_create_schema(tmpdir):
         assert 'metric_data' in table_names
 
 
-@pytest.mark.integration
 def test_populate_metric_ids(tmpdir):
     db_path = os.path.join(tmpdir.strpath, 'db.db')
 
@@ -43,7 +40,6 @@ def test_populate_metric_ids(tmpdir):
         )
 
 
-@pytest.mark.integration
 def test_create_tables_smoke(tmpdir):
     # Basically make sure it runs without crashing
     db_path = os.path.join(tmpdir.strpath, 'db.db')
