@@ -18,5 +18,4 @@ ignored-classes=pytest,staticconf
 min-public-methods=0
 
 [SIMILARITIES]
-min-similarity-lines=5
-
+min-similarity-lines=7
