@@ -42,6 +42,7 @@ setup(
         'console_scripts': [
             'git-code-debt-create-tables = git_code_debt.create_tables:main',
             'git-code-debt-generage = git_code_debt.generate:main',
+            'git-code-debt-list-metrics = git_code_debt.list_metrics:main',
             'git-code-debt-server = git_code_debt.server.app:main',
         ],
     },

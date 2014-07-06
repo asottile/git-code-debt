@@ -19,7 +19,8 @@ def color(text, color_value, color_setting):
     return '{0}{1}{2}'.format(color_value, text, NORMAL)
 
 
-def main(argv):
+def main(argv=None):
+    argv = argv if argv is not None else sys.argv[1:]
     parser = argparse.ArgumentParser(description='List metric parsers')
     # optional
     options.add_color(parser)
@@ -50,4 +51,4 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    exit(main())
