@@ -1,3 +1,6 @@
+from __future__ import absolute_import
+from __future__ import unicode_literals
+
 
 def chunk_iter(iterable, n):
     """Yields an iterator in chunks

@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+from __future__ import unicode_literals
 
 from git_code_debt.file_diff_stat import FileDiffStat
 from git_code_debt.metric import Metric
