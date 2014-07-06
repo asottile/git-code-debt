@@ -6,7 +6,7 @@ from git_code_debt.metric import Metric
 
 class DiffParserBase(object):
     """Generates metrics from git show"""
-    # Specify __metric__ = False to not be included
+    # Specify __metric__ = False to not be included (useful for base classes)
     __metric__ = False
 
     def get_metrics_from_stat(self, file_diff_stats):
@@ -55,17 +55,16 @@ class SimpleLineCounterBase(DiffParserBase):
 
     def should_include_file(self, file_diff_stat):
         """Implement me to return whether a filename should be included.
+        By default, this returns True.
 
-        Args:
-            file_diff_stat - FileDiffStat object
+        :param FileDiffStat file_diff_stat:
         """
         return True
 
     def line_matches_metric(self, line, file_diff_stat):
         """Implement me to return whether a line matches the metric.
 
-        Args:
-            line - Line in the file
-            file_diff_stat - FileDiffStat object
+        :param bytes line: Line in the file
+        :param FileDiffStat file_diff_stat:
         """
         raise NotImplementedError

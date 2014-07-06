@@ -82,7 +82,9 @@ def load_data(
                 compare_commit = commit
 
 
-def main(argv):
+def main(argv=None):
+    argv = argv if argv is not None else sys.argv[1:]
+
     parser = argparse.ArgumentParser(
         description='Generates metrics from a git repo',
     )
@@ -105,4 +107,4 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    exit(main())
