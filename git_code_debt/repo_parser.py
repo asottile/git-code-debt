@@ -48,8 +48,7 @@ class RepoParser(object):
 
         return Commit(sha, int(date), name)
 
-    # TODO: rename this to get_commits
-    def get_commit_shas(self, since_sha=None):
+    def get_commits(self, since_sha=None):
         """Returns a list of Commit objects.
 
         Args:
