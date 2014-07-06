@@ -1,5 +1,5 @@
-
-import sys
+from __future__ import absolute_import
+from __future__ import unicode_literals
 
 from git_code_debt.metrics.base import DiffParserBase
 from git_code_debt.util.discovery import discover
@@ -50,13 +50,10 @@ def get_modules(module_names):
     Returns:
         Module objects for each module specified in module_names
     """
-    modules = []
-
-    for module_name in module_names:
-        __import__(module_name)
-        modules.append(sys.modules[module_name])
-
-    return modules
+    return [
+        __import__(module_name, fromlist=[str('__trash__')])
+        for module_name in module_names
+    ]
 
 
 def get_metric_parsers_from_args(metric_package_names, skip_defaults):

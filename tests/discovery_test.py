@@ -64,8 +64,7 @@ def test_get_modules_no_modules():
 
 
 def test_get_modules_some_modules():
-    ret = get_modules([
-        'git_code_debt.metrics', 'git_code_debt.create_tables',
-    ])
-    # Not a great assertion, but at least it tests that it works
+    module_names = ['git_code_debt.metrics', 'git_code_debt.create_tables']
+    ret = get_modules(module_names)
     assert len(ret) == 2
+    assert [mod.__name__ for mod in ret] == module_names
