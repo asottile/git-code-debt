@@ -49,7 +49,7 @@ def load_data(
 
         with repo_parser.repo_checked_out():
             previous_sha = get_previous_sha(db, repo)
-            commits = repo_parser.get_commit_shas(since_sha=previous_sha)
+            commits = repo_parser.get_commits(since_sha=previous_sha)
 
             # If there is nothing to check gtfo
             if len(commits) == 1 and previous_sha is not None:
