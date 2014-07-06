@@ -4,9 +4,23 @@ import mock
 
 from git_code_debt.metrics.imports import PythonImportCount
 from git_code_debt.metrics.symlink_count import SymlinkCount
+from git_code_debt.util.compat import urllib_parse
 from git_code_debt.util import five
 from testing.assertions.response import assert_no_response_errors
 from testing.assertions.response import assert_redirect
+
+
+class StrLTE(object):
+    """Object when compared == does self.intval <= int(lhs)"""
+
+    def __init__(self, intval):
+        self.intval = intval
+
+    def __eq__(self, other):
+        return self.intval <= int(other)
+
+    def __repr__(self):
+        return 'StrLTE({0})'.format(self.intval)
 
 
 def test_all_data(server_with_data):
@@ -16,12 +30,22 @@ def test_all_data(server_with_data):
     ))
 
     # Should redirect to a show url
-    timestamp = server_with_data.cloneable_with_commits.commits[2].date
     assert_redirect(
         resp,
         flask.url_for('graph.show', metric_name=PythonImportCount.__name__),
-        {'start': [five.text(timestamp)], 'end': [mock.ANY]},
+        # Tested more explicitly below
+        mock.ANY,
     )
+    # This part is a bit racey due to how the commits were made.
+    # Instead of opting for more-exact timing here, I decided to unit test
+    # the underlying function and give a fuzzy check here.  The important part
+    # about this endpoint is it redirects to a show url and doesn't start at 0
+    timestamp = server_with_data.cloneable_with_commits.commits[-1].date
+    parsed_qs = urllib_parse.parse_qs(
+        urllib_parse.urlparse(resp.response.location).query,
+    )
+    assert int(parsed_qs['start'][0]) > 0
+    assert int(parsed_qs['start'][0]) <= timestamp
 
 
 def test_all_data_no_data_for_metric(server_with_data):
