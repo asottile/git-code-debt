@@ -10,19 +10,6 @@ from testing.assertions.response import assert_no_response_errors
 from testing.assertions.response import assert_redirect
 
 
-class StrLTE(object):
-    """Object when compared == does self.intval <= int(lhs)"""
-
-    def __init__(self, intval):
-        self.intval = intval
-
-    def __eq__(self, other):
-        return self.intval <= int(other)
-
-    def __repr__(self):
-        return 'StrLTE({0})'.format(self.intval)
-
-
 def test_all_data(server_with_data):
     resp = server_with_data.server.client.get(flask.url_for(
         'graph.all_data',
