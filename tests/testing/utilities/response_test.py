@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+from __future__ import unicode_literals
 
 from testing.utilities.response import Response
 from testing.utilities.auto_namedtuple import auto_namedtuple

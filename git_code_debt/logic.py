@@ -1,3 +1,6 @@
+from __future__ import absolute_import
+from __future__ import unicode_literals
+
 
 def get_metric_mapping(db):
     """Gets a mapping from metric_name to metric_id."""
