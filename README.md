@@ -45,7 +45,7 @@ $ git-code-debt-generate git://github.com/asottile/git-code-debt database.db
     `git-code-debt-create-tables` as well as `git-code-debt-generate`.
 
 
-The simplest way to write your own custom metrics is to instead extend
+The simplest way to write your own custom metrics is to extend
 `git_code_debt.metrics.base.SimpleLineCounterBase`
 
 
