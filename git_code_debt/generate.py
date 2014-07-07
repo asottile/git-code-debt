@@ -1,8 +1,10 @@
 from __future__ import absolute_import
+from __future__ import print_function
 from __future__ import unicode_literals
 
 import argparse
 import collections
+import os.path
 import sqlite3
 import sys
 
@@ -98,6 +100,11 @@ def main(argv=None):
     options.add_database(parser)
     options.add_metric_package_names(parser)
     args = parser.parse_args(argv)
+
+    if not os.path.exists(args.database):
+        print('Not found: {0}'.format(args.database))
+        print('Use git-code-debt-create-tables to create a database.')
+        return 1
 
     load_data(
         args.database,

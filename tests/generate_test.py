@@ -26,6 +26,11 @@ def test_generate_integration(sandbox, cloneable):
     main([cloneable, sandbox.db_path])
 
 
+def test_main_no_files_exist(cloneable):
+    ret = main([cloneable, 'i_dont_exist.db'])
+    assert ret == 1
+
+
 def get_metric_data_count(sandbox):
     with sandbox.db() as db:
         return db.execute('SELECT COUNT(*) FROM metric_data').fetchone()[0]

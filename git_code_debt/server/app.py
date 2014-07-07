@@ -1,8 +1,10 @@
 from __future__ import absolute_import
+from __future__ import print_function
 from __future__ import unicode_literals
 
 import argparse
 import flask
+import os.path
 import sqlite3
 import sys
 
@@ -36,8 +38,16 @@ def main(argv=None):  # pragma: no cover (starts a web server)
     parser = argparse.ArgumentParser()
     parser.add_argument('database_path', type=str)
     parser.add_argument('--port', type=int, default=5000)
-    args = parser.parse_args()
-    # TODO: is there a more elegant way to do this?
+    args = parser.parse_args(argv)
+
+    if not os.path.exists(args.database_path):
+        print('Not found: {0}'.format(args.database_path))
+        print(
+            'Use git-code-debt-create-tables and git-code-debt-generate to '
+            'create a database.'
+        )
+        return 1
+
     AppContext.database_path = args.database_path
     app.run('0.0.0.0', port=args.port, debug=True)
 
