@@ -111,3 +111,12 @@ class DiffParserBase(object):
     def get_possible_metric_ids(self):
         raise NotImplementedError
 ```
+
+
+## Some screenshots
+
+### Index
+![Example screen index](https://raw.githubusercontent.com/asottile/git-code-debt/master/img/debt_screen_1.png)
+
+### Graph
+![Example screen graph](https://raw.githubusercontent.com/asottile/git-code-debt/master/img/debt_screen_2.png)
