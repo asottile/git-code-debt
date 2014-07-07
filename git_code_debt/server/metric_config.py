@@ -10,12 +10,6 @@ import staticconf.getters
 
 
 CONFIG_NAMESPACE = 'metric_config'
-metric_config_watcher = staticconf.ConfigFacade.load(
-    'metric_config.yaml',
-    CONFIG_NAMESPACE,
-    staticconf.YamlConfiguration,
-    min_interval=30,
-)
 metric_config_getter = staticconf.NamespaceGetters(CONFIG_NAMESPACE)
 
 
