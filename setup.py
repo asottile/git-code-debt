@@ -28,6 +28,7 @@ setup(
             'templates/*.mako',
             'static/css/*.css',
             'static/js/*.js',
+            'metric_config.sample.yaml',
         ],
     },
     install_requires=[
