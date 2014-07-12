@@ -4,7 +4,7 @@ from git_code_debt.server.servlets.index import DATE_NAMES_TO_TIMEDELTAS
 
 <%inherit file="base.mako" />
 
-<%block name="title">Index</%block>
+<%block name="title">Code Debt - Index</%block>
 
 <%block name="css">
     <link rel="stylesheet" type="text/css" href="/static/css/git_code_debt.css">

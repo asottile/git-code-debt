@@ -4,7 +4,7 @@
     import flask
 %>
 
-<%block name="title">${metric_name}</%block>
+<%block name="title">Graph - ${metric_name}</%block>
 
 <%block name="css">
     ${parent.css()}
