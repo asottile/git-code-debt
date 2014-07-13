@@ -12,10 +12,9 @@ from git_code_debt.util.subprocess import cmd_output
 
 # pylint:disable=star-args
 
-# TODO: remove name since we can't really do anything useful with it
-Commit = collections.namedtuple('Commit', ['sha', 'date', 'name'])
+Commit = collections.namedtuple('Commit', ['sha', 'date'])
 
-COMMIT_FORMAT = '--format=%H%n%ct%n%cN'
+COMMIT_FORMAT = '--format=%H%n%ct'
 
 
 class RepoParser(object):
@@ -46,9 +45,9 @@ class RepoParser(object):
             'git', 'show', COMMIT_FORMAT, sha,
             cwd=self.tempdir,
         )
-        sha, date, name, = output.splitlines()[:3]
+        sha, date = output.splitlines()[:2]
 
-        return Commit(sha, int(date), name)
+        return Commit(sha, int(date))
 
     def get_commits(self, since_sha=None):
         """Returns a list of Commit objects.
@@ -68,8 +67,8 @@ class RepoParser(object):
 
         output = cmd_output(*cmd, cwd=self.tempdir)
 
-        for sha, date, name in chunk_iter(output.splitlines(), 3):
-            commits.append(Commit(sha, int(date), name))
+        for sha, date in chunk_iter(output.splitlines(), 2):
+            commits.append(Commit(sha, int(date)))
 
         return commits
 

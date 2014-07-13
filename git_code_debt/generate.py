@@ -52,7 +52,7 @@ def load_data(
         repo_parser = RepoParser(repo, tempdir_location=tempdir_location)
 
         with repo_parser.repo_checked_out():
-            previous_sha = get_previous_sha(db, repo)
+            previous_sha = get_previous_sha(db)
             commits = repo_parser.get_commits(since_sha=previous_sha)
 
             # If there is nothing to check gtfo
@@ -79,9 +79,7 @@ def load_data(
 
                 metrics = get_metrics(diff, metric_parsers)
                 increment_metric_values(metric_values, metrics)
-                insert_metric_values(
-                    db, metric_values, metric_mapping, repo, commit,
-                )
+                insert_metric_values(db, metric_values, metric_mapping, commit)
 
                 compare_commit = commit
 

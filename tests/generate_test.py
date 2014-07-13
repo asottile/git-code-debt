@@ -3,8 +3,6 @@ from __future__ import unicode_literals
 
 import collections
 import os
-import pytest
-import sqlite3
 
 from git_code_debt.generate import increment_metric_values
 from git_code_debt.generate import main
@@ -77,7 +75,7 @@ def test_regression_for_issue_10(sandbox, cloneable):
 
     main([cloneable, sandbox.db_path])
     data_count_before = get_metric_data_count(sandbox)
-    with pytest.raises(sqlite3.IntegrityError):
-        main([cloneable, sandbox.db_path])
+    # Used to raise IntegrityError
+    main([cloneable, sandbox.db_path])
     data_count_after = get_metric_data_count(sandbox)
     assert data_count_before == data_count_after

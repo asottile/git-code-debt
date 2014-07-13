@@ -8,18 +8,11 @@ def get_metric_mapping(db):
     return dict(results)
 
 
-def get_previous_sha(db, repo):
-    """Gets the latest inserted SHA for a specific repo."""
+def get_previous_sha(db):
+    """Gets the latest inserted SHA."""
     result = db.execute(
-        """
-        SELECT
-            sha
-        FROM metric_data
-        WHERE repo = ?
-        ORDER BY timestamp DESC
-        LIMIT 1
-        """,
-        [repo]
+        # Use ROWID as a free, auto-incrementing, primary key.
+        'SELECT sha FROM metric_data ORDER BY ROWID DESC LIMIT 1',
     ).fetchone()
 
     return result[0] if result else None
@@ -47,14 +40,14 @@ def get_metric_values(db, commit):
     return dict(results)
 
 
-def insert_metric_values(db, metric_values, metric_mapping, repo, commit):
+def insert_metric_values(db, metric_values, metric_mapping, commit):
     for metric_name, value in metric_values.items():
         metric_id = metric_mapping[metric_name]
         db.execute(
             """
             INSERT INTO metric_data
-            (repo, sha, metric_id, timestamp, running_value)
-            VALUES (?, ?, ?, ?, ?)
+            (sha, metric_id, timestamp, running_value)
+            VALUES (?, ?, ?, ?)
             """,
-            [repo, commit.sha, metric_id, commit.date, value],
+            [commit.sha, metric_id, commit.date, value],
         )
