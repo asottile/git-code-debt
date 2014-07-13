@@ -76,8 +76,8 @@ def cloneable_with_commits(cloneable):
 
     def append_commit():
         output = cmd_output('git', 'show', COMMIT_FORMAT)
-        sha, date, author = output.splitlines()[:3]
-        commits.append(Commit(sha, int(date), author))
+        sha, date = output.splitlines()[:2]
+        commits.append(Commit(sha, int(date)))
 
     def make_commit(filename, contents):
         # Make the graph tests more deterministic
