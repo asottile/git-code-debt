@@ -10,10 +10,6 @@ from git_code_debt.logic import insert_metric_values
 from git_code_debt.repo_parser import Commit
 
 
-sha = 'a' * 40
-repo = 'git@github.com:asottile/git-code-debt'
-
-
 def test_get_metric_mapping(sandbox):
     with sandbox.db() as db:
         ret = get_metric_mapping(db)
@@ -26,7 +22,7 @@ def test_get_metric_mapping(sandbox):
 
 def test_get_previous_sha_no_previous_sha(sandbox):
     with sandbox.db() as db:
-        ret = get_previous_sha(db, repo)
+        ret = get_previous_sha(db)
         assert ret is None
 
 
@@ -36,27 +32,24 @@ def get_fake_metrics(metric_mapping):
     )
 
 
-def get_fake_commit():
-    return Commit(sha, 1, 'foo')
-
-
 def insert_fake_metrics(db):
     metric_mapping = get_metric_mapping(db)
     metric_values = get_fake_metrics(metric_mapping)
-    commit = get_fake_commit()
-    insert_metric_values(db, metric_values, metric_mapping, repo, commit)
+    for sha_part in ('a', 'b', 'c'):
+        commit = Commit(sha_part * 40, 1, '')
+        insert_metric_values(db, metric_values, metric_mapping, commit)
 
 
 def test_get_previous_sha_previous_existing_sha(sandbox):
     with sandbox.db() as db:
         insert_fake_metrics(db)
-        ret = get_previous_sha(db, repo)
-        assert ret == sha
+        ret = get_previous_sha(db)
+        assert ret == 'c' * 40
 
 
 def test_insert_and_get_metric_values(sandbox):
     with sandbox.db() as db:
         fake_metrics = get_fake_metrics(get_metric_mapping(db))
-        fake_commit = get_fake_commit()
+        fake_commit = Commit('a' * 40, 1, '')
         insert_fake_metrics(db)
         assert fake_metrics == get_metric_values(db, fake_commit)

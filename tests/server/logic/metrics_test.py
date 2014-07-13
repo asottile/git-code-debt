@@ -18,7 +18,6 @@ def insert(db, sha, timestamp, value):
         db,
         {'PythonImportCount': value},
         metric_mapping,
-        'r',
         Commit(sha, timestamp, None),
     )
 
