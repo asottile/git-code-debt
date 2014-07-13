@@ -15,7 +15,7 @@ from git_code_debt.util.subprocess import cmd_output
 # TODO: remove name since we can't really do anything useful with it
 Commit = collections.namedtuple('Commit', ['sha', 'date', 'name'])
 
-COMMIT_FORMAT = '--format=%H%n%at%n%cN'
+COMMIT_FORMAT = '--format=%H%n%ct%n%cN'
 
 
 class RepoParser(object):
