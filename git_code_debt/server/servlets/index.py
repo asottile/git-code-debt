@@ -9,7 +9,7 @@ import flask
 from git_code_debt.server.metric_config import color_overrides
 from git_code_debt.server.metric_config import groups
 from git_code_debt.server.render_mako import render_template
-from git_code_debt.server.logic import metrics
+from git_code_debt.server import logic
 from git_code_debt.util.time import to_timestamp
 
 
@@ -153,20 +153,18 @@ def format_groups(
 
 @index.route('/')
 def show():
-    metric_names = metrics.get_metric_ids_from_database()
+    metric_names = logic.get_metric_ids_from_database()
     today = datetime.datetime.today()
     today_timestamp = to_timestamp(today)
     offsets = [
         (time_name, to_timestamp(today - offset))
         for (time_name, offset) in DATE_NAMES_TO_TIMEDELTAS
     ]
-    current_values = metrics.get_metrics_for_sha(
-        metrics.get_latest_sha(),
-    )
+    current_values = logic.get_metrics_for_sha(logic.get_latest_sha())
     metric_data = dict(
         (
             time_name,
-            metrics.get_metrics_for_sha(metrics.get_sha_for_date(timestamp)),
+            logic.get_metrics_for_sha(logic.get_sha_for_date(timestamp)),
         )
         for (time_name, timestamp) in offsets
     )
