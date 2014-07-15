@@ -6,11 +6,6 @@
 
 <%block name="title">Graph - ${metric_name}</%block>
 
-<%block name="css">
-    ${parent.css()}
-    <link rel="stylesheet" type="text/css" href="/static/css/git_code_debt.css">
-</%block>
-
 <%block name="scripts">
     ${parent.scripts()}
     <script src="/static/js/jquery.flot.min.js"></script>

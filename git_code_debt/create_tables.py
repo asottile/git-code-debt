@@ -9,6 +9,7 @@ import sqlite3
 import sys
 
 from git_code_debt import options
+from git_code_debt import write_logic
 from git_code_debt.discovery import get_metric_parsers_from_args
 
 
@@ -34,11 +35,7 @@ def get_metric_ids(metric_parsers):
 def populate_metric_ids(db, package_names, skip_defaults):
     metric_parsers = get_metric_parsers_from_args(package_names, skip_defaults)
     metric_ids = get_metric_ids(metric_parsers)
-
-    for metric_id in metric_ids:
-        db.execute(
-            "INSERT INTO metric_names ('name') VALUES (?)", [metric_id]
-        )
+    write_logic.insert_metric_ids(db, metric_ids)
 
 
 def main(argv=None):

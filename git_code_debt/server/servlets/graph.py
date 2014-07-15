@@ -6,7 +6,7 @@ import flask
 import simplejson
 
 from git_code_debt.server.render_mako import render_template
-from git_code_debt.server.logic import metrics
+from git_code_debt.server import logic
 from git_code_debt.util.time import data_points_for_time_range
 from git_code_debt.util.time import to_timestamp
 
@@ -24,9 +24,7 @@ def show(metric_name):
         end_timestamp,
         data_points=250,
     )
-    metrics_for_dates = metrics.metrics_for_dates(
-        metric_name, data_points,
-    )
+    metrics_for_dates = logic.metrics_for_dates(metric_name, data_points)
 
     metrics_for_js = sorted(set(
         (m.date * 1000, m.value)
@@ -44,7 +42,7 @@ def show(metric_name):
 
 @graph.route('/graph/<metric_name>/all_data')
 def all_data(metric_name):
-    earliest_timestamp = metrics.get_first_data_timestamp(metric_name)
+    earliest_timestamp = logic.get_first_data_timestamp(metric_name)
     now = datetime.datetime.today()
 
     return flask.redirect(flask.url_for(

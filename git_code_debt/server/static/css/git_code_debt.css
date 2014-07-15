@@ -142,3 +142,14 @@ td {
     -o-transform:rotate(-90deg); /* Opera */
     transform: rotate(-90deg);
 }
+
+
+/** Commit specific styles */
+
+.debt-stats-table {
+    width: 1px;
+}
+
+.debt-stats-table tbody {
+    text-align: left;
+}

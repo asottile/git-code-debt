@@ -14,8 +14,8 @@ from git_code_debt.file_diff_stat import get_file_diff_stats_from_output
 from git_code_debt.logic import get_metric_mapping
 from git_code_debt.logic import get_metric_values
 from git_code_debt.logic import get_previous_sha
-from git_code_debt.logic import insert_metric_values
 from git_code_debt.repo_parser import RepoParser
+from git_code_debt.write_logic import insert_metric_values
 
 
 # pylint:disable=too-many-locals
@@ -66,7 +66,9 @@ def load_data(
             compare_commit = None
             if previous_sha is not None:
                 compare_commit = commits[0]
-                metric_values.update(get_metric_values(db, compare_commit))
+                metric_values.update(get_metric_values(
+                    db, compare_commit.sha,
+                ))
                 commits = commits[1:]
 
             for commit in commits:

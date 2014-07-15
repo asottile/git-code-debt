@@ -18,36 +18,22 @@ def get_previous_sha(db):
     return result[0] if result else None
 
 
-def get_metric_values(db, commit):
+def get_metric_values(db, sha):
     """Gets the metric values from a specific commit.
 
-    Args:
-        db - Database object
-        commit - a Commit object with a sha property
+    :param db: Database object
+    :param text sha: A sha representing a single commit
     """
     results = db.execute(
-        """
-        SELECT
-            metric_names.name,
-            running_value
-        FROM metric_data
-        INNER JOIN metric_names ON
-            metric_names.id = metric_data.metric_id
-        WHERE sha = ?
-        """,
-        [commit.sha],
+        '\n'.join((
+            'SELECT',
+            '    metric_names.name,',
+            '    running_value',
+            'FROM metric_data',
+            'INNER JOIN metric_names ON',
+            '    metric_names.id = metric_data.metric_id',
+            'WHERE sha = ?',
+        )),
+        [sha],
     )
     return dict(results)
-
-
-def insert_metric_values(db, metric_values, metric_mapping, commit):
-    for metric_name, value in metric_values.items():
-        metric_id = metric_mapping[metric_name]
-        db.execute(
-            """
-            INSERT INTO metric_data
-            (sha, metric_id, timestamp, running_value)
-            VALUES (?, ?, ?, ?)
-            """,
-            [commit.sha, metric_id, commit.date, value],
-        )

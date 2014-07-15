@@ -20,7 +20,11 @@ def chunk_iter(iterable, n):
         n - Chunk size (must be greater than 0)
     """
     assert n > 0
-    iterable = iter(iterable)
-    while True:
-        chunk = tuple([next(iterable) for _ in range(n)])
+    iterable = tuple(iterable)
+
+    chunk = iterable[:n]
+    iterable = iterable[n:]
+    while chunk:
         yield chunk
+        chunk = iterable[:n]
+        iterable = iterable[n:]
