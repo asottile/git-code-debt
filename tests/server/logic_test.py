@@ -2,11 +2,11 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 from git_code_debt.logic import get_metric_mapping
-from git_code_debt.logic import insert_metric_values
 from git_code_debt.repo_parser import Commit
 from git_code_debt.server.logic import get_all_data
 from git_code_debt.server.logic import get_first_data_timestamp
 from git_code_debt.server.logic import get_previous_sha
+from git_code_debt.write_logic import insert_metric_values
 
 
 def test_no_data_returns_zero(sandbox):

@@ -38,16 +38,3 @@ def get_metric_values(db, commit):
         [commit.sha],
     )
     return dict(results)
-
-
-def insert_metric_values(db, metric_values, metric_mapping, commit):
-    for metric_name, value in metric_values.items():
-        metric_id = metric_mapping[metric_name]
-        db.execute(
-            """
-            INSERT INTO metric_data
-            (sha, metric_id, timestamp, running_value)
-            VALUES (?, ?, ?, ?)
-            """,
-            [commit.sha, metric_id, commit.date, value],
-        )
