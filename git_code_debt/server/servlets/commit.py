@@ -7,6 +7,7 @@ import flask
 from git_code_debt.server.presentation.commit_delta import CommitDeltaPresenter
 from git_code_debt.server.presentation.delta import DeltaPresenter
 from git_code_debt.server.render_mako import render_template
+from git_code_debt.logic import get_metric_values
 from git_code_debt.server import logic
 
 
@@ -19,9 +20,9 @@ def show(sha):
     if previous_sha is None:
         previous_values = collections.defaultdict(int)
     else:
-        previous_values = logic.get_metric_values(previous_sha)
+        previous_values = get_metric_values(flask.g.db, previous_sha)
 
-    values = logic.get_metric_values(sha)
+    values = get_metric_values(flask.g.db, sha)
 
     diff_values = sorted([
         CommitDeltaPresenter.from_data(

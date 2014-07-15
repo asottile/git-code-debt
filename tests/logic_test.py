@@ -50,6 +50,5 @@ def test_get_previous_sha_previous_existing_sha(sandbox):
 def test_insert_and_get_metric_values(sandbox):
     with sandbox.db() as db:
         fake_metrics = get_fake_metrics(get_metric_mapping(db))
-        fake_commit = Commit('a' * 40, 1)
         insert_fake_metrics(db)
-        assert fake_metrics == get_metric_values(db, fake_commit)
+        assert fake_metrics == get_metric_values(db, 'a' * 40)

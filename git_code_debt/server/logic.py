@@ -181,23 +181,3 @@ def get_previous_sha(sha, db=None):
 
     # Possible that we are the first commit
     return result[0] if result else None
-
-
-# TODO: this is duplicated, consolidate before shipping
-def get_metric_values(sha, db=None):
-    db = db or flask.g.db
-
-    assert sha is not None
-
-    return dict(db.execute(
-        '\n'.join((
-            'SELECT',
-            '    metric_names.name,',
-            '    running_value',
-            'FROM metric_data',
-            'INNER JOIN metric_names ON',
-            '    metric_names.id = metric_data.metric_id',
-            'WHERE sha = ?',
-        )),
-        [sha]
-    ))

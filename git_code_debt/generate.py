@@ -66,7 +66,9 @@ def load_data(
             compare_commit = None
             if previous_sha is not None:
                 compare_commit = commits[0]
-                metric_values.update(get_metric_values(db, compare_commit))
+                metric_values.update(get_metric_values(
+                    db, compare_commit.sha,
+                ))
                 commits = commits[1:]
 
             for commit in commits:
