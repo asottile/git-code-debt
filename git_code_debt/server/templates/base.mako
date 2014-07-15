@@ -3,6 +3,7 @@
 <head>
   <%block name="css">
     <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/dot-luv/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/git_code_debt.css">
   </%block>
   <title><%block name="title" /></title>
 </head>

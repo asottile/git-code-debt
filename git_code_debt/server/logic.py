@@ -139,7 +139,7 @@ def get_first_data_timestamp(metric_name, db=None):
 
 
 def get_all_data(metric_name, min_timestamp, max_timestamp, db=None):
-    db = db or flask.db
+    db = db or flask.g.db
     result = db.execute(
         '\n'.join((
             'SELECT',
@@ -159,3 +159,45 @@ def get_all_data(metric_name, min_timestamp, max_timestamp, db=None):
     ).fetchall()
 
     return tuple(result)
+
+
+def get_previous_sha(sha, db=None):
+    db = db or flask.g.db
+
+    # Attempt to find the sha of the commit directly before
+    result = db.execute(
+        '\n'.join((
+            'SELECT',
+            '    sha',
+            'FROM metric_data',
+            'WHERE',
+            '    sha != ? AND',
+            '    ROWID < (SELECT MAX(ROWID) FROM metric_data WHERE sha = ?)',
+            'ORDER BY ROWID DESC',
+            'LIMIT 1',
+        )),
+        [sha, sha],
+    ).fetchone()
+
+    # Possible that we are the first commit
+    return result[0] if result else None
+
+
+# TODO: this is duplicated, consolidate before shipping
+def get_metric_values(sha, db=None):
+    db = db or flask.g.db
+
+    assert sha is not None
+
+    return dict(db.execute(
+        '\n'.join((
+            'SELECT',
+            '    metric_names.name,',
+            '    running_value',
+            'FROM metric_data',
+            'INNER JOIN metric_names ON',
+            '    metric_names.id = metric_data.metric_id',
+            'WHERE sha = ?',
+        )),
+        [sha]
+    ))

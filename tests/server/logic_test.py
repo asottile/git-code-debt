@@ -6,6 +6,7 @@ from git_code_debt.logic import insert_metric_values
 from git_code_debt.repo_parser import Commit
 from git_code_debt.server.logic import get_all_data
 from git_code_debt.server.logic import get_first_data_timestamp
+from git_code_debt.server.logic import get_previous_sha
 
 
 def test_no_data_returns_zero(sandbox):
@@ -17,7 +18,7 @@ def insert(db, sha, timestamp, value):
     metric_mapping = get_metric_mapping(db)
     insert_metric_values(
         db,
-        {'PythonImportCount': value},
+        {'PythonImportCount': value, 'TODOCount': value},
         metric_mapping,
         Commit(sha, timestamp),
     )
@@ -83,3 +84,19 @@ def test_get_all_data_empty_set(sandbox):
         ret = get_all_data('PythonImportCount', 0, 1, db=db)
 
     assert ret == ()
+
+
+def test_get_previous_sha_first_sha(sandbox):
+    with sandbox.db() as db:
+        _insert_all_data_test_data(db)
+        ret = get_previous_sha('1' * 40, db=db)
+
+    assert ret is None
+
+
+def test_get_previous_sha_not_first(sandbox):
+    with sandbox.db() as db:
+        _insert_all_data_test_data(db)
+        ret = get_previous_sha('2' * 40, db=db)
+
+    assert ret == '1' * 40
