@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import collections
 import flask
 
+from git_code_debt.server import metric_config
 from git_code_debt.server.presentation.commit_delta import CommitDeltaPresenter
 from git_code_debt.server.presentation.delta import DeltaPresenter
 from git_code_debt.server.render_mako import render_template
@@ -24,7 +25,7 @@ def show(sha):
 
     values = get_metric_values(flask.g.db, sha)
 
-    diff_values = sorted([
+    commit_deltas = sorted([
         CommitDeltaPresenter.from_data(
             metric_name,
             DeltaPresenter(
@@ -36,9 +37,15 @@ def show(sha):
         if previous_values[metric_name] - metric_value
     ])
 
+    links = [
+        (link_name, link.format(sha=sha))
+        for link_name, link in metric_config.commit_links
+    ]
+
     return render_template(
         'commit.mako',
         sha=sha,
         short_sha=sha[:8],
-        diff_values=diff_values,
+        commit_deltas=commit_deltas,
+        links=links,
     )

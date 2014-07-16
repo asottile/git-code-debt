@@ -153,3 +153,10 @@ td {
 .debt-stats-table tbody {
     text-align: left;
 }
+
+.layout-table,
+.layout-table td,
+.layout-table tbody,
+.layout-table tr {
+    border: 0;
+}

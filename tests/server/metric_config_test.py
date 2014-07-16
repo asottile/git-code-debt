@@ -7,6 +7,7 @@ import re
 
 import staticconf.errors
 
+from git_code_debt.server.metric_config import _get_commit_links_from_yaml
 from git_code_debt.server.metric_config import _get_groups_from_yaml
 from git_code_debt.server.metric_config import Group
 
@@ -105,3 +106,16 @@ def test_get_groups_from_yaml_no_metric_expressions_provided():
     groups_yaml = [{'G1': {'metrics': ['Foo']}}]
     groups = _get_groups_from_yaml(groups_yaml)
     assert groups == (Group('G1', set(['Foo']), tuple()),)
+
+
+def test_get_commit_links_from_yaml_empty():
+    assert _get_commit_links_from_yaml({}) == ()
+
+
+def test_get_commit_links_from_yaml_one_entry():
+    assert _get_commit_links_from_yaml({'foo': 'bar'}) == (('foo', 'bar'),)
+
+
+def test_get_commit_links_from_yaml_is_sorted():
+    ret = _get_commit_links_from_yaml({'a': '1', 'b': '2', 'c': '3', 'd': '4'})
+    assert ret == (('a', '1'), ('b', '2'), ('c', '3'), ('d', '4'))

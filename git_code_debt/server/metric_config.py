@@ -53,9 +53,22 @@ def _get_groups_from_yaml(yaml):
     )
 
 
+def _get_commit_links_from_yaml(yaml):
+    # The CommitLinks will look like
+    # LinkName: 'link_value'
+    # OtherLinkName: 'other_link_value'
+    # Here we'll alphabetize these and return a tuple of (LinkName, link_value)
+    return tuple(sorted(yaml.items()))
+
+
+color_overrides = metric_config_getter.get_set('ColorOverrides')
+
+commit_links = staticconf.getters.build_getter(
+    _get_commit_links_from_yaml,
+    getter_namespace='metric_config',
+)('CommitLinks')
+
 groups = staticconf.getters.build_getter(
     _get_groups_from_yaml,
     getter_namespace='metric_config',
 )('Groups')
-
-color_overrides = metric_config_getter.get_set('ColorOverrides')
