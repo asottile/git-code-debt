@@ -44,11 +44,10 @@ def test_all_data_no_data_for_metric(server_with_data):
     ))
 
     # Should redirect to a show url
-    timestamp = server_with_data.cloneable_with_commits.commits[0].date
     assert_redirect(
         resp,
         flask.url_for('graph.show', metric_name=SymlinkCount.__name__),
-        {'start': [five.text(timestamp)], 'end': [mock.ANY]},
+        {'start': ['0'], 'end': [mock.ANY]},
     )
 
 
