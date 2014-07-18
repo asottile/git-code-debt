@@ -54,4 +54,4 @@ def test_first_commit_introduces_data(sandbox):
         insert_metric_changes(db, '1' * 40, 1)
         insert(db, '2' * 40, 2222, 2)
         insert_metric_changes(db, '2' * 40, 1)
-        assert get_first_data_timestamp('PythonImportCount', db=db) == 0
+        assert get_first_data_timestamp('PythonImportCount', db=db) == 1111

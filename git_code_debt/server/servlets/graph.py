@@ -5,8 +5,11 @@ import datetime
 import flask
 import simplejson
 
-from git_code_debt.server.render_mako import render_template
 from git_code_debt.server import logic
+from git_code_debt.server import metric_config
+from git_code_debt.server.presentation.commit_delta import CommitDeltaPresenter
+from git_code_debt.server.presentation.delta import DeltaPresenter
+from git_code_debt.server.render_mako import render_template
 from git_code_debt.util.time import data_points_for_time_range
 from git_code_debt.util.time import to_timestamp
 
@@ -31,12 +34,37 @@ def show(metric_name):
         for m in metrics_for_dates
     ))
 
+    changes = sorted(logic.get_major_changes_for_metric(
+        flask.g.db, start_timestamp, end_timestamp, metric_name,
+    ))
+    changes = [
+        (
+            datetime.datetime.fromtimestamp(timestamp).strftime(
+                '%Y-%m-%d %H:%M:%S',
+            ),
+            sha,
+            CommitDeltaPresenter.from_data(
+                metric_name,
+                DeltaPresenter('javascript:;', value),
+            )
+        )
+        for timestamp, sha, value in changes
+    ]
+
+    override_classname = (
+        'color-override'
+        if metric_name in metric_config.color_overrides
+        else ''
+    )
+
     return render_template(
         'graph.mako',
         metric_name=metric_name,
         metrics=simplejson.dumps(metrics_for_js),
         start_timestamp=start_timestamp,
         end_timestamp=end_timestamp,
+        changes=changes,
+        override_classname=override_classname,
     )
 
 

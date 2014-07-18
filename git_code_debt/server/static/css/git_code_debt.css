@@ -17,8 +17,8 @@ h1 {
 }
 
 table {
+    width: 1px;
     border-collapse: collapse;
-    width: 640px;
     margin: auto;
     text-align: center;
     border-right: 1px solid #ccc;
@@ -141,6 +141,10 @@ td {
     -webkit-transform:rotate(-90deg); /* Safari and Chrome */
     -o-transform:rotate(-90deg); /* Opera */
     transform: rotate(-90deg);
+}
+
+.changes-block {
+    display: inline-block;
 }
 
 

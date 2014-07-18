@@ -132,9 +132,11 @@ def get_first_data_timestamp(metric_name, db=None):
     ).fetchone()
 
     # If we didn't get a row that means the first change added data so
-    # return from the beginning of time.
+    # return that timestamp.
     if not previous_timestamp:
-        return 0
+        return db.execute(
+            'SELECT MIN(timestamp) FROM metric_data'
+        ).fetchone()[0]
     else:
         return previous_timestamp[0]
 
@@ -151,4 +153,30 @@ def get_metric_changes(db, sha):
             'WHERE metric_changes.sha = ?'
         )),
         [sha],
+    ).fetchall()
+
+
+def get_major_changes_for_metric(
+        db, start_timestamp, end_timestamp, metric_name,
+):
+    return db.execute(
+        '\n'.join((
+            'SELECT',
+            '    metric_data.timestamp,',
+            '    metric_data.sha,',
+            '    metric_changes.value',
+            'FROM metric_changes',
+            'INNER JOIN metric_data ON',
+            '    metric_changes.sha = metric_data.sha AND',
+            '    metric_changes.metric_id = metric_data.metric_id',
+            'INNER JOIN metric_names ON',
+            '    metric_changes.metric_id = metric_names.id',
+            'WHERE',
+            '    metric_data.timestamp >= ? AND',
+            '    metric_data.timestamp < ? AND',
+            '    metric_names.name = ?',
+            'ORDER BY ABS(metric_changes.value) DESC',
+            'LIMIT 50',
+        )),
+        [start_timestamp, end_timestamp, metric_name],
     ).fetchall()
