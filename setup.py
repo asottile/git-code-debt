@@ -30,6 +30,7 @@ setup(
         'git_code_debt.server': [
             'templates/*.mako',
             'static/css/*.css',
+            'static/img/*.gif',
             'static/js/*.js',
             'metric_config.sample.yaml',
         ],
