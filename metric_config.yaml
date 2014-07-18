@@ -1,7 +1,7 @@
 # This is a sample metric config
 
 # Sample Groups definition:
-# Groups -
+# Groups:
 #     Group1:
 #         metrics:
 #             - FooMetric
@@ -36,3 +36,14 @@ Groups:
 # This indicates that PartialTemplateCount should be colored the opposite of
 # the usual coloring (the usual coloring is up = red, down = green).
 ColorOverrides: []
+
+
+# Sample CommitLinks for Commit page:
+# CommitLinks:
+#     View on Github: https://github.com/asottile/git-code-debt/commit/{sha}
+#     ...
+#
+# These links will have the following variables substituted when displayed:
+#     {sha} - Points to the full (40-character) sha of the commit
+CommitLinks:
+    View on Github: https://github.com/asottile/git-code-debt/commit/{sha}

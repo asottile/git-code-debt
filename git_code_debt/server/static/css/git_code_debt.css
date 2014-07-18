@@ -17,8 +17,8 @@ h1 {
 }
 
 table {
+    width: 1px;
     border-collapse: collapse;
-    width: 640px;
     margin: auto;
     text-align: center;
     border-right: 1px solid #ccc;
@@ -143,6 +143,10 @@ td {
     transform: rotate(-90deg);
 }
 
+.changes-block {
+    display: inline-block;
+}
+
 
 /** Commit specific styles */
 
@@ -152,4 +156,11 @@ td {
 
 .debt-stats-table tbody {
     text-align: left;
+}
+
+.layout-table,
+.layout-table td,
+.layout-table tbody,
+.layout-table tr {
+    border: 0;
 }

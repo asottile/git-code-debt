@@ -20,3 +20,26 @@ def insert_metric_values(db, metric_values, metric_mapping, commit):
             )),
             [commit.sha, metric_id, commit.date, value],
         )
+
+
+def insert_metric_changes(db, metrics, metric_mapping, commit):
+    """Insert into the metric_changes tables.
+
+    :param metrics: `list` of `Metric` objects
+    :param dict metric_mapping: Maps metric names to ids
+    :param Commit commit:
+    """
+    for metric in metrics:
+        # Sparse table, ignore zero.
+        if metric.value == 0:
+            continue
+
+        metric_id = metric_mapping[metric.name]
+        db.execute(
+            '\n'.join((
+                'INSERT INTO metric_changes',
+                '(sha, metric_id, value)',
+                'VALUES (?, ?, ?)',
+            )),
+            [commit.sha, metric_id, metric.value],
+        )

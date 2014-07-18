@@ -15,6 +15,7 @@ from git_code_debt.logic import get_metric_mapping
 from git_code_debt.logic import get_metric_values
 from git_code_debt.logic import get_previous_sha
 from git_code_debt.repo_parser import RepoParser
+from git_code_debt.write_logic import insert_metric_changes
 from git_code_debt.write_logic import insert_metric_values
 
 
@@ -82,6 +83,7 @@ def load_data(
                 metrics = get_metrics(diff, metric_parsers)
                 increment_metric_values(metric_values, metrics)
                 insert_metric_values(db, metric_values, metric_mapping, commit)
+                insert_metric_changes(db, metrics, metric_mapping, commit)
 
                 compare_commit = commit
 
