@@ -10,12 +10,14 @@ import shutil
 import sqlite3
 import sys
 
+from git_code_debt.server.servlets.changes import changes
 from git_code_debt.server.servlets.commit import commit
 from git_code_debt.server.servlets.graph import graph
 from git_code_debt.server.servlets.index import index
 
 
 app = flask.Flask(__name__)
+app.register_blueprint(changes)
 app.register_blueprint(commit)
 app.register_blueprint(graph)
 app.register_blueprint(index)

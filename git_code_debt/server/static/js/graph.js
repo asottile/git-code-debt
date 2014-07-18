@@ -1,5 +1,7 @@
 $(function() {
-    var graph = $('#graph');
+    var graph = $('#graph'),
+        changesContainer = $('.changes-container'),
+        changesContainerAjaxUrl = changesContainer.data('ajax-url');
 
     $.plot(
         graph,
@@ -43,4 +45,9 @@ $(function() {
 
     setupDatePicker($("#datepicker-from"));
     setupDatePicker($("#datepicker-to"));
+
+    // Ajax load the changes container
+    $.getJSON(changesContainerAjaxUrl, function (resp) {
+        changesContainer.empty().append($(resp.body));
+    });
 });
