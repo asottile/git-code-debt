@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 import flask
 import pyquery
-import sys
 
 from testing.assertions.response import assert_no_response_errors
 
@@ -13,7 +12,8 @@ def test_changes_endpoint(server_with_data):
         'changes.show',
         metric_name='PythonImportCount',
         start_timestamp=0,
-        end_timestamp=sys.maxint,
+        # Some sufficiently large number to include all the data
+        end_timestamp=2 ** 62,
     ))
     assert_no_response_errors(resp)
     pq = pyquery.PyQuery(resp.json['body'])
