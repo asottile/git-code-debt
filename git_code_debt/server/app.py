@@ -61,6 +61,17 @@ def main(argv=None):  # pragma: no cover (starts a web server)
     parser = argparse.ArgumentParser()
     parser.add_argument('database_path', type=str)
     parser.add_argument('--port', type=int, default=5000)
+    parser.add_argument(
+        '--debug', action='store_true',
+        help=(
+            'Run in debug mode (stacktraces + single process). '
+            'Not suggested for production.'
+        ),
+    )
+    parser.add_argument(
+        '--processes', type=int, default=5,
+        help='Number of processes, does not apply to --debug',
+    )
     args = parser.parse_args(argv)
 
     if not os.path.exists(args.database_path):
@@ -74,7 +85,14 @@ def main(argv=None):  # pragma: no cover (starts a web server)
     create_metric_config_if_not_exists()
 
     AppContext.database_path = args.database_path
-    app.run('0.0.0.0', port=args.port, debug=True)
+    kwargs = {
+        'port': args.port,
+        'debug': args.debug,
+    }
+    if not args.debug:
+        kwargs['processes'] = args.processes
+
+    app.run('0.0.0.0', **kwargs)  # pylint:disable=star-args
 
 
 if __name__ == '__main__':
