@@ -145,6 +145,7 @@ td {
 
 .changes-block {
     display: inline-block;
+    vertical-align: top;
 }
 
 
