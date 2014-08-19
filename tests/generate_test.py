@@ -2,10 +2,17 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import collections
+import io
 import os
+import os.path
+import pytest
+import yaml
 
+from git_code_debt.generate import get_options_from_argparse
+from git_code_debt.generate import get_options_from_config
 from git_code_debt.generate import increment_metric_values
 from git_code_debt.generate import main
+from git_code_debt.generate_config import GenerateOptions
 from git_code_debt.metric import Metric
 from git_code_debt.util.subprocess import cmd_output
 from testing.utilities.cwd import cwd
@@ -25,6 +32,18 @@ def test_increment_metrics_already_there():
 
 def test_generate_integration(sandbox, cloneable):
     main([cloneable, sandbox.db_path])
+
+
+def test_generate_integration_config_file(sandbox, cloneable, tmpdir_factory):
+    tmpdir = tmpdir_factory.get()
+    config_filename = os.path.join(tmpdir, 'generate_config.yaml')
+    with io.open(config_filename, 'w') as config_file:
+        yaml.dump(
+            {'repo': cloneable, 'database': sandbox.db_path},
+            stream=config_file,
+        )
+    with cwd(tmpdir):
+        main([])
 
 
 def test_main_no_files_exist(cloneable):
@@ -79,3 +98,61 @@ def test_regression_for_issue_10(sandbox, cloneable):
     main([cloneable, sandbox.db_path])
     data_count_after = get_metric_data_count(sandbox)
     assert data_count_before == data_count_after
+
+
+def test_fields_equivalent(tmpdir_factory):
+    tmpdir = tmpdir_factory.get()
+    config_filename = os.path.join(tmpdir, 'config.yaml')
+    with io.open(config_filename, 'w') as config_file:
+        config_file.write(
+            'repo: .\n'
+            'database: database.db\n'
+        )
+
+    config_output = get_options_from_config([
+        '--config-filename', config_filename,
+    ])
+    # pylint:disable=no-member,protected-access
+    config_fields = set(config_output._fields)
+
+    argparse_output = get_options_from_argparse(['.', 'database.db'])
+    argparse_fields = set(vars(argparse_output))
+
+    # Assert that we got the same fields
+    assert (
+        argparse_fields - set(('config_filename', 'create_config')) ==
+        config_fields
+    )
+
+    # Assert that we got the same values
+    for field in config_fields:
+        assert getattr(config_output, field) == getattr(argparse_output, field)
+
+
+def test_get_options_from_config_create_config(tmpdir_factory):
+    tmpdir = tmpdir_factory.get()
+    with cwd(tmpdir):
+        ret = get_options_from_config([
+            '--create-config',
+            '.',
+            'database.db',
+        ])
+
+        assert os.path.exists('generate_config.yaml')
+        assert yaml.load(io.open('generate_config.yaml').read()) == {
+            'repo': '.',
+            'database': 'database.db',
+        }
+
+        assert ret == GenerateOptions(
+            skip_default_metrics=False,
+            tempdir_location=None,
+            metric_package_names=[],
+            repo='.',
+            database='database.db',
+        )
+
+
+def test_get_options_from_config_no_config_file():
+    with pytest.raises(SystemExit):
+        get_options_from_config(['--config-filename', 'i-dont-exist'])

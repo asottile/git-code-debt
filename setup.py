@@ -38,7 +38,9 @@ setup(
     install_requires=[
         'argparse',
         'flask',
+        'jsonschema',
         'mako',
+        'pyyaml',
         'PyStaticConfiguration[yaml]',
         'simplejson',
     ],

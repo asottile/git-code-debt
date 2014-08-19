@@ -4,13 +4,17 @@ from __future__ import unicode_literals
 
 import argparse
 import collections
+import io
 import os.path
 import sqlite3
 import sys
+import yaml
 
 from git_code_debt import options
 from git_code_debt.discovery import get_metric_parsers_from_args
 from git_code_debt.file_diff_stat import get_file_diff_stats_from_output
+from git_code_debt.generate_config import DEFAULT_GENERATE_CONFIG_FILENAME
+from git_code_debt.generate_config import GenerateOptions
 from git_code_debt.logic import get_metric_mapping
 from git_code_debt.logic import get_metric_values
 from git_code_debt.logic import get_previous_sha
@@ -88,9 +92,17 @@ def load_data(
                 compare_commit = commit
 
 
-def main(argv=None):
-    argv = argv if argv is not None else sys.argv[1:]
+def _add_config_file_options(argument_parser):
+    argument_parser.add_argument(
+        '--config-filename',
+        default=DEFAULT_GENERATE_CONFIG_FILENAME,
+    )
+    argument_parser.add_argument(
+        '--create-config', default=False, action='store_true',
+    )
 
+
+def get_options_from_argparse(argv):
     parser = argparse.ArgumentParser(
         description='Generates metrics from a git repo',
     )
@@ -101,7 +113,50 @@ def main(argv=None):
     options.add_repo(parser)
     options.add_database(parser)
     options.add_metric_package_names(parser)
+    # These are added here so the help message includes them but are unused
+    _add_config_file_options(parser)
     args = parser.parse_args(argv)
+    return args
+
+
+def get_options_from_config(argv):
+    parser = argparse.ArgumentParser()
+    _add_config_file_options(parser)
+    args, _ = parser.parse_known_args(argv)
+
+    # Create the config if they'd like us to do that.
+    if args.create_config:
+        args = get_options_from_argparse(argv)
+        # yeah yeah, not really yaml, but this is a good way to validate the
+        # config as we write it.
+        generate_options = GenerateOptions.from_yaml(vars(args))
+        with io.open(args.config_filename, 'w') as config_file:
+            yaml.safe_dump(
+                generate_options.to_yaml(),
+                config_file,
+                # We want unicode
+                encoding=None,
+                default_flow_style=False,
+            )
+
+    if not os.path.exists(args.config_filename):
+        print('No config file found!  Create one with --create-config.')
+        exit(1)
+
+    with io.open(args.config_filename) as config_file:
+        return GenerateOptions.from_yaml(yaml.load(config_file))
+
+
+def main(argv=None):
+    argv = argv if argv is not None else sys.argv[1:]
+    if (
+            argv == [] and os.path.exists(DEFAULT_GENERATE_CONFIG_FILENAME) or
+            '--config-filename' in argv or
+            '--create-config' in argv
+    ):
+        args = get_options_from_config(argv)
+    else:
+        args = get_options_from_argparse(argv)
 
     if not os.path.exists(args.database):
         print('Not found: {0}'.format(args.database))
