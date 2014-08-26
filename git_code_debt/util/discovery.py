@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 import inspect
 import pkgutil
-import sys
 
 
 def discover(package, cls_match_func):
@@ -20,13 +19,10 @@ def discover(package, cls_match_func):
             package.__path__,
             prefix=package.__name__ + '.',
     ):
-        __import__(module_name)
-        module = sys.modules[module_name]
+        module = __import__(module_name, fromlist=[str('__trash')], level=0)
 
         # Check all the classes in that module
-        for name, _ in inspect.getmembers(module, inspect.isclass):
-            imported_class = getattr(module, name)
-
+        for _, imported_class in inspect.getmembers(module, inspect.isclass):
             # Don't include things that are only there due to a side-effect of
             # importing
             if imported_class.__module__ != module.__name__:
