@@ -5,10 +5,11 @@
     <body>
         <p>This page represents a sample widget consumer.</p>
         <p>To start this page run:</p>
-        <pre>$ firefox sample_widget_consumer.htm &amp;</pre>
         <pre>$ git-code-debt-server --port 9001 database.db</pre>
+        <pre>$ firefox sample_widget_consumer.htm &amp;</pre>
         <p>Below this should be a table that says "TotalLinesOfCode: 1"</p>
-        <div class="git-code-debt" data-git-code-debt-domain="http://localhost:9001" style="display: none">
+        <p>And below that should be a table that says "TotalLinesOfCode: -1"</p>
+        <div class="git-code-debt" style="display: none">
             <ul>
                 <li>TotalLinesOfCode</li>
             </ul>
@@ -26,6 +27,28 @@ index ad3e2cb..5d9795e 100644
 
  # Settings format: (key, default, docstring)
  _DEFAULT_COMPILER_SETTINGS = [
+@@ -34,7 +36,6 @@ _DEFAULT_COMPILER_SETTINGS = [
+     ('useLegacyImportMode', True, 'All #import statements are relocated to the top of the generated Python module'),
+     ('mainMethodName', 'respond', ''),
+     ('mainMethodNameForSubclasses', 'writeBody', ''),
+-    ('indentationStep', ' ' * 4, ''),
+     ('cheetahVarStartToken', '$', ''),
+     ('commentStartToken', '##', ''),
+     ('directiveStartToken', '#', ''),
+@@ -45,7 +46,7 @@ _DEFAULT_COMPILER_SETTINGS = [
+     ('macroDirectives', {}, 'For providing macros'),
+ ]
+</div>
+        </div>
+        <div class="git-code-debt" style="display: none">
+            <ul>
+                <li>TotalLinesOfCode</li>
+            </ul>
+<div>
+diff --git a/Cheetah/legacy_compiler.py b/Cheetah/legacy_compiler.py
+index ad3e2cb..5d9795e 100644
+--- a/Cheetah/legacy_compiler.py
++++ b/Cheetah/legacy_compiler.py
 @@ -34,7 +36,6 @@ _DEFAULT_COMPILER_SETTINGS = [
      ('useLegacyImportMode', True, 'All #import statements are relocated to the top of the generated Python module'),
      ('mainMethodName', 'respond', ''),
