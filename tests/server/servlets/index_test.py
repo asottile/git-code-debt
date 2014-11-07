@@ -11,7 +11,7 @@ def _test_it_loads(server):
     response = server.client.get(flask.url_for('index.show'))
     assert_no_response_errors(response)
     # Should have a nonzero number of links to things
-    assert len(response.pq.find('a[href]')) > 0
+    assert response.pq.find('a[href]')
 
 
 def test_it_loads_no_data(server):
