@@ -25,7 +25,7 @@ def frame():
 
 @widget.route('/widget/data', methods=['POST'])
 def data():
-    metric_names = flask.request.form['metric_names[]']
+    metric_names = flask.request.form.getlist('metric_names[]')
     diff = flask.request.form['diff'].encode('UTF-8')
 
     metric_config = GenerateOptions.from_yaml(
