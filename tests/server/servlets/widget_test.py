@@ -28,3 +28,15 @@ def test_widget_data(server):
     assert not response_pq.find('.metric-none')
     # Should not have metrics we didn't specify
     assert 'TotalLinesOfCode_Text' not in response_pq.text()
+
+
+def test_widget_data_multiple_values(server):
+    response = server.client.post(
+        flask.url_for('widget.data'),
+        data={
+            'metric_names[]': ['TotalLinesOfCode', 'TotalLinesOfCode_Text'],
+            'diff': file_diff_stat_test.SAMPLE_OUTPUT,
+        },
+    )
+    response_pq = pyquery.PyQuery(response.json['metrics'])
+    assert 'TotalLinesOfCode_Text' in response_pq.text()
