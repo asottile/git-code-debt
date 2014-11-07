@@ -9,7 +9,13 @@ $(function () {
             },
             dataType: 'json',
             success: function (data) {
-                parent.postMessage({metrics: data.metrics}, '*');
+                parent.postMessage(
+                    {
+                        metrics: data.metrics,
+                        elementId: e.originalEvent.data.elementId
+                    },
+                    '*'
+                );
             }
         });
     });
