@@ -1,2 +1,3 @@
 database: database.db
-repo: git@github.com:Yelp/yelp_cheetah
+metric_package_names: []
+repo: git@github.com:asottile/git-code-debt
