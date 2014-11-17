@@ -11,20 +11,13 @@
         if (originalEvent.data.ready) {
             $('.git-code-debt').each(function (elementId, el) {
                 var element = $(el),
-                    metricNames = Array.prototype.map.call(
-                        element.find('ul li'),
-                        function (li) {
-                            return $(li).text();
-                        }
-                    ),
-                    diff = element.find('div').text();
+                    diff = element.text();
 
                 idToElement[elementId] = element;
 
                 iframe[0].contentWindow.postMessage(
                     {
                         elementId: elementId,
-                        metricNames: metricNames,
                         diff: diff
                     },
                     '*'

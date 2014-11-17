@@ -3,10 +3,7 @@ $(function () {
         $.ajax({
             url: '/widget/data',
             method: 'POST',
-            data: {
-                metric_names: e.originalEvent.data.metricNames,
-                diff: e.originalEvent.data.diff
-            },
+            data: {diff: e.originalEvent.data.diff},
             dataType: 'json',
             success: function (data) {
                 parent.postMessage(
