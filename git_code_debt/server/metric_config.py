@@ -72,3 +72,5 @@ groups = staticconf.getters.build_getter(
     _get_groups_from_yaml,
     getter_namespace='metric_config',
 )('Groups')
+
+widget_metrics = metric_config_getter.get('WidgetMetrics')

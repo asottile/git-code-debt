@@ -9,59 +9,27 @@
         <pre>$ firefox sample_widget_consumer.htm &amp;</pre>
         <p>Below this should be a table that says "TotalLinesOfCode: 1"</p>
         <p>And below that should be a table that says "TotalLinesOfCode: -1"</p>
-        <div class="git-code-debt" style="display: none">
-            <ul>
-                <li>TotalLinesOfCode</li>
-            </ul>
-<div>
-diff --git a/Cheetah/legacy_compiler.py b/Cheetah/legacy_compiler.py
-index ad3e2cb..5d9795e 100644
---- a/Cheetah/legacy_compiler.py
-+++ b/Cheetah/legacy_compiler.py
-@@ -25,6 +25,8 @@ CallDetails = collections.namedtuple(
-     'CallDetails', ['call_id', 'function_name', 'args', 'lineCol'],
- )
 
-+INDENT = 4 * ' '
-+
-
- # Settings format: (key, default, docstring)
- _DEFAULT_COMPILER_SETTINGS = [
-@@ -34,7 +36,6 @@ _DEFAULT_COMPILER_SETTINGS = [
-     ('useLegacyImportMode', True, 'All #import statements are relocated to the top of the generated Python module'),
-     ('mainMethodName', 'respond', ''),
-     ('mainMethodNameForSubclasses', 'writeBody', ''),
--    ('indentationStep', ' ' * 4, ''),
-     ('cheetahVarStartToken', '$', ''),
-     ('commentStartToken', '##', ''),
-     ('directiveStartToken', '#', ''),
-@@ -45,7 +46,7 @@ _DEFAULT_COMPILER_SETTINGS = [
-     ('macroDirectives', {}, 'For providing macros'),
- ]
+<div class="git-code-debt" style="display: none">
+diff --git a/sample_widget_consumer.htm b/sample_widget_consumer.htm
+index fe07c2d..1a4b7a5 100644
+--- a/sample_widget_consumer.htm
++++ b/sample_widget_consumer.htm
+@@ -5,10 +5,11 @@
+         &lt;p&gt;Below this should be a table that says "TotalLinesOfCode: 1"&lt;/p&gt;
+-        &lt;div class="git-code-debt" data-git-code-debt-domain="http://localhost:
++        &lt;p&gt;And below that should be a table that says "TotalLinesOfCode: -1"&lt;/p&gt;
++        &lt;div class="git-code-debt" style="display: none"&gt;
 </div>
-        </div>
-        <div class="git-code-debt" style="display: none">
-            <ul>
-                <li>TotalLinesOfCode</li>
-            </ul>
-<div>
-diff --git a/Cheetah/legacy_compiler.py b/Cheetah/legacy_compiler.py
-index ad3e2cb..5d9795e 100644
---- a/Cheetah/legacy_compiler.py
-+++ b/Cheetah/legacy_compiler.py
-@@ -34,7 +36,6 @@ _DEFAULT_COMPILER_SETTINGS = [
-     ('useLegacyImportMode', True, 'All #import statements are relocated to the top of the generated Python module'),
-     ('mainMethodName', 'respond', ''),
-     ('mainMethodNameForSubclasses', 'writeBody', ''),
--    ('indentationStep', ' ' * 4, ''),
-     ('cheetahVarStartToken', '$', ''),
-     ('commentStartToken', '##', ''),
-     ('directiveStartToken', '#', ''),
-@@ -45,7 +46,7 @@ _DEFAULT_COMPILER_SETTINGS = [
-     ('macroDirectives', {}, 'For providing macros'),
- ]
+<div class="git-code-debt" style="display: none">
+diff --git a/sample_widget_consumer.htm b/sample_widget_consumer.htm
+index fe07c2d..1a4b7a5 100644
+--- a/sample_widget_consumer.htm
++++ b/sample_widget_consumer.htm
+@@ -5,10 +5,11 @@
+         &lt;p&gt;Below this should be a table that says "TotalLinesOfCode: 1"&lt;/p&gt;
+-        &lt;div class="git-code-debt" data-git-code-debt-domain="http://localhost:
 </div>
-        </div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.js"></script>
         <script src="http://localhost:9001/static/js/widget.js"></script>
     </body>

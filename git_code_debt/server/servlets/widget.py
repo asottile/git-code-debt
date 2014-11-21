@@ -12,6 +12,7 @@ from git_code_debt.generate import get_metrics
 from git_code_debt.generate_config import GenerateOptions
 from git_code_debt.server.presentation.commit_delta import CommitDeltaPresenter
 from git_code_debt.server.presentation.delta import DeltaPresenter
+from git_code_debt.server.metric_config import widget_metrics
 from git_code_debt.server.render_mako import render_template
 
 
@@ -25,7 +26,7 @@ def frame():
 
 @widget.route('/widget/data', methods=['POST'])
 def data():
-    metric_names = flask.request.form.getlist('metric_names[]')
+    metric_names = set(widget_metrics)
     diff = flask.request.form['diff'].encode('UTF-8')
 
     metric_config = GenerateOptions.from_yaml(
