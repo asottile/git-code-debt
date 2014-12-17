@@ -14,6 +14,7 @@ from git_code_debt.server.servlets.changes import changes
 from git_code_debt.server.servlets.commit import commit
 from git_code_debt.server.servlets.graph import graph
 from git_code_debt.server.servlets.index import index
+from git_code_debt.server.servlets.status import status
 from git_code_debt.server.servlets.widget import widget
 
 
@@ -22,6 +23,7 @@ app.register_blueprint(changes)
 app.register_blueprint(commit)
 app.register_blueprint(graph)
 app.register_blueprint(index)
+app.register_blueprint(status)
 app.register_blueprint(widget)
 
 

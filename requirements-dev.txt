@@ -4,6 +4,6 @@ coverage
 flake8
 mock
 pre-commit
-pylint
+pylint<1.4
 pyquery
 pytest
