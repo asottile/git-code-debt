@@ -6,8 +6,8 @@ import mock
 
 from git_code_debt.metrics.imports import PythonImportCount
 from git_code_debt.metrics.symlink_count import SymlinkCount
-from git_code_debt.util.compat import urllib_parse
 from git_code_debt.util import five
+from git_code_debt.util.compat import urllib_parse
 from testing.assertions.response import assert_no_response_errors
 from testing.assertions.response import assert_redirect
 

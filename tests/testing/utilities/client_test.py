@@ -1,3 +1,4 @@
+# pylint:disable=redefined-outer-name,unused-argument
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
@@ -7,9 +8,6 @@ import pytest
 
 from testing.utilities.client import Client
 from testing.utilities.response import Response
-
-
-# pylint:disable=redefined-outer-name,unused-argument
 
 
 @pytest.yield_fixture

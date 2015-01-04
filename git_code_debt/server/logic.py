@@ -1,11 +1,10 @@
+# pylint:disable=star-args
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import collections
+
 import flask
-
-
-# pylint:disable=star-args
 
 
 Metric = collections.namedtuple('Metric', ['name', 'value', 'date'])

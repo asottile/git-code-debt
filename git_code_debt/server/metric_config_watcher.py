@@ -2,6 +2,7 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import functools
+
 import staticconf
 
 from git_code_debt.server.metric_config import CONFIG_NAMESPACE

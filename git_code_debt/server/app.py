@@ -3,12 +3,13 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import argparse
-import flask
 import os.path
-import pkg_resources
 import shutil
 import sqlite3
 import sys
+
+import flask
+import pkg_resources
 
 from git_code_debt.server.servlets.changes import changes
 from git_code_debt.server.servlets.commit import commit

@@ -10,9 +10,9 @@ import yaml
 from git_code_debt.discovery import get_metric_parsers_from_args
 from git_code_debt.generate import get_metrics
 from git_code_debt.generate_config import GenerateOptions
+from git_code_debt.server.metric_config import widget_metrics
 from git_code_debt.server.presentation.commit_delta import CommitDeltaPresenter
 from git_code_debt.server.presentation.delta import DeltaPresenter
-from git_code_debt.server.metric_config import widget_metrics
 from git_code_debt.server.render_mako import render_template
 
 

@@ -1,6 +1,7 @@
 from setuptools import find_packages
 from setuptools import setup
 
+
 setup(
     name='git_code_debt',
     description='A dashboard for monitoring code debt in a git repository.',

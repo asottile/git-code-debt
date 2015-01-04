@@ -1,3 +1,4 @@
+# pylint:disable=too-many-locals
 from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
@@ -8,6 +9,7 @@ import io
 import os.path
 import sqlite3
 import sys
+
 import yaml
 
 from git_code_debt import options
@@ -21,9 +23,6 @@ from git_code_debt.logic import get_previous_sha
 from git_code_debt.repo_parser import RepoParser
 from git_code_debt.write_logic import insert_metric_changes
 from git_code_debt.write_logic import insert_metric_values
-
-
-# pylint:disable=too-many-locals
 
 
 def get_metrics(diff, metric_parsers):

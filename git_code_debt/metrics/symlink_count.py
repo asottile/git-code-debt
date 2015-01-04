@@ -3,8 +3,8 @@ from __future__ import unicode_literals
 
 from git_code_debt.file_diff_stat import SpecialFileType
 from git_code_debt.file_diff_stat import Status
-from git_code_debt.metrics.base import DiffParserBase
 from git_code_debt.metric import Metric
+from git_code_debt.metrics.base import DiffParserBase
 
 
 class SymlinkCount(DiffParserBase):

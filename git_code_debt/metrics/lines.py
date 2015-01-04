@@ -3,8 +3,8 @@ from __future__ import unicode_literals
 
 import collections
 
-from git_code_debt.metrics.base import DiffParserBase
 from git_code_debt.metric import Metric
+from git_code_debt.metrics.base import DiffParserBase
 from git_code_debt.metrics.common import FILE_TYPE_MAP
 
 

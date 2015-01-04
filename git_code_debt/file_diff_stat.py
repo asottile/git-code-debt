@@ -1,12 +1,10 @@
+# pylint:disable=too-many-branches,too-many-statements
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import collections
 import os.path
 import re
-
-
-# pylint:disable=too-many-branches,too-many-statements
 
 
 class Status(object):

@@ -1,9 +1,11 @@
+# pylint:disable=too-many-arguments
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import unicode_literals
 
 import collections
 import datetime
+
 import flask
 
 from git_code_debt.server import logic
@@ -12,9 +14,6 @@ from git_code_debt.server.metric_config import groups
 from git_code_debt.server.presentation.delta import DeltaPresenter
 from git_code_debt.server.render_mako import render_template
 from git_code_debt.util.time import to_timestamp
-
-
-# pylint:disable=too-many-arguments
 
 
 index = flask.Blueprint('index', __name__)

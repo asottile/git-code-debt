@@ -1,16 +1,15 @@
+# pylint:disable=redefined-outer-name
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-import mock
 import os.path
+
+import mock
 import pytest
 
 from git_code_debt import repo_parser
 from git_code_debt.util import five
 from testing.utilities.auto_namedtuple import auto_namedtuple
-
-
-# pylint:disable=redefined-outer-name
 
 
 def test_repo_checked_out(cloneable):

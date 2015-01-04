@@ -1,3 +1,4 @@
+# pylint:disable=star-args
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
@@ -10,7 +11,6 @@ import tempfile
 from git_code_debt.util.iter import chunk_iter
 from git_code_debt.util.subprocess import cmd_output
 
-# pylint:disable=star-args
 
 Commit = collections.namedtuple('Commit', ['sha', 'date'])
 

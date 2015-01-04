@@ -1,3 +1,6 @@
+# pylint bug :(
+# https://bitbucket.org/logilab/pylint/issue/272/anomalous-backslash-in-string-for-raw  # noqa
+# pylint:disable=anomalous-backslash-in-string
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
@@ -7,11 +10,6 @@ from git_code_debt.file_diff_stat import get_file_diff_stats_from_output
 from git_code_debt.file_diff_stat import SpecialFile
 from git_code_debt.file_diff_stat import SpecialFileType
 from git_code_debt.file_diff_stat import Status
-
-
-# pylint bug :(
-# https://bitbucket.org/logilab/pylint/issue/272/anomalous-backslash-in-string-for-raw  # noqa
-# pylint:disable=anomalous-backslash-in-string
 
 
 SAMPLE_OUTPUT = b"""diff --git a/README.md b/README.md

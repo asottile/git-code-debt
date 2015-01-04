@@ -1,10 +1,10 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-import mock
-import pytest
 import re
 
+import mock
+import pytest
 import staticconf.errors
 
 from git_code_debt.server.metric_config import _get_commit_links_from_yaml

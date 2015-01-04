@@ -1,10 +1,8 @@
+# pylint:disable=no-self-use,unused-argument
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
 from git_code_debt.metric import Metric
-
-
-# pylint:disable=no-self-use,unused-argument
 
 
 class DiffParserBase(object):

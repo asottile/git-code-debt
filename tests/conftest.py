@@ -1,3 +1,4 @@
+# pylint:disable=redefined-outer-name
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
@@ -5,9 +6,10 @@ import collections
 import contextlib
 import io
 import os.path
-import pytest
 import sqlite3
 import subprocess
+
+import pytest
 
 from git_code_debt.create_tables import create_schema
 from git_code_debt.create_tables import populate_metric_ids
@@ -17,9 +19,6 @@ from git_code_debt.util import five
 from git_code_debt.util.subprocess import cmd_output
 from testing.utilities.auto_namedtuple import auto_namedtuple
 from testing.utilities.cwd import cwd
-
-
-# pylint:disable=redefined-outer-name
 
 
 @pytest.yield_fixture

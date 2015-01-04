@@ -3,11 +3,11 @@ from __future__ import unicode_literals
 
 import flask
 
+from git_code_debt.server import logic
 from git_code_debt.server import metric_config
 from git_code_debt.server.presentation.commit_delta import CommitDeltaPresenter
 from git_code_debt.server.presentation.delta import DeltaPresenter
 from git_code_debt.server.render_mako import render_template
-from git_code_debt.server import logic
 
 
 commit = flask.Blueprint('commit', __name__)

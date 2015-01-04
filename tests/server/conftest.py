@@ -1,7 +1,9 @@
+# pylint:disable=redefined-outer-name
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import contextlib
+
 import mock
 import pytest
 
@@ -10,9 +12,6 @@ from git_code_debt.server.app import app
 from git_code_debt.server.app import AppContext
 from testing.utilities.auto_namedtuple import auto_namedtuple
 from testing.utilities.client import Client
-
-
-# pylint:disable=redefined-outer-name
 
 
 class GitCodeDebtServer(object):

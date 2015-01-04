@@ -1,3 +1,4 @@
+# pylint:disable=redefined-outer-name
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
@@ -9,9 +10,6 @@ from git_code_debt.list_metrics import CYAN
 from git_code_debt.list_metrics import main
 from git_code_debt.list_metrics import NORMAL
 from git_code_debt.util.compat import builtins
-
-
-# pylint:disable=redefined-outer-name
 
 
 @pytest.yield_fixture

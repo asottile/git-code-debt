@@ -1,4 +1,5 @@
 # -*- coding: UTF-8 -*-
+# pylint:disable=star-args
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
@@ -7,9 +8,6 @@ import pytest
 from git_code_debt.util import five
 from git_code_debt.util.subprocess import CalledProcessError
 from git_code_debt.util.subprocess import cmd_output
-
-
-# pylint:disable=star-args
 
 
 def test_subprocess_encoding():

@@ -4,9 +4,10 @@ from __future__ import unicode_literals
 import argparse
 import os
 import os.path
-import pkg_resources
 import sqlite3
 import sys
+
+import pkg_resources
 
 from git_code_debt import options
 from git_code_debt import write_logic

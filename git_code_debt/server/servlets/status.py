@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import flask
 
+
 status = flask.Blueprint('status', __name__)
 
 
