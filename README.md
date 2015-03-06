@@ -20,7 +20,7 @@ A dashboard for monitoring code debt in a git repository.
 ```
 # Create tables
 $ git-code-debt-create-tables database.db
-# Generage metric data (substitute your own repo path)
+# Generate metric data (substitute your own repo path)
 $ git-code-debt-generate git://github.com/Yelp/git-code-debt database.db
 # Start the server
 $ git-code-debt-server database.db
