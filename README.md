@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/asottile/git-code-debt.svg?branch=master)](https://travis-ci.org/asottile/git-code-debt)
-[![Coverage Status](https://img.shields.io/coveralls/asottile/git-code-debt.svg)](https://coveralls.io/r/asottile/git-code-debt?branch=master)
+[![Build Status](https://travis-ci.org/Yelp/git-code-debt.svg?branch=master)](https://travis-ci.org/Yelp/git-code-debt)
+[![Coverage Status](https://img.shields.io/coveralls/Yelp/git-code-debt.svg)](https://coveralls.io/r/Yelp/git-code-debt?branch=master)
 
 git-code-debt
 =============
@@ -21,7 +21,7 @@ A dashboard for monitoring code debt in a git repository.
 # Create tables
 $ git-code-debt-create-tables database.db
 # Generage metric data (substitute your own repo path)
-$ git-code-debt-generate git://github.com/asottile/git-code-debt database.db
+$ git-code-debt-generate git://github.com/Yelp/git-code-debt database.db
 # Start the server
 $ git-code-debt-server database.db
 ```
@@ -34,7 +34,7 @@ previously.
 
 ```
 # (substitute your own repo path)
-$ git-code-debt-generate git://github.com/asottile/git-code-debt database.db
+$ git-code-debt-generate git://github.com/Yelp/git-code-debt database.db
 ```
 
 ### Creating your own metrics
@@ -116,7 +116,7 @@ class DiffParserBase(object):
 ## Some screenshots
 
 ### Index
-![Example screen index](https://raw.githubusercontent.com/asottile/git-code-debt/master/img/debt_screen_1.png)
+![Example screen index](https://raw.githubusercontent.com/Yelp/git-code-debt/master/img/debt_screen_1.png)
 
 ### Graph
-![Example screen graph](https://raw.githubusercontent.com/asottile/git-code-debt/master/img/debt_screen_2.png)
+![Example screen graph](https://raw.githubusercontent.com/Yelp/git-code-debt/master/img/debt_screen_2.png)

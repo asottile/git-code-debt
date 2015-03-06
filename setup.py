@@ -5,7 +5,7 @@ from setuptools import setup
 setup(
     name='git_code_debt',
     description='A dashboard for monitoring code debt in a git repository.',
-    url='https://github.com/asottile/git-code-debt',
+    url='https://github.com/Yelp/git-code-debt',
     version='0.6.1',
 
     author='Anthony Sottile',
