@@ -65,7 +65,7 @@ def main(argv=None):  # pragma: no cover (starts a web server)
     argv = argv if argv is not None else sys.argv[1:]
     parser = argparse.ArgumentParser()
     parser.add_argument('database_path', type=str)
-    parser.add_argument('--port', type=int, default=5000)
+    parser.add_argument('-p', '--port', type=int, default=5000)
     parser.add_argument(
         '--debug', action='store_true',
         help=(
