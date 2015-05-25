@@ -9,6 +9,8 @@ template_lookup = mako.lookup.TemplateLookup(
     directories=[
         pkg_resources.resource_filename('git_code_debt.server', 'templates'),
     ],
+    default_filters=['html_escape'],
+    imports=['from mako.filters import html_escape'],
 )
 
 
