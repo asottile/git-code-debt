@@ -53,7 +53,7 @@ Here's what the base class looks like
 
 ```python
 
-class SimpleLineCounterBase(DiffParserBase:
+class SimpleLineCounterBase(DiffParserBase):
     # ...
 
     def should_include_file(self, file_diff_stat):
