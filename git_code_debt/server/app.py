@@ -6,7 +6,6 @@ import argparse
 import os.path
 import shutil
 import sqlite3
-import sys
 
 import flask
 import pkg_resources
@@ -62,7 +61,6 @@ def create_metric_config_if_not_exists():
 
 
 def main(argv=None):  # pragma: no cover (starts a web server)
-    argv = argv if argv is not None else sys.argv[1:]
     parser = argparse.ArgumentParser()
     parser.add_argument('database_path', type=str)
     parser.add_argument('-p', '--port', type=int, default=5000)

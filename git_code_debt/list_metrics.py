@@ -3,7 +3,6 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import argparse
-import sys
 
 from git_code_debt import options
 from git_code_debt.discovery import get_metric_parsers_from_args
@@ -21,7 +20,6 @@ def color(text, color_value, color_setting):
 
 
 def main(argv=None):
-    argv = argv if argv is not None else sys.argv[1:]
     parser = argparse.ArgumentParser(description='List metric parsers')
     # optional
     options.add_color(parser)

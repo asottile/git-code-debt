@@ -5,7 +5,6 @@ import argparse
 import os
 import os.path
 import sqlite3
-import sys
 
 import pkg_resources
 
@@ -40,8 +39,6 @@ def populate_metric_ids(db, package_names, skip_defaults):
 
 
 def main(argv=None):
-    argv = argv if argv is not None else sys.argv[1:]
-
     parser = argparse.ArgumentParser(description='Set up schema')
     # optional
     options.add_skip_default_metrics(parser)
