@@ -4,8 +4,8 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import pytest
+import six
 
-from git_code_debt.util import five
 from git_code_debt.util.subprocess import CalledProcessError
 from git_code_debt.util.subprocess import cmd_output
 
@@ -13,7 +13,7 @@ from git_code_debt.util.subprocess import cmd_output
 def test_subprocess_encoding():
     # Defaults to utf-8
     ret = cmd_output('echo', '☃'.encode('UTF-8'))
-    assert type(ret) is five.text
+    assert type(ret) is six.text_type
     assert ret == '☃\n'
 
 

@@ -3,10 +3,10 @@ from __future__ import unicode_literals
 
 import flask
 import mock
+import six
 
 from git_code_debt.metrics.imports import PythonImportCount
 from git_code_debt.metrics.symlink_count import SymlinkCount
-from git_code_debt.util import five
 from git_code_debt.util.compat import urllib_parse
 from testing.assertions.response import assert_no_response_errors
 from testing.assertions.response import assert_redirect
@@ -73,8 +73,8 @@ def test_show(server_with_data):
     resp = server_with_data.server.client.get(flask.url_for(
         'graph.show',
         metric_name=PythonImportCount.__name__,
-        start=five.text(timestamp - 1000),
-        end=five.text(timestamp + 1000),
+        start=six.text_type(timestamp - 1000),
+        end=six.text_type(timestamp + 1000),
     ))
     assert_no_response_errors(resp)
 
