@@ -22,7 +22,7 @@ from testing.utilities.cwd import cwd
 
 
 @pytest.yield_fixture
-def tmpdir_factory(tmpdir):
+def tempdir_factory(tmpdir):
     class TmpdirFactory(object):
         def __init__(self):
             self.tmpdir_count = 0
@@ -50,8 +50,8 @@ class Sandbox(collections.namedtuple('Sandbox', ['directory'])):
 
 
 @pytest.yield_fixture
-def sandbox(tmpdir_factory):
-    ret = Sandbox(tmpdir_factory.get())
+def sandbox(tempdir_factory):
+    ret = Sandbox(tempdir_factory.get())
     with ret.db() as db:
         create_schema(db)
         populate_metric_ids(db, tuple(), False)
@@ -60,8 +60,8 @@ def sandbox(tmpdir_factory):
 
 
 @pytest.yield_fixture
-def cloneable(tmpdir_factory):
-    repo_path = tmpdir_factory.get()
+def cloneable(tempdir_factory):
+    repo_path = tempdir_factory.get()
     with cwd(repo_path):
         subprocess.check_call(['git', 'init', '.'])
         subprocess.check_call(['git', 'commit', '-m', 'foo', '--allow-empty'])

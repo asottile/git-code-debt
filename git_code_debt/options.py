@@ -44,12 +44,3 @@ def add_skip_default_metrics(argparser):
         action='store_true',
         help='Whether to skip default metrics.',
     )
-
-
-def add_tempdir_location(argparser):
-    argparser.add_argument(
-        '--tempdir-location',
-        type=five.text,
-        default=None,
-        help='Override location of temp dirs.  Default is system default.',
-    )
