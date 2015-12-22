@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-from git_code_debt.util import five
+import six
 
 
 # TODO: Take the color processing code from pre-commit and package it
@@ -24,7 +24,7 @@ def add_database(argparser):
 def add_metric_package_names(argparser):
     argparser.add_argument(
         'metric_package_names',
-        type=five.text,
+        type=six.text_type,
         nargs='*',
         help='Metric Package Names (such as foo.metrics bar.metrics).',
     )

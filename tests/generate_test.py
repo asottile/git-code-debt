@@ -9,12 +9,15 @@ import os.path
 import pytest
 import yaml
 
+from git_code_debt.generate import _get_metrics_inner
 from git_code_debt.generate import get_options_from_argparse
 from git_code_debt.generate import get_options_from_config
 from git_code_debt.generate import increment_metric_values
 from git_code_debt.generate import main
 from git_code_debt.generate_config import GenerateOptions
 from git_code_debt.metric import Metric
+from git_code_debt.metrics.lines import LinesOfCodeParser
+from git_code_debt.repo_parser import RepoParser
 from git_code_debt.util.subprocess import cmd_output
 from testing.utilities.cwd import cwd
 
@@ -29,6 +32,27 @@ def test_increment_metrics_already_there():
     metrics = collections.defaultdict(int, {'foo': 2, 'bar': 3})
     increment_metric_values(metrics, [Metric('foo', 1), Metric('bar', 2)])
     assert metrics == {'foo': 3, 'bar': 5}
+
+
+def test_get_metrics_inner_first_commit(cloneable_with_commits):
+    repo_parser = RepoParser(cloneable_with_commits.path)
+    with repo_parser.repo_checked_out():
+        metrics = _get_metrics_inner((
+            None, cloneable_with_commits.commits[0],
+            repo_parser, [LinesOfCodeParser],
+        ))
+        assert Metric(name='TotalLinesOfCode', value=0) in metrics
+
+
+def test_get_metrics_inner_nth_commit(cloneable_with_commits):
+    repo_parser = RepoParser(cloneable_with_commits.path)
+    with repo_parser.repo_checked_out():
+        metrics = _get_metrics_inner((
+            cloneable_with_commits.commits[-2],
+            cloneable_with_commits.commits[-1],
+            repo_parser, [LinesOfCodeParser],
+        ))
+        assert Metric(name='TotalLinesOfCode', value=2) in metrics
 
 
 def test_generate_integration(sandbox, cloneable):

@@ -43,6 +43,7 @@ setup(
         'pyyaml',
         'PyStaticConfiguration[yaml]',
         'simplejson',
+        'six',
     ],
 
     entry_points={

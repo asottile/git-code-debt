@@ -10,12 +10,12 @@ import sqlite3
 import subprocess
 
 import pytest
+import six
 
 from git_code_debt.create_tables import create_schema
 from git_code_debt.create_tables import populate_metric_ids
 from git_code_debt.repo_parser import Commit
 from git_code_debt.repo_parser import COMMIT_FORMAT
-from git_code_debt.util import five
 from git_code_debt.util.subprocess import cmd_output
 from testing.utilities.auto_namedtuple import auto_namedtuple
 from testing.utilities.cwd import cwd
@@ -28,7 +28,7 @@ def tempdir_factory(tmpdir):
             self.tmpdir_count = 0
 
         def get(self):
-            path = os.path.join(tmpdir.strpath, five.text(self.tmpdir_count))
+            path = tmpdir.join(six.text_type(self.tmpdir_count)).strpath
             self.tmpdir_count += 1
             os.mkdir(path)
             return path
@@ -63,8 +63,8 @@ def sandbox(tempdir_factory):
 def cloneable(tempdir_factory):
     repo_path = tempdir_factory.get()
     with cwd(repo_path):
-        subprocess.check_call(['git', 'init', '.'])
-        subprocess.check_call(['git', 'commit', '-m', 'foo', '--allow-empty'])
+        subprocess.check_call(('git', 'init', '.'))
+        subprocess.check_call(('git', 'commit', '-m', 'foo', '--allow-empty'))
 
     yield repo_path
 
@@ -84,10 +84,10 @@ def cloneable_with_commits(cloneable):
         with io.open(filename, 'w') as file_obj:
             file_obj.write(contents)
 
-        subprocess.check_call(['git', 'add', filename])
-        subprocess.check_call([
+        subprocess.check_call(('git', 'add', filename))
+        subprocess.check_call((
             'git', 'commit', '-m', 'Add {0}'.format(filename),
-        ])
+        ))
         append_commit()
 
     with cwd(cloneable):

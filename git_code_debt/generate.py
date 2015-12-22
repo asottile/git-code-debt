@@ -6,10 +6,13 @@ from __future__ import unicode_literals
 import argparse
 import collections
 import io
+import itertools
+import multiprocessing.pool
 import os.path
 import sqlite3
 import sys
 
+import six
 import yaml
 
 from git_code_debt import options
@@ -39,6 +42,15 @@ def get_metrics(diff, metric_parsers):
 def increment_metric_values(metric_values, metrics):
     for metric in metrics:
         metric_values[metric.name] += metric.value
+
+
+def _get_metrics_inner(m_args):
+    compare_commit, commit, repo_parser, metric_parsers = m_args
+    if compare_commit is None:
+        diff = repo_parser.get_original_commit(commit.sha)
+    else:
+        diff = repo_parser.get_commit_diff(compare_commit.sha, commit.sha)
+    return get_metrics(diff, metric_parsers)
 
 
 def load_data(
@@ -74,20 +86,21 @@ def load_data(
                 ))
                 commits = commits[1:]
 
-            for commit in commits:
-                if compare_commit is None:
-                    diff = repo_parser.get_original_commit(commit.sha)
-                else:
-                    diff = repo_parser.get_commit_diff(
-                        compare_commit.sha, commit.sha,
-                    )
-
-                metrics = get_metrics(diff, metric_parsers)
+            mp_args = six.moves.zip(
+                [compare_commit] + commits,
+                commits,
+                itertools.repeat(repo_parser),
+                itertools.repeat(metric_parsers),
+            )
+            pool = multiprocessing.pool.Pool(15)
+            for commit, metrics in six.moves.zip(
+                    commits, pool.imap(_get_metrics_inner, mp_args),
+            ):
                 increment_metric_values(metric_values, metrics)
-                insert_metric_values(db, metric_values, metric_mapping, commit)
+                insert_metric_values(
+                    db, metric_values, metric_mapping, commit,
+                )
                 insert_metric_changes(db, metrics, metric_mapping, commit)
-
-                compare_commit = commit
 
 
 def _add_config_file_options(argument_parser):
