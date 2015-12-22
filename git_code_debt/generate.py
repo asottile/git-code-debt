@@ -46,14 +46,13 @@ def load_data(
         repo,
         package_names,
         skip_defaults,
-        tempdir_location,
 ):
     metric_parsers = get_metric_parsers_from_args(package_names, skip_defaults)
 
     with sqlite3.connect(database_file) as db:
         metric_mapping = get_metric_mapping(db)
 
-        repo_parser = RepoParser(repo, tempdir_location=tempdir_location)
+        repo_parser = RepoParser(repo)
 
         with repo_parser.repo_checked_out():
             previous_sha = get_previous_sha(db)
@@ -107,7 +106,6 @@ def get_options_from_argparse(argv):
     )
     # optional
     options.add_skip_default_metrics(parser)
-    options.add_tempdir_location(parser)
     # positional
     options.add_repo(parser)
     options.add_database(parser)
@@ -167,7 +165,6 @@ def main(argv=None):
         args.repo,
         args.metric_package_names,
         args.skip_default_metrics,
-        args.tempdir_location,
     )
 
 

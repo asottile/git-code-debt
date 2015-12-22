@@ -15,14 +15,12 @@ def test_empty_config_invalid():
 def test_with_all_options_specified():
     ret = GenerateOptions.from_yaml({
         'skip_default_metrics': True,
-        'tempdir_location': '/foo/tmp',
         'metric_package_names': ['my_package'],
         'repo': '.',
         'database': 'database.db',
     })
     assert ret == GenerateOptions(
         skip_default_metrics=True,
-        tempdir_location='/foo/tmp',
         metric_package_names=['my_package'],
         repo='.',
         database='database.db',
@@ -33,7 +31,6 @@ def test_minimal_defaults():
     ret = GenerateOptions.from_yaml({'repo': './', 'database': 'database.db'})
     assert ret == GenerateOptions(
         skip_default_metrics=False,
-        tempdir_location=None,
         metric_package_names=[],
         repo='./',
         database='database.db',
@@ -44,11 +41,9 @@ def test_none_for_tempdir_allowed():
     ret = GenerateOptions.from_yaml({
         'repo': 'repo',
         'database': 'database.db',
-        'tempdir_location': None,
     })
     assert ret == GenerateOptions(
         skip_default_metrics=False,
-        tempdir_location=None,
         metric_package_names=[],
         repo='repo',
         database='database.db',
@@ -58,7 +53,6 @@ def test_none_for_tempdir_allowed():
 def test_to_yaml_all_specified():
     ret = GenerateOptions(
         skip_default_metrics=True,
-        tempdir_location='/foo/tmp',
         metric_package_names=['my_package'],
         repo='.',
         database='database.db',
@@ -66,7 +60,6 @@ def test_to_yaml_all_specified():
 
     assert ret == {
         'skip_default_metrics': True,
-        'tempdir_location': '/foo/tmp',
         'metric_package_names': ['my_package'],
         'repo': '.',
         'database': 'database.db',
@@ -76,7 +69,6 @@ def test_to_yaml_all_specified():
 def test_to_yaml_defaults():
     ret = GenerateOptions(
         skip_default_metrics=False,
-        tempdir_location=None,
         metric_package_names=[],
         repo='.',
         database='database.db',

@@ -19,20 +19,17 @@ COMMIT_FORMAT = '--format=%H%n%ct'
 
 class RepoParser(object):
 
-    def __init__(self, git_repo, tempdir_location=None):
+    def __init__(self, git_repo):
         self.git_repo = git_repo
         self.tempdir = None
-        self.tempdir_location = tempdir_location
 
     @contextlib.contextmanager
     def repo_checked_out(self):
         assert not self.tempdir
-        self.tempdir = tempfile.mkdtemp(
-            suffix='temp-repo', dir=self.tempdir_location,
-        )
+        self.tempdir = tempfile.mkdtemp(suffix='temp-repo')
         try:
             subprocess.check_call(
-                ['git', 'clone', '--no-checkout', self.git_repo, self.tempdir],
+                ('git', 'clone', '--no-checkout', self.git_repo, self.tempdir),
                 stdout=None,
             )
             yield

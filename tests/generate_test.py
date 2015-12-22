@@ -35,8 +35,8 @@ def test_generate_integration(sandbox, cloneable):
     main([cloneable, sandbox.db_path])
 
 
-def test_generate_integration_config_file(sandbox, cloneable, tmpdir_factory):
-    tmpdir = tmpdir_factory.get()
+def test_generate_integration_config_file(sandbox, cloneable, tempdir_factory):
+    tmpdir = tempdir_factory.get()
     config_filename = os.path.join(tmpdir, 'generate_config.yaml')
     with io.open(config_filename, 'w') as config_file:
         yaml.dump(
@@ -101,8 +101,8 @@ def test_regression_for_issue_10(sandbox, cloneable):
     assert data_count_before == data_count_after
 
 
-def test_fields_equivalent(tmpdir_factory):
-    tmpdir = tmpdir_factory.get()
+def test_fields_equivalent(tempdir_factory):
+    tmpdir = tempdir_factory.get()
     config_filename = os.path.join(tmpdir, 'config.yaml')
     with io.open(config_filename, 'w') as config_file:
         config_file.write(
@@ -130,8 +130,8 @@ def test_fields_equivalent(tmpdir_factory):
         assert getattr(config_output, field) == getattr(argparse_output, field)
 
 
-def test_get_options_from_config_create_config(tmpdir_factory):
-    tmpdir = tmpdir_factory.get()
+def test_get_options_from_config_create_config(tempdir_factory):
+    tmpdir = tempdir_factory.get()
     with cwd(tmpdir):
         ret = get_options_from_config([
             '--create-config',
@@ -147,7 +147,6 @@ def test_get_options_from_config_create_config(tmpdir_factory):
 
         assert ret == GenerateOptions(
             skip_default_metrics=False,
-            tempdir_location=None,
             metric_package_names=[],
             repo='.',
             database='database.db',
