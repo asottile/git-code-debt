@@ -29,7 +29,11 @@ class RepoParser(object):
         self.tempdir = tempfile.mkdtemp(suffix='temp-repo')
         try:
             subprocess.check_call(
-                ('git', 'clone', '--no-checkout', self.git_repo, self.tempdir),
+                (
+                    'git', 'clone',
+                    '--no-checkout', '--shared',
+                    self.git_repo, self.tempdir,
+                ),
                 stdout=None,
             )
             yield
