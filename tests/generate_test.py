@@ -125,6 +125,19 @@ def test_regression_for_issue_10(sandbox, cloneable):
     assert data_count_before == data_count_after
 
 
+def test_moves_handled_properly(sandbox, cloneable):
+    with cwd(cloneable):
+        with io.open('f', 'w') as f:
+            f.write('foo\nbar\nbaz\n')
+        cmd_output('git', 'add', 'f')
+        cmd_output('git', 'commit', '-m', 'add f')
+        cmd_output('git', 'mv', 'f', 'g')
+        cmd_output('git', 'commit', '-m', 'move f to g')
+
+    # Used to raise AssertionError
+    assert main((cloneable, sandbox.db_path)) is None
+
+
 def test_fields_equivalent(tempdir_factory):
     tmpdir = tempdir_factory.get()
     config_filename = os.path.join(tmpdir, 'config.yaml')
