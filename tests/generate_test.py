@@ -150,7 +150,6 @@ def test_fields_equivalent(tempdir_factory):
     config_output = get_options_from_config([
         '--config-filename', config_filename,
     ])
-    # pylint:disable=no-member,protected-access
     config_fields = set(config_output._fields)
 
     argparse_output = get_options_from_argparse(['.', 'database.db'])
