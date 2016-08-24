@@ -3,12 +3,20 @@ env: # These should match the tox env list
     - TOXENV=py27
     - TOXENV=py33
     - TOXENV=py34
+    - TOXENV=py27 LATEST_GIT=1
 install: pip install coveralls tox
 script: tox
 # Special snowflake.  Our tests depend on making real commits.
 before_install:
-  - git config --global user.name "Travis CI"
-  - git config --global user.email "user@example.com"
+    - git config --global user.name "Travis CI"
+    - git config --global user.email "user@example.com"
+    - git --version
+    - |
+        if [ "$LATEST_GIT" = "1" ]; then
+            ./latest-git.sh
+            export PATH="/tmp/git:$PATH"
+        fi
+    - git --version
 after_success:
     - coveralls
 sudo: false

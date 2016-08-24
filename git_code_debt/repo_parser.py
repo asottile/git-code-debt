@@ -83,6 +83,7 @@ class RepoParser(object):
     def get_commit_diff(self, previous_sha, sha):
         assert self.tempdir
         output = cmd_output(
-            'git', 'diff', previous_sha, sha, cwd=self.tempdir, encoding=None,
+            'git', 'diff', previous_sha, sha, '--no-renames',
+            cwd=self.tempdir, encoding=None,
         )
         return output
