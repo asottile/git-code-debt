@@ -2,9 +2,9 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import datetime
+import json
 
 import flask
-import simplejson
 
 from git_code_debt.server import logic
 from git_code_debt.server import metric_config
@@ -50,4 +50,4 @@ def show(metric_name, start_timestamp, end_timestamp):
         override_classname=override_classname,
     )
 
-    return simplejson.dumps({'body': rendered_template})
+    return json.dumps({'body': rendered_template})

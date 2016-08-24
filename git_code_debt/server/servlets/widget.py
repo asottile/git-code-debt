@@ -2,9 +2,9 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import io
+import json
 
 import flask
-import simplejson
 import yaml
 
 from git_code_debt.discovery import get_metric_parsers_from_args
@@ -47,6 +47,6 @@ def data():
         )
         for metric in metrics
     ])
-    return simplejson.dumps({
+    return json.dumps({
         'metrics': render_template('widget.mako', commit_deltas=commit_deltas)
     })
