@@ -95,7 +95,7 @@ def main(argv=None):  # pragma: no cover (starts a web server)
     if not args.debug:
         kwargs['processes'] = args.processes
 
-    app.run('0.0.0.0', **kwargs)  # pylint:disable=star-args
+    app.run('0.0.0.0', **kwargs)
 
 
 if __name__ == '__main__':

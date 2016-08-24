@@ -1,11 +1,10 @@
 language: python
+python: 3.5
 env: # These should match the tox env list
     - TOXENV=py27
-    - TOXENV=py33
     - TOXENV=py34
+    - TOXENV=py35
     - TOXENV=py27 LATEST_GIT=1
-install: pip install coveralls tox
-script: tox
 # Special snowflake.  Our tests depend on making real commits.
 before_install:
     - git config --global user.name "Travis CI"
@@ -17,9 +16,9 @@ before_install:
             export PATH="/tmp/git:$PATH"
         fi
     - git --version
-after_success:
-    - coveralls
-sudo: false
+install: pip install coveralls tox
+script: tox
+after_success: coveralls
 cache:
     directories:
         - $HOME/.cache/pip

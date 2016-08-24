@@ -1,6 +1,3 @@
-# pylint bug :(
-# https://bitbucket.org/logilab/pylint/issue/272/anomalous-backslash-in-string-for-raw  # noqa
-# pylint:disable=anomalous-backslash-in-string
 from __future__ import absolute_import
 from __future__ import unicode_literals
 

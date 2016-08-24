@@ -1,4 +1,3 @@
-# pylint:disable=redefined-outer-name
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
