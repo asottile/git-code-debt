@@ -2,9 +2,9 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import datetime
+import json
 
 import flask
-import simplejson
 
 from git_code_debt.server import logic
 from git_code_debt.server.render_mako import render_template
@@ -35,7 +35,7 @@ def show(metric_name):
     return render_template(
         'graph.mako',
         metric_name=metric_name,
-        metrics=simplejson.dumps(metrics_for_js),
+        metrics=json.dumps(metrics_for_js),
         start_timestamp=start_timestamp,
         end_timestamp=end_timestamp,
         changes_url=flask.url_for(

@@ -12,12 +12,16 @@ def test_ctor():
 
 
 def test_pq():
-    response = auto_namedtuple('Response', data='<p>Oh hai!</p>')
+    response = auto_namedtuple(
+        'Response', data=b'<p>Oh hai!</p>', charset='UTF-8',
+    )
     instance = Response(response)
-    assert instance.pq.__html__() == response.data
+    assert instance.pq.__html__() == response.data.decode('UTF-8')
 
 
 def test_json():
-    response = auto_namedtuple('Response', data='{"foo": "bar"}')
+    response = auto_namedtuple(
+        'Response', data=b'{"foo": "bar"}', charset='UTF-8',
+    )
     instance = Response(response)
     assert instance.json == {'foo': 'bar'}
