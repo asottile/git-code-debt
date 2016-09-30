@@ -11,7 +11,7 @@ from git_code_debt.metrics.common import FILE_TYPE_MAP
 class LinesOfCodeParser(DiffParserBase):
     """Counts lines of code in a repository, overall and by file types."""
 
-    def get_metrics_from_stat(self, file_diff_stats):
+    def get_metrics_from_stat(self, _, file_diff_stats):
         total_lines = 0
         lines_by_file_type = collections.defaultdict(int)
 

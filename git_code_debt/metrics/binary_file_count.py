@@ -8,7 +8,7 @@ from git_code_debt.metrics.base import DiffParserBase
 
 
 class BinaryFileCount(DiffParserBase):
-    def get_metrics_from_stat(self, file_diff_stats):
+    def get_metrics_from_stat(self, _, file_diff_stats):
         binary_delta = 0
 
         for file_diff_stat in file_diff_stats:

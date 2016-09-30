@@ -27,11 +27,13 @@ from git_code_debt.write_logic import insert_metric_changes
 from git_code_debt.write_logic import insert_metric_values
 
 
-def get_metrics(diff, metric_parsers):
+def get_metrics(commit, diff, metric_parsers):
     def get_all_metrics(file_diff_stats):
         for metric_parser_cls in metric_parsers:
             metric_parser = metric_parser_cls()
-            for metric in metric_parser.get_metrics_from_stat(file_diff_stats):
+            for metric in metric_parser.get_metrics_from_stat(
+                commit, file_diff_stats,
+            ):
                 yield metric
 
     file_diff_stats = get_file_diff_stats_from_output(diff)
@@ -49,7 +51,7 @@ def _get_metrics_inner(m_args):
         diff = repo_parser.get_original_commit(commit.sha)
     else:
         diff = repo_parser.get_commit_diff(compare_commit.sha, commit.sha)
-    return get_metrics(diff, metric_parsers)
+    return get_metrics(commit, diff, metric_parsers)
 
 
 def load_data(

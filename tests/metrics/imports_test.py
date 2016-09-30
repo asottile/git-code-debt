@@ -9,6 +9,7 @@ from git_code_debt.metrics.imports import CheetahTemplateImportCount
 from git_code_debt.metrics.imports import is_python_import
 from git_code_debt.metrics.imports import is_template_import
 from git_code_debt.metrics.imports import PythonImportCount
+from git_code_debt.repo_parser import Commit
 
 
 @pytest.mark.parametrize(('line', 'expected'), (
@@ -49,7 +50,7 @@ def test_python_import_parser():
         ),
     ]
 
-    metrics = list(parser.get_metrics_from_stat(input_stats))
+    metrics = list(parser.get_metrics_from_stat(Commit.blank, input_stats))
     assert metrics == [Metric('PythonImportCount', 1)]
 
 
@@ -64,5 +65,5 @@ def test_template_import_parser():
         ),
     ]
 
-    metrics = list(parser.get_metrics_from_stat(input_stats))
+    metrics = list(parser.get_metrics_from_stat(Commit.blank, input_stats))
     assert metrics == [Metric('CheetahTemplateImportCount', 1)]
