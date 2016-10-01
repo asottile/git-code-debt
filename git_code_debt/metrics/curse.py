@@ -21,7 +21,7 @@ def count_curse_words(lines):
 class CurseWordsParser(DiffParserBase):
     """Counts curse words in a repository, overall and by file type"""
 
-    def get_metrics_from_stat(self, file_diff_stats):
+    def get_metrics_from_stat(self, _, file_diff_stats):
         total_curses = 0
         curses_by_file_type = collections.defaultdict(int)
 

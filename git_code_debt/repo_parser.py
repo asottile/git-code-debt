@@ -11,7 +11,8 @@ from git_code_debt.util.iter import chunk_iter
 from git_code_debt.util.subprocess import cmd_output
 
 
-Commit = collections.namedtuple('Commit', ['sha', 'date'])
+Commit = collections.namedtuple('Commit', ('sha', 'date'))
+Commit.blank = Commit('0' * 40, 0)
 
 COMMIT_FORMAT = '--format=%H%n%ct'
 

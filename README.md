@@ -96,11 +96,12 @@ class DiffParserBase(object):
     # Specify __metric__ = False to not be included (useful for base classes)
     __metric__ = False
 
-    def get_metrics_from_stat(self, file_diff_stats):
+    def get_metrics_from_stat(self, commit, file_diff_stats):
         """Implement me to yield Metric objects from the input list of
         FileStat objects.
 
         Args:
+            commit - Commit object
             file_diff_stats - list of FileDiffStat objects
 
         Returns:
