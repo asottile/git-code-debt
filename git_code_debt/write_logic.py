@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 def insert_metric_ids(db, metric_ids):
     values = [[x] for x in metric_ids]
-    db.executemany("INSERT INTO metric_names ('name') VALUES (?)", values)
+    db.executemany("INSERT INTO metric_names (name) VALUES (?)", values)
 
 
 def insert_metric_values(db, metric_values, metric_mapping, commit):
