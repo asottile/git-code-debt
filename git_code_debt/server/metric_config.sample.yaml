@@ -40,7 +40,7 @@ ColorOverrides: []
 
 # Sample CommitLinks for Commit page:
 # CommitLinks:
-#     View on Github: https://github.com/Yelp/git-code-debt/commit/{sha}
+#     View on Github: https://github.com/asottile/git-code-debt/commit/{sha}
 #     ...
 #
 # These links will have the following variables substituted when displayed:

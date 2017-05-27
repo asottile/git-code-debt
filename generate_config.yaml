@@ -1,3 +1,3 @@
 database: database.db
 metric_package_names: []
-repo: git@github.com:Yelp/git-code-debt
+repo: git@github.com:asottile/git-code-debt

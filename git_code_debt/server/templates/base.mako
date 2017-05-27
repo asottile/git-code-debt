@@ -12,7 +12,7 @@
   <div>
     <a href="/">Home</a> |
     Powered by
-    <a href="https://github.com/Yelp/git-code-debt" target="_blank">
+    <a href="https://github.com/asottile/git-code-debt" target="_blank">
       git-code-debt
     </a>
   </div>
