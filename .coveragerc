@@ -1,11 +1,9 @@
 [run]
 branch = True
-source =
-    .
+source = .
 omit =
     .tox/*
     /usr/*
-    */tmp*
     setup.py
     *_mako
 

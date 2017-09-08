@@ -1,10 +1,14 @@
 language: python
-python: 3.5
-env: # These should match the tox env list
-    - TOXENV=py27
-    - TOXENV=py34
-    - TOXENV=py35
-    - TOXENV=py27 LATEST_GIT=1
+matrix:
+    include:
+        -   env: TOXENV=py27
+        -   env: TOXENV=py27 LATEST_GIT=1
+        -   env: TOXENV=py35
+            python: 3.5
+        -   env: TOXENV=py36
+            python: 3.6
+        -   env: TOXENV=pypy
+            python: pypy-5.7.1
 # Special snowflake.  Our tests depend on making real commits.
 before_install:
     - git config --global user.name "Travis CI"
