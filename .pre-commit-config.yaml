@@ -1,6 +1,6 @@
 repos:
 -   repo: git@github.com:pre-commit/pre-commit-hooks
-    sha: v0.9.1
+    sha: v1.2.0
     hooks:
     -   id: trailing-whitespace
     -   id: end-of-file-fixer
@@ -13,6 +13,6 @@ repos:
     -   id: requirements-txt-fixer
     -   id: flake8
 -   repo: git@github.com:asottile/reorder_python_imports
-    sha: v0.3.5
+    sha: v1.0.1
     hooks:
     -   id: reorder-python-imports
