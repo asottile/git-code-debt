@@ -41,7 +41,7 @@ def test_widget_data(server):
             data={'diff': file_diff_stat_test.SAMPLE_OUTPUT},
         )
     response_pq = pyquery.PyQuery(response.json['metrics'])
-    assert 'TotalLinesOfCode 1' in response_pq.text()
+    assert 'TotalLinesOfCode 1' in ' '.join(response_pq.text().split())
     # Should not find any metrics with no data
     assert not response_pq.find('.metric-none')
     # Should not have metrics we didn't specify

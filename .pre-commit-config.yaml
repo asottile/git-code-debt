@@ -1,5 +1,5 @@
 repos:
--   repo: git@github.com:pre-commit/pre-commit-hooks
+-   repo: https://github.com/pre-commit/pre-commit-hooks
     sha: v1.2.0
     hooks:
     -   id: trailing-whitespace
@@ -12,15 +12,15 @@ repos:
     -   id: name-tests-test
     -   id: requirements-txt-fixer
     -   id: flake8
--   repo: git@github.com:asottile/reorder_python_imports
+-   repo: https://github.com/asottile/reorder_python_imports
     sha: v1.0.1
     hooks:
     -   id: reorder-python-imports
--   repo: git@github.com:asottile/pyupgrade
+-   repo: https://github.com/asottile/pyupgrade
     sha: v1.2.0
     hooks:
     -   id: pyupgrade
--   repo: git@github.com:asottile/add-trailing-comma
+-   repo: https://github.com/asottile/add-trailing-comma
     sha: v0.6.4
     hooks:
     -   id: add-trailing-comma
