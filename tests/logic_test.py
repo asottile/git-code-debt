@@ -27,9 +27,7 @@ def test_get_previous_sha_no_previous_sha(sandbox):
 
 
 def get_fake_metrics(metric_mapping):
-    return dict(
-        (metric_name, 1) for metric_name in metric_mapping.keys()
-    )
+    return {metric_name: 1 for metric_name in metric_mapping}
 
 
 def insert_fake_metrics(db):

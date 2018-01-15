@@ -25,7 +25,7 @@ def create_schema(db):
 
 
 def get_metric_ids(metric_parsers):
-    metric_ids = set([])
+    metric_ids = set()
     for metric_parser_cls in metric_parsers:
         for metric_id in metric_parser_cls().get_possible_metric_ids():
             metric_ids.add(metric_id)

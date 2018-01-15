@@ -33,7 +33,7 @@ def show(metric_name, start_timestamp, end_timestamp):
             CommitDeltaPresenter.from_data(
                 metric_name,
                 DeltaPresenter('javascript:;', value),
-            )
+            ),
         )
         for timestamp, sha, value in metric_changes
     ]

@@ -12,29 +12,33 @@ from git_code_debt.metrics.imports import PythonImportCount
 from git_code_debt.repo_parser import Commit
 
 
-@pytest.mark.parametrize(('line', 'expected'), (
-    (b'import collections', True),
-    (b'from collections import defaultdict', True),
-    (b'from foo import bar as baz', True),
-    (b'import bar as baz', True),
-    (b'#import foo as bar', False),
-    (b'from with nothing', False),
-    (b'    import foo', True),
-    (b'herpderp', False),
-))
+@pytest.mark.parametrize(
+    ('line', 'expected'), (
+        (b'import collections', True),
+        (b'from collections import defaultdict', True),
+        (b'from foo import bar as baz', True),
+        (b'import bar as baz', True),
+        (b'#import foo as bar', False),
+        (b'from with nothing', False),
+        (b'    import foo', True),
+        (b'herpderp', False),
+    ),
+)
 def test_python_imports(line, expected):
     assert is_python_import(line) == expected
 
 
-@pytest.mark.parametrize(('line', 'expected'), (
-    (b'#import foo', True),
-    (b'#from foo import bar', True),
-    (b'#from foo import bar as baz', True),
-    (b'#import bar as baz', True),
-    (b'    #import foo', True),
-    (b'## Nothing to import from here', False),
-    (b'herpderp', False),
-))
+@pytest.mark.parametrize(
+    ('line', 'expected'), (
+        (b'#import foo', True),
+        (b'#from foo import bar', True),
+        (b'#from foo import bar as baz', True),
+        (b'#import bar as baz', True),
+        (b'    #import foo', True),
+        (b'## Nothing to import from here', False),
+        (b'herpderp', False),
+    ),
+)
 def test_template_imports(line, expected):
     assert is_template_import(line) == expected
 

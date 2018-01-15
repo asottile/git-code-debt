@@ -14,7 +14,7 @@ def test_discover_classes():
         testing.testing_package.package_a,
         lambda cls: True,
     )
-    assert ret == set([Base])
+    assert ret == {Base}
 
 
 def test_discover_excludes_imported_classes():

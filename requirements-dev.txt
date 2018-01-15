@@ -1,6 +1,6 @@
 coverage
-flake8
 mock
 pre-commit
 pyquery
 pytest
+pytest-env

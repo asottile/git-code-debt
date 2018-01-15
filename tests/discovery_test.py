@@ -49,7 +49,7 @@ def test_returns_metrics_defined_in_tests_when_specified():
     metrics_in_tests = discover(tests, is_metric_cls)
     if not metrics_in_tests:
         raise AssertionError(
-            'Expected at least one metric in `tests` but found none'
+            'Expected at least one metric in `tests` but found none',
         )
 
     assert (

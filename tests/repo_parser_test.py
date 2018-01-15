@@ -55,7 +55,7 @@ def test_get_commits_after_date(checked_out_repo):
         ) + '\n'
         checked_out_repo.repo_parser.get_commits(previous_sha)
         assert (
-            '{0}..HEAD'.format(previous_sha) in
+            '{}..HEAD'.format(previous_sha) in
             cmd_output_mock.call_args[0]
         )
 

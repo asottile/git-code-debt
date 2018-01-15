@@ -85,7 +85,7 @@ def cloneable_with_commits(cloneable):
 
         subprocess.check_call(('git', 'add', filename))
         subprocess.check_call((
-            'git', 'commit', '-m', 'Add {0}'.format(filename),
+            'git', 'commit', '-m', 'Add {}'.format(filename),
         ))
         append_commit()
 

@@ -17,7 +17,7 @@ def add_color(argparser):
 def add_database(argparser):
     argparser.add_argument(
         'database',
-        help='Database filename (usually end with .db).'
+        help='Database filename (usually end with .db).',
     )
 
 

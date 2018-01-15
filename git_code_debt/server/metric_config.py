@@ -28,8 +28,8 @@ class Group(collections.namedtuple(
     def from_yaml(cls, name, metrics, metric_expressions):
         if not metrics and not metric_expressions:
             raise staticconf.errors.ValidationError(
-                'Group {0} must define at least one of '
-                '`metrics` or `metric_expressions`'.format(name)
+                'Group {} must define at least one of '
+                '`metrics` or `metric_expressions`'.format(name),
             )
         return cls(
             name,

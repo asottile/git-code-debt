@@ -49,5 +49,5 @@ def data():
         for metric in metrics
     ])
     return json.dumps({
-        'metrics': render_template('widget.mako', commit_deltas=commit_deltas)
+        'metrics': render_template('widget.mako', commit_deltas=commit_deltas),
     })

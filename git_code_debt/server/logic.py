@@ -11,14 +11,14 @@ Metric = collections.namedtuple('Metric', ['name', 'value', 'date'])
 
 def get_metric_ids_from_database():
     result = flask.g.db.execute(
-        'SELECT name FROM metric_names ORDER BY name'
+        'SELECT name FROM metric_names ORDER BY name',
     ).fetchall()
     return [name for name, in result]
 
 
 def get_latest_sha():
     result = flask.g.db.execute(
-        'SELECT sha FROM metric_data ORDER BY timestamp DESC LIMIT 1'
+        'SELECT sha FROM metric_data ORDER BY timestamp DESC LIMIT 1',
     ).fetchone()
 
     # If there is no data result will be None
@@ -135,7 +135,7 @@ def get_first_data_timestamp(metric_name, db=None):
     # return that timestamp.
     if not previous_timestamp:
         return db.execute(
-            'SELECT MIN(timestamp) FROM metric_data'
+            'SELECT MIN(timestamp) FROM metric_data',
         ).fetchone()[0]
     else:
         return previous_timestamp[0]
@@ -150,7 +150,7 @@ def get_metric_changes(db, sha):
             'FROM metric_changes',
             'INNER JOIN metric_names',
             '    ON metric_changes.metric_id = metric_names.id',
-            'WHERE metric_changes.sha = ?'
+            'WHERE metric_changes.sha = ?',
         )),
         [sha],
     ).fetchall()

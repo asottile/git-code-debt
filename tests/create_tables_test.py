@@ -18,7 +18,7 @@ def test_create_schema(tmpdir):
         create_schema(db)
 
         results = db.execute(
-            "SELECT name FROM sqlite_master WHERE type = 'table'"
+            "SELECT name FROM sqlite_master WHERE type = 'table'",
         ).fetchall()
         table_names = [table_name for table_name, in results]
 

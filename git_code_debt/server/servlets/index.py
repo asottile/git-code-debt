@@ -88,22 +88,24 @@ def format_groups(
         current_values,
         metric_data,
 ):
-    metric_presenters = dict(
-        (metric_name, MetricPresenter.from_data(
+    metric_presenters = {
+        metric_name: MetricPresenter.from_data(
             metric_name,
             today_timestamp,
             offsets,
             current_values,
             metric_data,
-        ))
+        )
         for metric_name in metric_names
-    )
+    }
 
     defined_groups = [
-        GroupPresenter(group.name, tuple(
-            metric_presenters[metric_name]
-            for metric_name in metric_names if group.contains(metric_name)
-        ))
+        GroupPresenter(
+            group.name, tuple(
+                metric_presenters[metric_name]
+                for metric_name in metric_names if group.contains(metric_name)
+            ),
+        )
         for group in groups
     ]
 
@@ -138,13 +140,11 @@ def show():
         for (time_name, offset) in DATE_NAMES_TO_TIMEDELTAS
     ]
     current_values = logic.get_metrics_for_sha(logic.get_latest_sha())
-    metric_data = dict(
-        (
-            time_name,
-            logic.get_metrics_for_sha(logic.get_sha_for_date(timestamp)),
-        )
+    metric_data = {
+        time_name:
+        logic.get_metrics_for_sha(logic.get_sha_for_date(timestamp))
         for (time_name, timestamp) in offsets
-    )
+    }
 
     return render_template(
         'index.mako',

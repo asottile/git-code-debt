@@ -27,10 +27,10 @@ def show(metric_name):
     )
     metrics_for_dates = logic.metrics_for_dates(metric_name, data_points)
 
-    metrics_for_js = sorted(set(
+    metrics_for_js = sorted({
         (m.date * 1000, m.value)
         for m in metrics_for_dates
-    ))
+    })
 
     return render_template(
         'graph.mako',
@@ -43,7 +43,7 @@ def show(metric_name):
             metric_name=metric_name,
             start_timestamp=start_timestamp,
             end_timestamp=end_timestamp,
-        )
+        ),
     )
 
 
