@@ -144,7 +144,7 @@ def test_fields_equivalent(tempdir_factory):
     with io.open(config_filename, 'w') as config_file:
         config_file.write(
             'repo: .\n'
-            'database: database.db\n'
+            'database: database.db\n',
         )
 
     config_output = get_options_from_config([

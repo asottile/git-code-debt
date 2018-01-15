@@ -29,7 +29,7 @@ class Group(collections.namedtuple(
         if not metrics and not metric_expressions:
             raise staticconf.errors.ValidationError(
                 'Group {} must define at least one of '
-                '`metrics` or `metric_expressions`'.format(name)
+                '`metrics` or `metric_expressions`'.format(name),
             )
         return cls(
             name,

@@ -36,7 +36,7 @@ def main(argv=None):
 
     metric_parsers_sorted = sorted(
         metric_parsers,
-        key=lambda cls: cls.__module__ + cls.__name__
+        key=lambda cls: cls.__module__ + cls.__name__,
     )
 
     for metric_parser_cls in metric_parsers_sorted:
@@ -45,7 +45,7 @@ def main(argv=None):
                 color(metric_parser_cls.__module__, CYAN, color_setting),
                 metric_parser_cls.__name__,
                 sorted(metric_parser_cls().get_possible_metric_ids()),
-            )
+            ),
         )
 
 

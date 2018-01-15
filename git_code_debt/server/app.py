@@ -81,7 +81,7 @@ def main(argv=None):  # pragma: no cover (starts a web server)
         print('Not found: {}'.format(args.database_path))
         print(
             'Use git-code-debt-create-tables and git-code-debt-generate to '
-            'create a database.'
+            'create a database.',
         )
         return 1
 

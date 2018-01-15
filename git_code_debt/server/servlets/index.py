@@ -100,10 +100,12 @@ def format_groups(
     }
 
     defined_groups = [
-        GroupPresenter(group.name, tuple(
-            metric_presenters[metric_name]
-            for metric_name in metric_names if group.contains(metric_name)
-        ))
+        GroupPresenter(
+            group.name, tuple(
+                metric_presenters[metric_name]
+                for metric_name in metric_names if group.contains(metric_name)
+            ),
+        )
         for group in groups
     ]
 

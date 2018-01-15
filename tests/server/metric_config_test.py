@@ -67,7 +67,7 @@ def test_get_groups_from_yaml_smoke():
         {'LinesOfCode': {
             'metrics': [],
             'metric_expressions': ['^TotalLinesOfCode.*$'],
-        }}
+        }},
     ]
 
     groups = _get_groups_from_yaml(groups_yaml)

@@ -43,7 +43,7 @@ def show(metric_name):
             metric_name=metric_name,
             start_timestamp=start_timestamp,
             end_timestamp=end_timestamp,
-        )
+        ),
     )
 
 

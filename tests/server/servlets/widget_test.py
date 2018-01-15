@@ -38,9 +38,7 @@ def test_widget_data(server):
     with metrics_enabled({'TotalLinesOfCode': {}}):
         response = server.client.post(
             flask.url_for('widget.data'),
-            data={
-                'diff': file_diff_stat_test.SAMPLE_OUTPUT
-            }
+            data={'diff': file_diff_stat_test.SAMPLE_OUTPUT},
         )
     response_pq = pyquery.PyQuery(response.json['metrics'])
     assert 'TotalLinesOfCode 1' in response_pq.text()
@@ -52,13 +50,11 @@ def test_widget_data(server):
 
 def test_widget_data_multiple_values(server):
     with metrics_enabled(
-        {'TotalLinesOfCode': {}, 'TotalLinesOfCode_Text': {}}
+        {'TotalLinesOfCode': {}, 'TotalLinesOfCode_Text': {}},
     ):
         response = server.client.post(
             flask.url_for('widget.data'),
-            data={
-                'diff': file_diff_stat_test.SAMPLE_OUTPUT,
-            },
+            data={'diff': file_diff_stat_test.SAMPLE_OUTPUT},
         )
     response_pq = pyquery.PyQuery(response.json['metrics'])
     assert 'TotalLinesOfCode_Text' in response_pq.text()

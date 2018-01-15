@@ -24,7 +24,7 @@ def test_simple_base_counter():
             'test.py',
             ['a', 'b', 'c'],
             ['d'],
-            'this_should_be_ignored'
+            'this_should_be_ignored',
         ),
     ]
 
