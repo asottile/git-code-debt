@@ -16,3 +16,7 @@ repos:
     sha: v1.0.1
     hooks:
     -   id: reorder-python-imports
+-   repo: git@github.com:asottile/pyupgrade
+    sha: v1.2.0
+    hooks:
+    -   id: pyupgrade

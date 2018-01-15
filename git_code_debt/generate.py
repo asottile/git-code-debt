@@ -170,7 +170,7 @@ def main(argv=None):
         args = get_options_from_argparse(argv)
 
     if not os.path.exists(args.database):
-        print('Not found: {0}'.format(args.database))
+        print('Not found: {}'.format(args.database))
         print('Use git-code-debt-create-tables to create a database.')
         return 1
 

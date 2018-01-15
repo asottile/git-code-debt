@@ -157,7 +157,7 @@ def test_fields_equivalent(tempdir_factory):
 
     # Assert that we got the same fields
     assert (
-        argparse_fields - set(('config_filename', 'create_config')) ==
+        argparse_fields - {'config_filename', 'create_config'} ==
         config_fields
     )
 

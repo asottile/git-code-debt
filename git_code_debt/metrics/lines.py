@@ -30,15 +30,15 @@ class LinesOfCodeParser(DiffParserBase):
 
         # Yield overall metric and one per type of expected mapping types
         yield Metric('TotalLinesOfCode', total_lines)
-        for file_type in set(FILE_TYPE_MAP.values()) | set(['unknown']):
+        for file_type in set(FILE_TYPE_MAP.values()) | {'unknown'}:
             lines_changed = lines_by_file_type.get(file_type, 0)
             yield Metric(
-                'TotalLinesOfCode_{0}'.format(file_type),
+                'TotalLinesOfCode_{}'.format(file_type),
                 lines_changed,
             )
 
     def get_possible_metric_ids(self):
         return ['TotalLinesOfCode'] + [
-            'TotalLinesOfCode_{0}'.format(file_type)
-            for file_type in set(FILE_TYPE_MAP.values()) | set(['unknown'])
+            'TotalLinesOfCode_{}'.format(file_type)
+            for file_type in set(FILE_TYPE_MAP.values()) | {'unknown'}
         ]

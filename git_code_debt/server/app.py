@@ -78,7 +78,7 @@ def main(argv=None):  # pragma: no cover (starts a web server)
     args = parser.parse_args(argv)
 
     if not os.path.exists(args.database_path):
-        print('Not found: {0}'.format(args.database_path))
+        print('Not found: {}'.format(args.database_path))
         print(
             'Use git-code-debt-create-tables and git-code-debt-generate to '
             'create a database.'

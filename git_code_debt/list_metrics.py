@@ -16,7 +16,7 @@ def color(text, color_value, color_setting):
     if not color_setting:
         return text
 
-    return '{0}{1}{2}'.format(color_value, text, NORMAL)
+    return '{}{}{}'.format(color_value, text, NORMAL)
 
 
 def main(argv=None):
@@ -41,7 +41,7 @@ def main(argv=None):
 
     for metric_parser_cls in metric_parsers_sorted:
         print(
-            '{0} {1} {2!r}'.format(
+            '{} {} {!r}'.format(
                 color(metric_parser_cls.__module__, CYAN, color_setting),
                 metric_parser_cls.__name__,
                 sorted(metric_parser_cls().get_possible_metric_ids()),
