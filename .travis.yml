@@ -5,8 +5,6 @@ matrix:
         -   env: TOXENV=py27 LATEST_GIT=1
         -   env: TOXENV=py36
             python: 3.6
-        -   env: TOXENV=pypy
-            python: pypy-5.7.1
 before_install:
     - git --version
     - |
