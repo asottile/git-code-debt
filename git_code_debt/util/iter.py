@@ -10,7 +10,7 @@ def chunk_iter(iterable, n):
     For example you can do
 
     for a, b in chunk_iter([1, 2, 3, 4, 5, 6], 2):
-        print('{0} {1}'.format(a, b))
+        print('{} {}'.format(a, b))
 
     # Prints
     # 1 2
