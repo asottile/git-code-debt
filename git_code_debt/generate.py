@@ -7,17 +7,18 @@ import collections
 import io
 import itertools
 import multiprocessing.pool
+import os
 import os.path
 import sqlite3
-import sys
 
+import pkg_resources
 import six
 import yaml
 
 from git_code_debt import options
+from git_code_debt import write_logic
 from git_code_debt.discovery import get_metric_parsers_from_args
 from git_code_debt.file_diff_stat import get_file_diff_stats_from_output
-from git_code_debt.generate_config import DEFAULT_GENERATE_CONFIG_FILENAME
 from git_code_debt.generate_config import GenerateOptions
 from git_code_debt.logic import get_metric_mapping
 from git_code_debt.logic import get_metric_values
@@ -104,75 +105,58 @@ def load_data(
                 insert_metric_changes(db, metrics, metric_mapping, commit)
 
 
-def _add_config_file_options(argument_parser):
-    argument_parser.add_argument(
-        '--config-filename',
-        default=DEFAULT_GENERATE_CONFIG_FILENAME,
-    )
-    argument_parser.add_argument(
-        '--create-config', default=False, action='store_true',
-    )
+def create_schema(db):
+    """Creates the database schema."""
+    schema_dir = pkg_resources.resource_filename('git_code_debt', 'schema')
+    schema_files = os.listdir(schema_dir)
+
+    for sql_file in schema_files:
+        resource_filename = os.path.join(schema_dir, sql_file)
+        with open(resource_filename, 'r') as resource:
+            db.executescript(resource.read())
 
 
-def get_options_from_argparse(argv):
-    parser = argparse.ArgumentParser(
-        description='Generates metrics from a git repo',
-    )
-    # optional
-    options.add_skip_default_metrics(parser)
-    # positional
-    options.add_repo(parser)
-    options.add_database(parser)
-    options.add_metric_package_names(parser)
-    # These are added here so the help message includes them but are unused
-    _add_config_file_options(parser)
-    args = parser.parse_args(argv)
-    return args
+def get_metric_ids(metric_parsers):
+    metric_ids = set()
+    for metric_parser_cls in metric_parsers:
+        for metric_id in metric_parser_cls().get_possible_metric_ids():
+            metric_ids.add(metric_id)
+    return sorted(metric_ids)
 
 
-def get_options_from_config(argv):
-    parser = argparse.ArgumentParser()
-    _add_config_file_options(parser)
-    args, _ = parser.parse_known_args(argv)
+def populate_metric_ids(db, package_names, skip_defaults):
+    metric_parsers = get_metric_parsers_from_args(package_names, skip_defaults)
+    metric_ids = get_metric_ids(metric_parsers)
+    write_logic.insert_metric_ids(db, metric_ids)
 
-    # Create the config if they'd like us to do that.
-    if args.create_config:
-        args = get_options_from_argparse(argv)
-        # yeah yeah, not really yaml, but this is a good way to validate the
-        # config as we write it.
-        generate_options = GenerateOptions.from_yaml(vars(args))
-        with io.open(args.config_filename, 'w') as config_file:
-            yaml.safe_dump(
-                generate_options.to_yaml(),
-                config_file,
-                # We want unicode
-                encoding=None,
-                default_flow_style=False,
-            )
 
-    if not os.path.exists(args.config_filename):
-        print('No config file found!  Create one with --create-config.')
+def create_database(args):
+    with sqlite3.connect(args.database) as db:
+        create_schema(db)
+        populate_metric_ids(
+            db,
+            args.metric_package_names,
+            args.skip_default_metrics,
+        )
+
+
+def get_options_from_config(config_filename):
+    if not os.path.exists(config_filename):
+        print('config file not found {}'.format(config_filename))
         exit(1)
 
-    with io.open(args.config_filename) as config_file:
+    with io.open(config_filename) as config_file:
         return GenerateOptions.from_yaml(yaml.load(config_file))
 
 
 def main(argv=None):
-    argv = argv if argv is not None else sys.argv[1:]
-    if (
-            argv == [] and os.path.exists(DEFAULT_GENERATE_CONFIG_FILENAME) or
-            '--config-filename' in argv or
-            '--create-config' in argv
-    ):
-        args = get_options_from_config(argv)
-    else:
-        args = get_options_from_argparse(argv)
+    parser = argparse.ArgumentParser()
+    options.add_generate_config_filename(parser)
+    parsed_args = parser.parse_args(argv)
+    args = get_options_from_config(parsed_args.config_filename)
 
     if not os.path.exists(args.database):
-        print('Not found: {}'.format(args.database))
-        print('Use git-code-debt-create-tables to create a database.')
-        return 1
+        create_database(args)
 
     load_data(
         args.database,

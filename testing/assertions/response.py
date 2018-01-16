@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-from git_code_debt.util.compat import urllib_parse
+from six.moves import urllib_parse
 
 
 def assert_no_response_errors(response):

@@ -7,7 +7,6 @@ import six
 
 from git_code_debt.metrics.imports import PythonImportCount
 from git_code_debt.metrics.symlink_count import SymlinkCount
-from git_code_debt.util.compat import urllib_parse
 from testing.assertions.response import assert_no_response_errors
 from testing.assertions.response import assert_redirect
 
@@ -30,8 +29,8 @@ def test_all_data(server_with_data):
     # the underlying function and give a fuzzy check here.  The important part
     # about this endpoint is it redirects to a show url and doesn't start at 0
     timestamp = server_with_data.cloneable_with_commits.commits[-1].date
-    parsed_qs = urllib_parse.parse_qs(
-        urllib_parse.urlparse(resp.response.location).query,
+    parsed_qs = six.moves.urllib_parse.parse_qs(
+        six.moves.urllib_parse.urlparse(resp.response.location).query,
     )
     assert int(parsed_qs['start'][0]) > 0
     assert int(parsed_qs['start'][0]) <= timestamp
