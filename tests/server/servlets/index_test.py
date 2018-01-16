@@ -23,10 +23,10 @@ def test_it_loads_with_data(server_with_data):
 
 
 def test_metric_classname_overriden():
-    metric = MetricPresenter('metric', True, 0, tuple(), '')
+    metric = MetricPresenter('metric', True, 0, (), '')
     assert metric.classname == 'color-override'
 
 
 def test_metric_classname_normal():
-    metric = MetricPresenter('metric', False, 0, tuple(), '')
+    metric = MetricPresenter('metric', False, 0, (), '')
     assert metric.classname == ''

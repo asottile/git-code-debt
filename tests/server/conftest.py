@@ -48,7 +48,8 @@ def server(sandbox):
 
 @pytest.yield_fixture
 def server_with_data(server, cloneable_with_commits):
-    main([cloneable_with_commits.path, server.sandbox.db_path])
+    cfg = server.sandbox.gen_config(repo=cloneable_with_commits.path)
+    main(('-C', cfg))
     yield auto_namedtuple(
         server=server,
         cloneable_with_commits=cloneable_with_commits,

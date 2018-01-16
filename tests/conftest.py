@@ -10,9 +10,10 @@ import subprocess
 
 import pytest
 import six
+import yaml
 
-from git_code_debt.create_tables import create_schema
-from git_code_debt.create_tables import populate_metric_ids
+from git_code_debt.generate import create_schema
+from git_code_debt.generate import populate_metric_ids
 from git_code_debt.repo_parser import Commit
 from git_code_debt.repo_parser import COMMIT_FORMAT
 from git_code_debt.util.subprocess import cmd_output
@@ -42,6 +43,17 @@ class Sandbox(collections.namedtuple('Sandbox', ['directory'])):
     def db_path(self):
         return os.path.join(self.directory, 'db.db')
 
+    def gen_config(self, **data):
+        path = os.path.join(self.directory, 'generate_config.yaml')
+        with io.open(path, 'w') as f:
+            yaml.safe_dump(
+                dict({'database': self.db_path}, **data),
+                f,
+                encoding=None,
+                default_flow_style=False,
+            )
+        return path
+
     @contextlib.contextmanager
     def db(self):
         with sqlite3.connect(self.db_path) as db:
@@ -53,7 +65,7 @@ def sandbox(tempdir_factory):
     ret = Sandbox(tempdir_factory.get())
     with ret.db() as db:
         create_schema(db)
-        populate_metric_ids(db, tuple(), False)
+        populate_metric_ids(db, (), False)
 
     yield ret
 

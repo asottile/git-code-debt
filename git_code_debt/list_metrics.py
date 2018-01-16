@@ -6,6 +6,7 @@ import argparse
 
 from git_code_debt import options
 from git_code_debt.discovery import get_metric_parsers_from_args
+from git_code_debt.generate import get_options_from_config
 
 
 CYAN = '\033[1;36m'
@@ -23,11 +24,11 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description='List metric parsers')
     # optional
     options.add_color(parser)
-    options.add_skip_default_metrics(parser)
-    options.add_metric_package_names(parser)
-    args = parser.parse_args(argv)
+    options.add_generate_config_filename(parser)
+    parsed_args = parser.parse_args(argv)
 
-    color_setting = args.color in ('always', 'auto')
+    color_setting = parsed_args.color in ('always', 'auto')
+    args = get_options_from_config(parsed_args.config_filename)
 
     metric_parsers = get_metric_parsers_from_args(
         args.metric_package_names,

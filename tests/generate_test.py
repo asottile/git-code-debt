@@ -5,16 +5,19 @@ import collections
 import io
 import os
 import os.path
+import sqlite3
 
 import pytest
 import yaml
 
+from git_code_debt.discovery import get_metric_parsers_from_args
 from git_code_debt.generate import _get_metrics_inner
-from git_code_debt.generate import get_options_from_argparse
+from git_code_debt.generate import create_schema
+from git_code_debt.generate import get_metric_ids
 from git_code_debt.generate import get_options_from_config
 from git_code_debt.generate import increment_metric_values
 from git_code_debt.generate import main
-from git_code_debt.generate_config import GenerateOptions
+from git_code_debt.generate import populate_metric_ids
 from git_code_debt.metric import Metric
 from git_code_debt.metrics.lines import LinesOfCodeParser
 from git_code_debt.repo_parser import RepoParser
@@ -56,7 +59,7 @@ def test_get_metrics_inner_nth_commit(cloneable_with_commits):
 
 
 def test_generate_integration(sandbox, cloneable):
-    main([cloneable, sandbox.db_path])
+    main(('-C', sandbox.gen_config(repo=cloneable)))
 
 
 def test_generate_integration_config_file(sandbox, cloneable, tempdir_factory):
@@ -71,9 +74,11 @@ def test_generate_integration_config_file(sandbox, cloneable, tempdir_factory):
         main([])
 
 
-def test_main_no_files_exist(cloneable):
-    ret = main([cloneable, 'i_dont_exist.db'])
-    assert ret == 1
+def test_main_database_does_not_exist(sandbox, cloneable):
+    new_db_path = os.path.join(sandbox.directory, 'new.db')
+    cfg = sandbox.gen_config(database=new_db_path, repo=cloneable)
+    assert not main(('-C', cfg))
+    assert os.path.exists(new_db_path)
 
 
 def get_metric_data_count(sandbox):
@@ -82,21 +87,23 @@ def get_metric_data_count(sandbox):
 
 
 def test_generate_integration_previous_data(sandbox, cloneable):
-    main([cloneable, sandbox.db_path])
+    cfg = sandbox.gen_config(repo=cloneable)
+    main(('-C', cfg))
     before_data_count = get_metric_data_count(sandbox)
     assert before_data_count > 0
-    main([cloneable, sandbox.db_path])
+    main(('-C', cfg))
     after_data_count = get_metric_data_count(sandbox)
     assert before_data_count == after_data_count
 
 
 def test_generate_new_data_created(sandbox, cloneable):
-    main([cloneable, sandbox.db_path])
+    cfg = sandbox.gen_config(repo=cloneable)
+    main(('-C', cfg))
     before_data_count = get_metric_data_count(sandbox)
     # Add some commits
     with cwd(cloneable):
         cmd_output('git', 'commit', '--allow-empty', '-m', 'bar')
-    main([cloneable, sandbox.db_path])
+    main(('-C', cfg))
     after_data_count = get_metric_data_count(sandbox)
     assert after_data_count > before_data_count
 
@@ -117,10 +124,11 @@ def test_regression_for_issue_10(sandbox, cloneable):
             ),
         )
 
-    main([cloneable, sandbox.db_path])
+    cfg = sandbox.gen_config(repo=cloneable)
+    main(('-C', cfg))
     data_count_before = get_metric_data_count(sandbox)
     # Used to raise IntegrityError
-    main([cloneable, sandbox.db_path])
+    main(('-C', cfg))
     data_count_after = get_metric_data_count(sandbox)
     assert data_count_before == data_count_after
 
@@ -135,60 +143,39 @@ def test_moves_handled_properly(sandbox, cloneable):
         cmd_output('git', 'commit', '-m', 'move f to g')
 
     # Used to raise AssertionError
-    assert main((cloneable, sandbox.db_path)) is None
-
-
-def test_fields_equivalent(tempdir_factory):
-    tmpdir = tempdir_factory.get()
-    config_filename = os.path.join(tmpdir, 'config.yaml')
-    with io.open(config_filename, 'w') as config_file:
-        config_file.write(
-            'repo: .\n'
-            'database: database.db\n',
-        )
-
-    config_output = get_options_from_config([
-        '--config-filename', config_filename,
-    ])
-    config_fields = set(config_output._fields)
-
-    argparse_output = get_options_from_argparse(['.', 'database.db'])
-    argparse_fields = set(vars(argparse_output))
-
-    # Assert that we got the same fields
-    assert (
-        argparse_fields - {'config_filename', 'create_config'} ==
-        config_fields
-    )
-
-    # Assert that we got the same values
-    for field in config_fields:
-        assert getattr(config_output, field) == getattr(argparse_output, field)
-
-
-def test_get_options_from_config_create_config(tempdir_factory):
-    tmpdir = tempdir_factory.get()
-    with cwd(tmpdir):
-        ret = get_options_from_config([
-            '--create-config',
-            '.',
-            'database.db',
-        ])
-
-        assert os.path.exists('generate_config.yaml')
-        assert yaml.load(io.open('generate_config.yaml').read()) == {
-            'repo': '.',
-            'database': 'database.db',
-        }
-
-        assert ret == GenerateOptions(
-            skip_default_metrics=False,
-            metric_package_names=[],
-            repo='.',
-            database='database.db',
-        )
+    assert not main(('-C', sandbox.gen_config(repo=cloneable)))
 
 
 def test_get_options_from_config_no_config_file():
     with pytest.raises(SystemExit):
-        get_options_from_config(['--config-filename', 'i-dont-exist'])
+        get_options_from_config('i-dont-exist')
+
+
+def test_create_schema(tmpdir):
+    db_path = os.path.join(tmpdir.strpath, 'db.db')
+
+    with sqlite3.connect(db_path) as db:
+        create_schema(db)
+
+        results = db.execute(
+            "SELECT name FROM sqlite_master WHERE type = 'table'",
+        ).fetchall()
+        table_names = [table_name for table_name, in results]
+
+        assert 'metric_names' in table_names
+        assert 'metric_data' in table_names
+
+
+def test_populate_metric_ids(tmpdir):
+    db_path = os.path.join(tmpdir.strpath, 'db.db')
+
+    with sqlite3.connect(db_path) as db:
+        create_schema(db)
+        populate_metric_ids(db, (), False)
+
+        results = db.execute('SELECT * FROM metric_names').fetchall()
+        # Smoke test assertion
+        assert (
+            len(results) ==
+            len(get_metric_ids(get_metric_parsers_from_args((), False)))
+        )

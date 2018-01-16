@@ -3,17 +3,17 @@ from __future__ import unicode_literals
 
 import mock
 import pytest
+import six
 
 from git_code_debt.list_metrics import color
 from git_code_debt.list_metrics import CYAN
 from git_code_debt.list_metrics import main
 from git_code_debt.list_metrics import NORMAL
-from git_code_debt.util.compat import builtins
 
 
 @pytest.yield_fixture
 def print_mock():
-    with mock.patch.object(builtins, 'print') as print_mock:
+    with mock.patch.object(six.moves.builtins, 'print') as print_mock:
         yield print_mock
 
 

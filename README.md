@@ -17,11 +17,27 @@ A dashboard for monitoring code debt in a git repository.
 
 ### Basic / tl;dr Usage
 
+#### make a `generate_config.yaml`
+
+```yaml
+# required: repository to clone
+repo: git@github.com:asottile/git-code-debt
+
+# required: database generation path
+database: database.db
+
+# optional: default False
+skip_default_metrics: false
+
+# optional: default []
+metric_package_names: []
 ```
-# Create tables
-$ git-code-debt-create-tables database.db
+
+#### invoke the cli
+
+```
 # Generate code metric data (substitute your own repo path)
-$ git-code-debt-generate git://github.com/asottile/git-code-debt database.db
+$ git-code-debt-generate
 # Start the server
 $ git-code-debt-server database.db
 ```
@@ -33,16 +49,14 @@ Adding data to the database is as simple as running generate again.
 previously.
 
 ```
-# (substitute your own repo path)
-$ git-code-debt-generate git://github.com/asottile/git-code-debt database.db
+$ git-code-debt-generate
 ```
 
 ### Creating your own metrics
 
 1. Create a python project which adds `git-code-debt` as a dependency.
 2. Create a package where you'll write your metrics
-3. Pass your package(s) as positional argument(s) to
-    `git-code-debt-create-tables` as well as `git-code-debt-generate`.
+3. Add your package to `metric_package_names` in your `generate_config.yaml`
 
 
 The simplest way to write your own custom metrics is to extend
