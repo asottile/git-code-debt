@@ -4,13 +4,7 @@ from __future__ import unicode_literals
 import collections
 import re
 
-import staticconf
-import staticconf.errors
-import staticconf.getters
-
-
 CONFIG_NAMESPACE = 'metric_config'
-metric_config_getter = staticconf.NamespaceGetters(CONFIG_NAMESPACE)
 
 
 class Group(collections.namedtuple(
@@ -27,13 +21,13 @@ class Group(collections.namedtuple(
     @classmethod
     def from_yaml(cls, name, metrics, metric_expressions):
         if not metrics and not metric_expressions:
-            raise staticconf.errors.ValidationError(
+            raise TypeError(
                 'Group {} must define at least one of '
                 '`metrics` or `metric_expressions`'.format(name),
             )
         return cls(
             name,
-            set(metrics),
+            frozenset(metrics),
             tuple(re.compile(expr) for expr in metric_expressions),
         )
 
@@ -61,16 +55,16 @@ def _get_commit_links_from_yaml(yaml):
     return tuple(sorted(yaml.items()))
 
 
-color_overrides = metric_config_getter.get_set('ColorOverrides')
+class Config(collections.namedtuple(
+    'Config', ('color_overrides', 'commit_links', 'groups', 'widget_metrics'),
+)):
+    __slots__ = ()
 
-commit_links = staticconf.getters.build_getter(
-    _get_commit_links_from_yaml,
-    getter_namespace='metric_config',
-)('CommitLinks')
-
-groups = staticconf.getters.build_getter(
-    _get_groups_from_yaml,
-    getter_namespace='metric_config',
-)('Groups')
-
-widget_metrics = metric_config_getter.get('WidgetMetrics')
+    @classmethod
+    def from_data(cls, data):
+        return cls(
+            color_overrides=frozenset(data['ColorOverrides']),
+            commit_links=_get_commit_links_from_yaml(data['CommitLinks']),
+            groups=_get_groups_from_yaml(data['Groups']),
+            widget_metrics=data['WidgetMetrics'],
+        )

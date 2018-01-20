@@ -5,7 +5,6 @@ import re
 
 import mock
 import pytest
-import staticconf.errors
 
 from git_code_debt.server.metric_config import _get_commit_links_from_yaml
 from git_code_debt.server.metric_config import _get_groups_from_yaml
@@ -27,11 +26,13 @@ def test_Group_from_yaml():
 
 
 def test_Group_from_yaml_complains_if_nothing_useful_specified():
-    with pytest.raises(staticconf.errors.ValidationError):
+    with pytest.raises(TypeError) as excinfo:
         Group.from_yaml('G1', [], [])
-        # TODO: assert the exception message
-        # 'Group G1 must define at least one of `metrics` or ' +
-        # '`metric_expressions`'
+    msg, = excinfo.value.args
+    assert msg == (
+        'Group G1 must define at least one of `metrics` or '
+        '`metric_expressions`'
+    )
 
 
 def test_Group_contains_does_not_contain():

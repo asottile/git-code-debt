@@ -9,6 +9,7 @@ import pytest
 from git_code_debt.generate import main
 from git_code_debt.server.app import app
 from git_code_debt.server.app import AppContext
+from git_code_debt.server.metric_config import Config
 from testing.utilities.auto_namedtuple import auto_namedtuple
 from testing.utilities.client import Client
 
@@ -38,11 +39,15 @@ def _in_testing_app_context(application):
 
 @pytest.yield_fixture
 def server(sandbox):
-    with _patch_app_with_client(app):
-        with _in_testing_app_context(app) as client:
-            with mock.patch.object(
-                AppContext, 'database_path', sandbox.db_path,
-            ):
+    with _patch_app_with_client(app), _in_testing_app_context(app) as client:
+        with mock.patch.object(AppContext, 'database_path', sandbox.db_path):
+            config = Config.from_data({
+                'Groups': [{'Python': {'metric_expressions': ['Python']}}],
+                'ColorOverrides': [],
+                'CommitLinks': {},
+                'WidgetMetrics': {},
+            })
+            with mock.patch.object(AppContext, 'config', config):
                 yield GitCodeDebtServer(client, sandbox)
 
 

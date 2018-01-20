@@ -7,7 +7,6 @@ import json
 import flask
 
 from git_code_debt.server import logic
-from git_code_debt.server import metric_config
 from git_code_debt.server.presentation.commit_delta import CommitDelta
 from git_code_debt.server.presentation.delta import Delta
 from git_code_debt.server.render_mako import render_template
@@ -30,14 +29,17 @@ def show(metric_name, start_timestamp, end_timestamp):
                 '%Y-%m-%d %H:%M:%S',
             ),
             sha,
-            CommitDelta.from_data(metric_name, Delta('javascript:;', value)),
+            CommitDelta.from_data(
+                metric_name, Delta('javascript:;', value),
+                color_overrides=flask.g.config.color_overrides,
+            ),
         )
         for timestamp, sha, value in metric_changes
     ]
 
     override_classname = (
         'color-override'
-        if metric_name in metric_config.color_overrides
+        if metric_name in flask.g.config.color_overrides
         else ''
     )
 
