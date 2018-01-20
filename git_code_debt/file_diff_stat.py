@@ -19,14 +19,13 @@ class SpecialFileType(object):
 
 
 SpecialFile = collections.namedtuple(
-    'SpecialFile',
-    ['file_type', 'added', 'removed'],
+    'SpecialFile', ('file_type', 'added', 'removed'),
 )
 
 
 class FileDiffStat(collections.namedtuple(
         'FileDiffStat',
-        ['path', 'lines_added', 'lines_removed', 'status', 'special_file'],
+        ('path', 'lines_added', 'lines_removed', 'status', 'special_file'),
 )):
     __slots__ = ()
 

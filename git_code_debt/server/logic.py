@@ -6,7 +6,7 @@ import collections
 import flask
 
 
-Metric = collections.namedtuple('Metric', ['name', 'value', 'date'])
+Metric = collections.namedtuple('Metric', ('name', 'value', 'date'))
 
 
 def get_metric_ids_from_database():

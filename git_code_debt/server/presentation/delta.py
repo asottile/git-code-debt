@@ -12,9 +12,7 @@ SIGNS_TO_CLASSNAMES = {
 }
 
 
-class DeltaPresenter(collections.namedtuple(
-        'DeltaPresenter', ['url', 'value'],
-)):
+class Delta(collections.namedtuple('Delta', ('url', 'value'))):
     __slots__ = ()
 
     @property
