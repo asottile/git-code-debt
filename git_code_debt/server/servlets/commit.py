@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 import flask
 
 from git_code_debt.server import logic
-from git_code_debt.server import metric_config
 from git_code_debt.server.presentation.commit_delta import CommitDelta
 from git_code_debt.server.presentation.delta import Delta
 from git_code_debt.server.render_mako import render_template
@@ -18,13 +17,16 @@ def show(sha):
     changes = logic.get_metric_changes(flask.g.db, sha)
 
     commit_deltas = sorted(
-        CommitDelta.from_data(metric_name, Delta('javascript:;', change))
+        CommitDelta.from_data(
+            metric_name, Delta('javascript:;', change),
+            color_overrides=flask.g.config.color_overrides,
+        )
         for metric_name, change in changes
     )
 
     links = [
         (link_name, link.format(sha=sha))
-        for link_name, link in metric_config.commit_links
+        for link_name, link in flask.g.config.commit_links
     ]
 
     return render_template(

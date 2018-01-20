@@ -4,10 +4,11 @@ from __future__ import unicode_literals
 import contextlib
 
 import flask
+import mock
 import pyquery
-import staticconf.testing
 
-from git_code_debt.server.metric_config import CONFIG_NAMESPACE
+from git_code_debt.server.app import AppContext
+from git_code_debt.server.metric_config import Config
 from testing.assertions.response import assert_no_response_errors
 from tests import file_diff_stat_test
 
@@ -20,17 +21,13 @@ def test_widget_frame_loads(server):
 
 @contextlib.contextmanager
 def metrics_enabled(widget_metrics):
-    config = {
+    config = Config.from_data({
         'Groups': [],
-        'CommitLinks': [],
+        'CommitLinks': {},
         'ColorOverrides': [],
         'WidgetMetrics': widget_metrics,
-    }
-    with staticconf.testing.MockConfiguration(
-        config,
-        flatten=False,
-        namespace=CONFIG_NAMESPACE,
-    ):
+    })
+    with mock.patch.object(AppContext, 'config', config):
         yield
 
 

@@ -8,8 +8,6 @@ import datetime
 import flask
 
 from git_code_debt.server import logic
-from git_code_debt.server.metric_config import color_overrides
-from git_code_debt.server.metric_config import groups
 from git_code_debt.server.presentation.delta import Delta
 from git_code_debt.server.render_mako import render_template
 from git_code_debt.util.time import to_timestamp
@@ -57,6 +55,7 @@ class Metric(collections.namedtuple(
             offsets,
             current_values,
             metric_data,
+            color_overrides,
     ):
         return cls(
             metric_name,
@@ -82,6 +81,7 @@ class Metric(collections.namedtuple(
 
 
 def format_groups(
+        config,
         metric_names,
         today_timestamp,
         offsets,
@@ -95,6 +95,7 @@ def format_groups(
             offsets,
             current_values,
             metric_data,
+            config.color_overrides,
         )
         for metric_name in metric_names
     }
@@ -106,7 +107,7 @@ def format_groups(
                 for metric_name in metric_names if group.contains(metric_name)
             ),
         )
-        for group in groups
+        for group in config.groups
     ]
 
     uncategorized_group = Group(
@@ -114,7 +115,7 @@ def format_groups(
         tuple(
             metrics[metric_name]
             for metric_name in metric_names if not any(
-                group.contains(metric_name) for group in groups
+                group.contains(metric_name) for group in config.groups
             )
         ),
     )
@@ -146,6 +147,7 @@ def show():
     return render_template(
         'index.mako',
         groups=format_groups(
+            flask.g.config,
             metric_names,
             today_timestamp,
             offsets,

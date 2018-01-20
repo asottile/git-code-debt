@@ -11,7 +11,6 @@ from git_code_debt.discovery import get_metric_parsers_from_args
 from git_code_debt.generate import get_metrics
 from git_code_debt.generate_config import GenerateOptions
 from git_code_debt.repo_parser import Commit
-from git_code_debt.server.metric_config import widget_metrics
 from git_code_debt.server.presentation.commit_delta import CommitDelta
 from git_code_debt.server.presentation.delta import Delta
 from git_code_debt.server.render_mako import render_template
@@ -27,7 +26,7 @@ def frame():
 
 @widget.route('/widget/data', methods=['POST'])
 def data():
-    metric_names = set(widget_metrics)
+    metric_names = frozenset(flask.g.config.widget_metrics)
     diff = flask.request.form['diff'].encode('UTF-8')
 
     metric_config = GenerateOptions.from_yaml(
@@ -43,7 +42,10 @@ def data():
     ]
 
     commit_deltas = sorted([
-        CommitDelta.from_data(metric.name, Delta('javascript:;', metric.value))
+        CommitDelta.from_data(
+            metric.name, Delta('javascript:;', metric.value),
+            color_overrides=flask.g.config.color_overrides,
+        )
         for metric in metrics
     ])
     return json.dumps({

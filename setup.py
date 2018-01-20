@@ -38,7 +38,6 @@ setup(
         'jsonschema',
         'mako',
         'pyyaml',
-        'PyStaticConfiguration[yaml]',
         'six',
     ],
 

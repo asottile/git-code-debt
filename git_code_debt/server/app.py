@@ -9,7 +9,9 @@ import sqlite3
 
 import flask
 import pkg_resources
+import yaml
 
+from git_code_debt.server.metric_config import Config
 from git_code_debt.server.servlets.changes import changes
 from git_code_debt.server.servlets.commit import commit
 from git_code_debt.server.servlets.graph import graph
@@ -28,19 +30,19 @@ app.register_blueprint(widget)
 
 
 class AppContext(object):
-    database_path = './database.db'
+    database_path = 'database.db'
+    config = None
 
 
 @app.before_request
 def before_request():
-    # Imported here to avoid stating a non-existent file
-    from git_code_debt.server.metric_config_watcher import watcher
-    watcher.reload_if_changed()
+    flask.g.config = AppContext.config
     flask.g.db = sqlite3.connect(AppContext.database_path)
 
 
 @app.teardown_request
 def teardown_request(_):
+    flask.g.config = None
     flask.g.db.close()
 
 
@@ -64,14 +66,15 @@ def main(argv=None):  # pragma: no cover (starts a web server)
     parser = argparse.ArgumentParser()
     parser.add_argument('database_path', type=str)
     parser.add_argument('-p', '--port', type=int, default=5000)
-    parser.add_argument(
+    mutex = parser.add_mutually_exclusive_group()
+    mutex.add_argument(
         '--debug', action='store_true',
         help=(
             'Run in debug mode (stacktraces + single process). '
             'Not suggested for production.'
         ),
     )
-    parser.add_argument(
+    mutex.add_argument(
         '--processes', type=int, default=5,
         help='Number of processes, does not apply to --debug',
     )
@@ -79,19 +82,16 @@ def main(argv=None):  # pragma: no cover (starts a web server)
 
     if not os.path.exists(args.database_path):
         print('Not found: {}'.format(args.database_path))
-        print(
-            'Use git-code-debt-create-tables and git-code-debt-generate to '
-            'create a database.',
-        )
+        print('Use git-code-debt-generate to create a database.')
         return 1
 
     create_metric_config_if_not_exists()
+    with open('metric_config.yaml') as f:
+        contents = yaml.load(f)
+    AppContext.config = Config.from_data(contents)
 
     AppContext.database_path = args.database_path
-    kwargs = {
-        'port': args.port,
-        'debug': args.debug,
-    }
+    kwargs = {'port': args.port, 'debug': args.debug}
     if not args.debug:
         kwargs['processes'] = args.processes
 
