@@ -5,8 +5,8 @@ import flask
 
 from git_code_debt.server import logic
 from git_code_debt.server import metric_config
-from git_code_debt.server.presentation.commit_delta import CommitDeltaPresenter
-from git_code_debt.server.presentation.delta import DeltaPresenter
+from git_code_debt.server.presentation.commit_delta import CommitDelta
+from git_code_debt.server.presentation.delta import Delta
 from git_code_debt.server.render_mako import render_template
 
 
@@ -17,12 +17,10 @@ commit = flask.Blueprint('commit', __name__)
 def show(sha):
     changes = logic.get_metric_changes(flask.g.db, sha)
 
-    commit_deltas = sorted([
-        CommitDeltaPresenter.from_data(
-            metric_name, DeltaPresenter('javascript:;', change),
-        )
+    commit_deltas = sorted(
+        CommitDelta.from_data(metric_name, Delta('javascript:;', change))
         for metric_name, change in changes
-    ])
+    )
 
     links = [
         (link_name, link.format(sha=sha))

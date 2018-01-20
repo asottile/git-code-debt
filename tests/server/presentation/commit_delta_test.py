@@ -5,7 +5,7 @@ import mock
 import pytest
 
 from git_code_debt.server import metric_config
-from git_code_debt.server.presentation.commit_delta import CommitDeltaPresenter
+from git_code_debt.server.presentation.commit_delta import CommitDelta
 
 
 @pytest.yield_fixture
@@ -17,22 +17,16 @@ def patched_color_overrides():
 
 
 @pytest.mark.usefixtures('patched_color_overrides')
-def test_commit_delta_presenter_not_overriden():
+def test_commit_delta_not_overriden():
     assert 'MyMetric' not in metric_config.color_overrides
-    presenter = CommitDeltaPresenter.from_data(
-        'MyMetric', mock.sentinel.delta,
-    )
-    assert presenter == CommitDeltaPresenter(
-        'MyMetric', '', mock.sentinel.delta,
-    )
+    ret = CommitDelta.from_data('MyMetric', mock.sentinel.delta)
+    assert ret == CommitDelta('MyMetric', '', mock.sentinel.delta)
 
 
 @pytest.mark.usefixtures('patched_color_overrides')
-def test_commit_delta_presenter_with_overrides():
+def test_commit_delta_with_overrides():
     assert 'ColorOverrideMetric' in metric_config.color_overrides
-    presenter = CommitDeltaPresenter.from_data(
-        'ColorOverrideMetric', mock.sentinel.delta,
-    )
-    assert presenter == CommitDeltaPresenter(
+    ret = CommitDelta.from_data('ColorOverrideMetric', mock.sentinel.delta)
+    assert ret == CommitDelta(
         'ColorOverrideMetric', 'color-override', mock.sentinel.delta,
     )

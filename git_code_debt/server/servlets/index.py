@@ -10,7 +10,7 @@ import flask
 from git_code_debt.server import logic
 from git_code_debt.server.metric_config import color_overrides
 from git_code_debt.server.metric_config import groups
-from git_code_debt.server.presentation.delta import DeltaPresenter
+from git_code_debt.server.presentation.delta import Delta
 from git_code_debt.server.render_mako import render_template
 from git_code_debt.util.time import to_timestamp
 
@@ -27,18 +27,18 @@ DATE_NAMES_TO_TIMEDELTAS = (
 )
 
 
-GroupPresenter = collections.namedtuple('GroupPresenter', ['name', 'metrics'])
+Group = collections.namedtuple('Group', ('name', 'metrics'))
 
 
-class MetricPresenter(collections.namedtuple(
-        'MetricPresenter',
-        [
+class Metric(collections.namedtuple(
+        'Metric',
+        (
             'name',
             'color_override',
             'current_value',
             'historic_deltas',
             'all_data_url',
-        ],
+        ),
 )):
     __slots__ = ()
 
@@ -63,7 +63,7 @@ class MetricPresenter(collections.namedtuple(
             metric_name in color_overrides,
             current_values[metric_name],
             tuple(
-                DeltaPresenter(
+                Delta(
                     flask.url_for(
                         'graph.show',
                         metric_name=metric_name,
@@ -88,8 +88,8 @@ def format_groups(
         current_values,
         metric_data,
 ):
-    metric_presenters = {
-        metric_name: MetricPresenter.from_data(
+    metrics = {
+        metric_name: Metric.from_data(
             metric_name,
             today_timestamp,
             offsets,
@@ -100,30 +100,27 @@ def format_groups(
     }
 
     defined_groups = [
-        GroupPresenter(
+        Group(
             group.name, tuple(
-                metric_presenters[metric_name]
+                metrics[metric_name]
                 for metric_name in metric_names if group.contains(metric_name)
             ),
         )
         for group in groups
     ]
 
-    uncategorized_group = GroupPresenter(
+    uncategorized_group = Group(
         'Uncategorized',
         tuple(
-            metric_presenters[metric_name]
+            metrics[metric_name]
             for metric_name in metric_names if not any(
                 group.contains(metric_name) for group in groups
             )
         ),
     )
 
-    all_group = GroupPresenter(
-        'All',
-        tuple(
-            metric_presenters[metric_name] for metric_name in metric_names
-        ),
+    all_group = Group(
+        'All', tuple(metrics[metric_name] for metric_name in metric_names),
     )
 
     all_groups = defined_groups + [uncategorized_group, all_group]

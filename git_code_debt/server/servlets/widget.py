@@ -12,8 +12,8 @@ from git_code_debt.generate import get_metrics
 from git_code_debt.generate_config import GenerateOptions
 from git_code_debt.repo_parser import Commit
 from git_code_debt.server.metric_config import widget_metrics
-from git_code_debt.server.presentation.commit_delta import CommitDeltaPresenter
-from git_code_debt.server.presentation.delta import DeltaPresenter
+from git_code_debt.server.presentation.commit_delta import CommitDelta
+from git_code_debt.server.presentation.delta import Delta
 from git_code_debt.server.render_mako import render_template
 
 
@@ -43,9 +43,7 @@ def data():
     ]
 
     commit_deltas = sorted([
-        CommitDeltaPresenter.from_data(
-            metric.name, DeltaPresenter('javascript:;', metric.value),
-        )
+        CommitDelta.from_data(metric.name, Delta('javascript:;', metric.value))
         for metric in metrics
     ])
     return json.dumps({

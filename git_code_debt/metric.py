@@ -4,4 +4,4 @@ from __future__ import unicode_literals
 import collections
 
 
-Metric = collections.namedtuple('Metric', ['name', 'value'])
+Metric = collections.namedtuple('Metric', ('name', 'value'))
