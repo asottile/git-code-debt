@@ -39,9 +39,9 @@ def _get_groups_from_yaml(yaml):
     # [{'Bar': {'metrics': ['Foo', 'Bar'], 'metric_expressions': ['^Baz']}}]
     return tuple(
         Group.from_yaml(
-            list(group_dict.keys())[0],
-            list(group_dict.values())[0].get('metrics', []),
-            list(group_dict.values())[0].get('metric_expressions', []),
+            next(iter(group_dict.keys())),
+            next(iter(group_dict.values())).get('metrics', []),
+            next(iter(group_dict.values())).get('metric_expressions', []),
         )
         for group_dict in yaml
     )

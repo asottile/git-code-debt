@@ -39,7 +39,7 @@ def get_metrics(commit, diff, metric_parsers):
                 yield metric
 
     file_diff_stats = get_file_diff_stats_from_output(diff)
-    return list(get_all_metrics(file_diff_stats))
+    return tuple(get_all_metrics(file_diff_stats))
 
 
 def increment_metric_values(metric_values, metrics):

@@ -15,9 +15,9 @@ def test_to_timestamp():
 
 def test_data_points_for_time_range():
     ret = data_points_for_time_range(1, 25, 5)
-    assert ret == [1, 5, 9, 13, 17, 21, 25]
+    assert ret == (1, 5, 9, 13, 17, 21, 25)
 
 
 def test_data_points_for_time_range_gives_data_for_empty_range():
     ret = data_points_for_time_range(1, 1, 5)
-    assert ret == [1]
+    assert ret == (1,)

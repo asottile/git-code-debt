@@ -17,5 +17,5 @@ def test_lines_in_init():
             None,
         ),
     ]
-    metrics = list(parser.get_metrics_from_stat(Commit.blank, input_stats))
-    assert metrics == [Metric('Python__init__LineCount', 1)]
+    metric, = parser.get_metrics_from_stat(Commit.blank, input_stats)
+    assert metric == Metric('Python__init__LineCount', 1)

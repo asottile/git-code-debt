@@ -13,7 +13,7 @@ def test_lines_of_code_parser():
         FileDiffStat(b'womp.yaml', [b'a', b'b', b'c'], [b'hi'], None),
     ]
 
-    metrics = list(parser.get_metrics_from_stat(Commit.blank, input_stats))
+    metrics = set(parser.get_metrics_from_stat(Commit.blank, input_stats))
 
     expected_value = {
         'TotalLinesOfCode': 3,

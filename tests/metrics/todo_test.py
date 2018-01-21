@@ -17,5 +17,5 @@ def test_parser():
             None,
         ),
     ]
-    metrics = list(parser.get_metrics_from_stat(Commit.blank, input_stats))
-    assert metrics == [Metric('TODOCount', 1)]
+    metric, = parser.get_metrics_from_stat(Commit.blank, input_stats)
+    assert metric == Metric('TODOCount', 1)

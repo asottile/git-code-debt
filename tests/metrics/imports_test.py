@@ -54,8 +54,8 @@ def test_python_import_parser():
         ),
     ]
 
-    metrics = list(parser.get_metrics_from_stat(Commit.blank, input_stats))
-    assert metrics == [Metric('PythonImportCount', 1)]
+    metric, = parser.get_metrics_from_stat(Commit.blank, input_stats)
+    assert metric == Metric('PythonImportCount', 1)
 
 
 def test_template_import_parser():
@@ -69,5 +69,5 @@ def test_template_import_parser():
         ),
     ]
 
-    metrics = list(parser.get_metrics_from_stat(Commit.blank, input_stats))
-    assert metrics == [Metric('CheetahTemplateImportCount', 1)]
+    metric, = parser.get_metrics_from_stat(Commit.blank, input_stats)
+    assert metric == Metric('CheetahTemplateImportCount', 1)

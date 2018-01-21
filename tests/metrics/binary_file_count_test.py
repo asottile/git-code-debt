@@ -19,8 +19,8 @@ def test_binary_file_count_detects_added():
         ),
     ]
 
-    metrics = list(parser.get_metrics_from_stat(Commit.blank, input_stats))
-    assert metrics == [Metric('BinaryFileCount', 1)]
+    metric, = parser.get_metrics_from_stat(Commit.blank, input_stats)
+    assert metric == Metric('BinaryFileCount', 1)
 
 
 def test_binary_file_count_detects_deleted():
@@ -32,8 +32,8 @@ def test_binary_file_count_detects_deleted():
         ),
     ]
 
-    metrics = list(parser.get_metrics_from_stat(Commit.blank, input_stats))
-    assert metrics == [Metric('BinaryFileCount', -1)]
+    metric, = parser.get_metrics_from_stat(Commit.blank, input_stats)
+    assert metric == Metric('BinaryFileCount', -1)
 
 
 def test_binary_file_count_detects_ignores_moved():
@@ -45,5 +45,5 @@ def test_binary_file_count_detects_ignores_moved():
         ),
     ]
 
-    metrics = list(parser.get_metrics_from_stat(Commit.blank, input_stats))
-    assert metrics == [Metric('BinaryFileCount', 0)]
+    metric, = parser.get_metrics_from_stat(Commit.blank, input_stats)
+    assert metric == Metric('BinaryFileCount', 0)

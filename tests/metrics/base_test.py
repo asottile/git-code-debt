@@ -28,8 +28,8 @@ def test_simple_base_counter():
         ),
     ]
 
-    metrics = list(parser.get_metrics_from_stat(Commit.blank, input_stats))
-    assert metrics == [Metric('TestCounter', 2)]
+    metric, = parser.get_metrics_from_stat(Commit.blank, input_stats)
+    assert metric == Metric('TestCounter', 2)
 
 
 def test_includes_file_by_default():
