@@ -28,14 +28,11 @@ class RepoParser(object):
         assert not self.tempdir
         self.tempdir = tempfile.mkdtemp(suffix='temp-repo')
         try:
-            subprocess.check_call(
-                (
-                    'git', 'clone',
-                    '--no-checkout', '--shared',
-                    self.git_repo, self.tempdir,
-                ),
-                stdout=None,
-            )
+            subprocess.check_call((
+                'git', 'clone',
+                '--no-checkout', '--quiet', '--shared',
+                self.git_repo, self.tempdir,
+            ))
             yield
         finally:
             shutil.rmtree(self.tempdir)
@@ -43,8 +40,7 @@ class RepoParser(object):
 
     def get_commit(self, sha):
         output = cmd_output(
-            'git', 'show', COMMIT_FORMAT, sha,
-            cwd=self.tempdir,
+            'git', 'show', COMMIT_FORMAT, sha, cwd=self.tempdir,
         )
         sha, date = output.splitlines()[:2]
 
