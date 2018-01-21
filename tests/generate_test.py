@@ -17,6 +17,7 @@ from git_code_debt.generate import get_metric_ids
 from git_code_debt.generate import get_options_from_config
 from git_code_debt.generate import increment_metric_values
 from git_code_debt.generate import main
+from git_code_debt.generate import mapper
 from git_code_debt.generate import populate_metric_ids
 from git_code_debt.metric import Metric
 from git_code_debt.metrics.lines import LinesOfCodeParser
@@ -56,6 +57,16 @@ def test_get_metrics_inner_nth_commit(cloneable_with_commits):
             repo_parser, [LinesOfCodeParser],
         ))
         assert Metric(name='TotalLinesOfCode', value=2) in metrics
+
+
+def square(x):
+    return x * x
+
+
+@pytest.mark.parametrize('jobs', (1, 4))
+def test_mapper(jobs):
+    ret = tuple(mapper(jobs)(square, (3, 5, 9)))
+    assert ret == (9, 25, 81)
 
 
 def test_generate_integration(sandbox, cloneable):
