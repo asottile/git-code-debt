@@ -11,7 +11,7 @@ from git_code_debt.list_metrics import main
 from git_code_debt.list_metrics import NORMAL
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def print_mock():
     with mock.patch.object(six.moves.builtins, 'print') as print_mock:
         yield print_mock

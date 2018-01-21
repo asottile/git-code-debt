@@ -26,7 +26,7 @@ def test_repo_checked_out(cloneable):
     assert not os.path.exists(tempdir_path)
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def checked_out_repo(cloneable_with_commits):
     parser = repo_parser.RepoParser(cloneable_with_commits.path)
     with parser.repo_checked_out():

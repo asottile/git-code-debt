@@ -21,7 +21,7 @@ from testing.utilities.auto_namedtuple import auto_namedtuple
 from testing.utilities.cwd import cwd
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def tempdir_factory(tmpdir):
     class TmpdirFactory(object):
         def __init__(self):
@@ -60,7 +60,7 @@ class Sandbox(collections.namedtuple('Sandbox', ['directory'])):
             yield db
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def sandbox(tempdir_factory):
     ret = Sandbox(tempdir_factory.get())
     with ret.db() as db:
@@ -70,7 +70,7 @@ def sandbox(tempdir_factory):
     yield ret
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def cloneable(tempdir_factory):
     repo_path = tempdir_factory.get()
     with cwd(repo_path):
@@ -80,7 +80,7 @@ def cloneable(tempdir_factory):
     yield repo_path
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def cloneable_with_commits(cloneable):
     commits = []
 
