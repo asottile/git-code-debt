@@ -14,13 +14,9 @@
 # NOTE: metrics and metric_expressions may be omitted
 
 Groups:
-    - Cheetah:
-        metrics: ['TotalLinesOfCode_Template']
-        metric_expressions:
-            - ^.*Cheetah.*$
     - Python:
         metric_expressions:
-            - ^.*Python.*$
+            - (?i)^.*Python.*$
     - CurseWords:
         metric_expressions:
             - ^TotalCurseWords.*$
@@ -50,8 +46,8 @@ CommitLinks:
 # These denote the metrics to show in the widget.
 WidgetMetrics:
     TotalLinesOfCode: {}
-    TotalLinesOfCode_Css: {}
-    TotalLinesOfCode_Python: {}
-    TotalLinesOfCode_Javascript: {}
-    TotalLinesOfCode_Text: {}
-    TotalLinesOfCode_Yaml: {}
+    TotalLinesOfCode_css: {}
+    TotalLinesOfCode_python: {}
+    TotalLinesOfCode_javascript: {}
+    TotalLinesOfCode_plain-text: {}
+    TotalLinesOfCode_yaml: {}

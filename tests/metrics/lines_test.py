@@ -17,8 +17,8 @@ def test_lines_of_code_parser():
 
     expected_value = {
         'TotalLinesOfCode': 3,
-        'TotalLinesOfCode_Python': 1,
-        'TotalLinesOfCode_Yaml': 2,
+        'TotalLinesOfCode_python': 1,
+        'TotalLinesOfCode_yaml': 2,
     }
     for metric in metrics:
         assert metric.value == expected_value.get(metric.name, 0)

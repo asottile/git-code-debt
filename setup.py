@@ -35,6 +35,7 @@ setup(
     },
     install_requires=[
         'flask',
+        'identify',
         'jsonschema',
         'mako',
         'pyyaml',

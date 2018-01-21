@@ -11,8 +11,8 @@ def test_curse_words_parser():
     parser = CurseWordsParser()
     input_stats = [
         FileDiffStat(
-            b'templates/foo.tmpl',
-            [b'#man seriously, fuck cheetah'],
+            b'some/file.rb',
+            [b'#man seriously, fuck ruby'],
             [],
             None,
         ),
@@ -24,5 +24,5 @@ def test_curse_words_parser():
         ),
     ]
     metrics = list(parser.get_metrics_from_stat(Commit.blank, input_stats))
-    assert Metric('TotalCurseWords_Template', 1) in metrics
-    assert Metric('TotalCurseWords_Python', 0) in metrics
+    assert Metric('TotalCurseWords_ruby', 1) in metrics
+    assert Metric('TotalCurseWords_python', 0) in metrics
