@@ -9,11 +9,10 @@ import flask
 Metric = collections.namedtuple('Metric', ('name', 'value', 'date'))
 
 
-def get_metric_ids_from_database():
-    result = flask.g.db.execute(
-        'SELECT name FROM metric_names ORDER BY name',
-    ).fetchall()
-    return [name for name, in result]
+def get_metric_ids(db):
+    query = 'SELECT name FROM metric_names WHERE has_data=1 ORDER BY name'
+    res = db.execute(query).fetchall()
+    return [name for name, in res]
 
 
 def get_latest_sha():
@@ -49,16 +48,15 @@ def get_metrics_for_sha(sha):
         return collections.defaultdict(int)
 
     result = flask.g.db.execute(
-        '\n'.join((
-            'SELECT',
-            '    metric_names.name,',
-            '    metric_data.running_value',
-            'FROM metric_data',
-            'INNER JOIN metric_names ON',
-            '    metric_names.id = metric_data.metric_id',
-            'WHERE',
-            '    metric_data.sha = ?',
-        )),
+        'SELECT\n'
+        '    metric_names.name,\n'
+        '    metric_data.running_value\n'
+        'FROM metric_data\n'
+        'INNER JOIN metric_names ON\n'
+        '    metric_names.id = metric_data.metric_id AND\n'
+        '    metric_names.has_data = 1\n'
+        'WHERE\n'
+        '    metric_data.sha = ?\n',
         [sha],
     ).fetchall()
 
