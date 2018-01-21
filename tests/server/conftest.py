@@ -37,7 +37,7 @@ def _in_testing_app_context(application):
             yield client
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def server(sandbox):
     with _patch_app_with_client(app), _in_testing_app_context(app) as client:
         with mock.patch.object(AppContext, 'database_path', sandbox.db_path):
@@ -51,7 +51,7 @@ def server(sandbox):
                 yield GitCodeDebtServer(client, sandbox)
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def server_with_data(server, cloneable_with_commits):
     cfg = server.sandbox.gen_config(repo=cloneable_with_commits.path)
     main(('-C', cfg))

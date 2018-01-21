@@ -10,7 +10,7 @@ from testing.utilities.client import Client
 from testing.utilities.client import Response
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def client_open_mock():
     with mock.patch.object(flask.testing.FlaskClient, 'open') as open_mock:
         yield open_mock
