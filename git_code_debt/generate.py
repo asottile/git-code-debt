@@ -55,11 +55,19 @@ def _get_metrics_inner(m_args):
     return get_metrics(commit, diff, metric_parsers)
 
 
+def mapper(jobs):
+    if jobs == 1:
+        return map
+    else:
+        return multiprocessing.Pool(jobs).imap
+
+
 def load_data(
         database_file,
         repo,
         package_names,
         skip_defaults,
+        jobs,
 ):
     metric_parsers = get_metric_parsers_from_args(package_names, skip_defaults)
 
@@ -94,9 +102,9 @@ def load_data(
                 itertools.repeat(repo_parser),
                 itertools.repeat(metric_parsers),
             )
-            pool = multiprocessing.pool.Pool(15)
+            do_map = mapper(jobs)
             for commit, metrics in six.moves.zip(
-                    commits, pool.imap(_get_metrics_inner, mp_args),
+                    commits, do_map(_get_metrics_inner, mp_args),
             ):
                 increment_metric_values(metric_values, metrics)
                 insert_metric_values(
@@ -152,6 +160,9 @@ def get_options_from_config(config_filename):
 def main(argv=None):
     parser = argparse.ArgumentParser()
     options.add_generate_config_filename(parser)
+    parser.add_argument(
+        '-j', '--jobs', type=int, default=multiprocessing.cpu_count(),
+    )
     parsed_args = parser.parse_args(argv)
     args = get_options_from_config(parsed_args.config_filename)
 
@@ -163,6 +174,7 @@ def main(argv=None):
         args.repo,
         args.metric_package_names,
         args.skip_default_metrics,
+        parsed_args.jobs,
     )
 
 
