@@ -39,12 +39,3 @@ class GenerateOptions(collections.namedtuple(
             repo=yaml_dict['repo'],
             database=yaml_dict['database'],
         )
-
-    def to_yaml(self):
-        ret = {'repo': self.repo, 'database': self.database}
-        if self.skip_default_metrics is True:
-            ret['skip_default_metrics'] = True
-        if self.metric_package_names:
-            ret['metric_package_names'] = list(self.metric_package_names)
-
-        return ret

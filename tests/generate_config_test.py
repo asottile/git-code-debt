@@ -48,29 +48,3 @@ def test_none_for_tempdir_allowed():
         repo='repo',
         database='database.db',
     )
-
-
-def test_to_yaml_all_specified():
-    ret = GenerateOptions(
-        skip_default_metrics=True,
-        metric_package_names=['my_package'],
-        repo='.',
-        database='database.db',
-    ).to_yaml()
-
-    assert ret == {
-        'skip_default_metrics': True,
-        'metric_package_names': ['my_package'],
-        'repo': '.',
-        'database': 'database.db',
-    }
-
-
-def test_to_yaml_defaults():
-    ret = GenerateOptions(
-        skip_default_metrics=False,
-        metric_package_names=[],
-        repo='.',
-        database='database.db',
-    ).to_yaml()
-    assert ret == {'repo': '.', 'database': 'database.db'}
