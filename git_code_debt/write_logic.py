@@ -37,3 +37,9 @@ def insert_metric_changes(db, metrics, metric_mapping, commit):
         'INSERT INTO metric_changes (sha, metric_id, value) VALUES (?, ?, ?)',
         values,
     )
+
+
+def update_has_data(db, metrics, metric_mapping):
+    query = 'UPDATE metric_names SET has_data=1 WHERE id = ?'
+    for metric_id in [metric_mapping[m.name] for m in metrics if m.value > 0]:
+        db.execute(query, (metric_id,))

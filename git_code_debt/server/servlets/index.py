@@ -130,7 +130,7 @@ def format_groups(
 
 @index.route('/')
 def show():
-    metric_names = logic.get_metric_ids_from_database()
+    metric_names = logic.get_metric_ids(flask.g.db)
     today = datetime.datetime.today()
     today_timestamp = to_timestamp(today)
     offsets = [
