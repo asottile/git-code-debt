@@ -1,6 +1,8 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
+import re
+
 import jsonschema.exceptions
 import pytest
 
@@ -18,12 +20,14 @@ def test_with_all_options_specified():
         'metric_package_names': ['my_package'],
         'repo': '.',
         'database': 'database.db',
+        'exclude': '^vendor/',
     })
     assert ret == GenerateOptions(
         skip_default_metrics=True,
         metric_package_names=['my_package'],
         repo='.',
         database='database.db',
+        exclude=re.compile(b'^vendor/'),
     )
 
 
@@ -34,17 +38,5 @@ def test_minimal_defaults():
         metric_package_names=[],
         repo='./',
         database='database.db',
-    )
-
-
-def test_none_for_tempdir_allowed():
-    ret = GenerateOptions.from_yaml({
-        'repo': 'repo',
-        'database': 'database.db',
-    })
-    assert ret == GenerateOptions(
-        skip_default_metrics=False,
-        metric_package_names=[],
-        repo='repo',
-        database='database.db',
+        exclude=re.compile(b'^$'),
     )

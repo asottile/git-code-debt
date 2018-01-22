@@ -29,7 +29,7 @@ from git_code_debt.write_logic import insert_metric_values
 from git_code_debt.write_logic import update_has_data
 
 
-def get_metrics(commit, diff, metric_parsers):
+def get_metrics(commit, diff, metric_parsers, exclude):
     def get_all_metrics(file_diff_stats):
         for metric_parser_cls in metric_parsers:
             metric_parser = metric_parser_cls()
@@ -39,6 +39,10 @@ def get_metrics(commit, diff, metric_parsers):
                 yield metric
 
     file_diff_stats = get_file_diff_stats_from_output(diff)
+    file_diff_stats = tuple(
+        x for x in file_diff_stats
+        if not exclude.search(x.path)
+    )
     return tuple(get_all_metrics(file_diff_stats))
 
 
@@ -47,13 +51,13 @@ def increment_metric_values(metric_values, metrics):
         metric_values[metric.name] += metric.value
 
 
-def _get_metrics_inner(m_args):
-    compare_commit, commit, repo_parser, metric_parsers = m_args
+def _get_metrics_inner(mp_args):
+    compare_commit, commit, repo_parser, metric_parsers, exclude = mp_args
     if compare_commit is None:
         diff = repo_parser.get_original_commit(commit.sha)
     else:
         diff = repo_parser.get_commit_diff(compare_commit.sha, commit.sha)
-    return get_metrics(commit, diff, metric_parsers)
+    return get_metrics(commit, diff, metric_parsers, exclude)
 
 
 def mapper(jobs):
@@ -68,6 +72,7 @@ def load_data(
         repo,
         package_names,
         skip_defaults,
+        exclude,
         jobs,
 ):
     metric_parsers = get_metric_parsers_from_args(package_names, skip_defaults)
@@ -102,6 +107,7 @@ def load_data(
                 commits,
                 itertools.repeat(repo_parser),
                 itertools.repeat(metric_parsers),
+                itertools.repeat(exclude),
             )
             do_map = mapper(jobs)
             for commit, metrics in six.moves.zip(
@@ -176,6 +182,7 @@ def main(argv=None):
         args.repo,
         args.metric_package_names,
         args.skip_default_metrics,
+        args.exclude,
         parsed_args.jobs,
     )
 

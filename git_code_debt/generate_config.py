@@ -2,6 +2,7 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import collections
+import re
 
 import jsonschema
 
@@ -17,6 +18,7 @@ GENERATE_OPTIONS_SCHEMA = {
         'metric_package_names': {'type': 'array', 'items': {'type': 'string'}},
         'repo': {'type': 'string'},
         'database': {'type': 'string'},
+        'exclude': {'type': 'string'},
     },
 }
 
@@ -28,6 +30,7 @@ class GenerateOptions(collections.namedtuple(
             'metric_package_names',
             'repo',
             'database',
+            'exclude',
         ),
 )):
     @classmethod
@@ -38,4 +41,5 @@ class GenerateOptions(collections.namedtuple(
             metric_package_names=yaml_dict.get('metric_package_names', []),
             repo=yaml_dict['repo'],
             database=yaml_dict['database'],
+            exclude=re.compile(yaml_dict.get('exclude', '^$').encode()),
         )
