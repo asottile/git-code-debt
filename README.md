@@ -31,6 +31,9 @@ skip_default_metrics: false
 
 # optional: default []
 metric_package_names: []
+
+# optional: default ^$ (python regex) to exclude paths such as '^vendor/'
+exclude: ^$
 ```
 
 #### invoke the cli
