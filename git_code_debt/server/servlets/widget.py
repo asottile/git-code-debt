@@ -35,7 +35,7 @@ def data():
     parsers = get_metric_parsers_from_args(
         metric_config.metric_package_names, skip_defaults=False,
     )
-    metrics = get_metrics(Commit.blank, diff, parsers)
+    metrics = get_metrics(Commit.blank, diff, parsers, metric_config.exclude)
     metrics = [
         metric for metric in metrics
         if metric.value and metric.name in metric_names
