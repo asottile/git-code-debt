@@ -20,13 +20,13 @@ from git_code_debt import write_logic
 from git_code_debt.discovery import get_metric_parsers_from_args
 from git_code_debt.file_diff_stat import get_file_diff_stats_from_output
 from git_code_debt.generate_config import GenerateOptions
+from git_code_debt.logic import get_metric_has_data
 from git_code_debt.logic import get_metric_mapping
 from git_code_debt.logic import get_metric_values
 from git_code_debt.logic import get_previous_sha
 from git_code_debt.repo_parser import RepoParser
 from git_code_debt.write_logic import insert_metric_changes
 from git_code_debt.write_logic import insert_metric_values
-from git_code_debt.write_logic import update_has_data
 
 
 def get_metrics(commit, diff, metric_parsers, exclude):
@@ -46,9 +46,8 @@ def get_metrics(commit, diff, metric_parsers, exclude):
     return tuple(get_all_metrics(file_diff_stats))
 
 
-def increment_metric_values(metric_values, metrics):
-    for metric in metrics:
-        metric_values[metric.name] += metric.value
+def increment_metric_values(metric_values, metric_mapping, metrics):
+    metric_values.update({metric_mapping[m.name]: m.value for m in metrics})
 
 
 def _get_metrics_inner(mp_args):
@@ -67,6 +66,14 @@ def mapper(jobs):
         return multiprocessing.Pool(jobs).imap
 
 
+def update_has_data(db, metrics, metric_mapping, has_data):
+    query = 'UPDATE metric_names SET has_data=1 WHERE id = ?'
+    for metric_id in [metric_mapping[m.name] for m in metrics if m.value]:
+        if not has_data[metric_id]:
+            has_data[metric_id] = True
+            db.execute(query, (metric_id,))
+
+
 def load_data(
         database_file,
         repo,
@@ -78,7 +85,8 @@ def load_data(
     metric_parsers = get_metric_parsers_from_args(package_names, skip_defaults)
 
     with sqlite3.connect(database_file) as db:
-        metric_mapping = get_metric_mapping(db)
+        metric_mapping = get_metric_mapping(db)  # type: Dict[str, int]
+        has_data = get_metric_has_data(db)  # type: Dict[int, bool]
 
         repo_parser = RepoParser(repo)
 
@@ -90,17 +98,14 @@ def load_data(
             if len(commits) == 1 and previous_sha is not None:
                 return
 
-            # Maps metric_name to a running value
-            metric_values = collections.defaultdict(int)
+            # Maps metric_id to a running value
+            metric_values = collections.Counter()  # type: Counter[int]
 
             # Grab the state of our metrics at the last place
             compare_commit = None
             if previous_sha is not None:
-                compare_commit = commits[0]
-                metric_values.update(get_metric_values(
-                    db, compare_commit.sha,
-                ))
-                commits = commits[1:]
+                compare_commit = commits.pop(0)
+                metric_values.update(get_metric_values(db, compare_commit.sha))
 
             mp_args = six.moves.zip(
                 [compare_commit] + commits,
@@ -113,12 +118,10 @@ def load_data(
             for commit, metrics in six.moves.zip(
                     commits, do_map(_get_metrics_inner, mp_args),
             ):
-                increment_metric_values(metric_values, metrics)
-                insert_metric_values(
-                    db, metric_values, metric_mapping, commit,
-                )
+                update_has_data(db, metrics, metric_mapping, has_data)
+                increment_metric_values(metric_values, metric_mapping, metrics)
+                insert_metric_values(db, metric_values, has_data, commit)
                 insert_metric_changes(db, metrics, metric_mapping, commit)
-                update_has_data(db, metrics, metric_mapping)
 
 
 def create_schema(db):

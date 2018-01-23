@@ -45,9 +45,9 @@ class CurseWordsParser(DiffParserBase):
 
         # Yield overall metric and one per type of expected mapping types
         yield Metric('TotalCurseWords', total_curses)
-        for tag in ALL_TAGS:
-            curses_changed = curses_by_file_type[tag]
-            yield Metric('TotalCurseWords_{}'.format(tag), curses_changed)
+        for tag, value in curses_by_file_type.items():
+            if tag in ALL_TAGS and value:
+                yield Metric('TotalCurseWords_{}'.format(tag), value)
 
     def get_possible_metric_ids(self):
         return ['TotalCurseWords'] + [

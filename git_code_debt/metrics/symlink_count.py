@@ -23,7 +23,8 @@ class SymlinkCount(DiffParserBase):
                 elif file_diff_stat.status is Status.DELETED:
                     symlink_delta -= 1
 
-        yield Metric(type(self).__name__, symlink_delta)
+        if symlink_delta:
+            yield Metric(type(self).__name__, symlink_delta)
 
     def get_possible_metric_ids(self):
         return [type(self).__name__]

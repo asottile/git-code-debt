@@ -26,16 +26,13 @@ def test_get_previous_sha_no_previous_sha(sandbox):
         assert ret is None
 
 
-def get_fake_metrics(metric_mapping):
-    return {metric_name: 1 for metric_name in metric_mapping}
-
-
 def insert_fake_metrics(db):
     metric_mapping = get_metric_mapping(db)
-    metric_values = get_fake_metrics(metric_mapping)
-    for sha_part in ('a', 'b', 'c'):
+    has_data = dict.fromkeys(metric_mapping.values(), True)
+    for v, sha_part in enumerate('abc', 1):
+        metric_values = dict.fromkeys(metric_mapping.values(), v)
         commit = Commit(sha_part * 40, 1)
-        insert_metric_values(db, metric_values, metric_mapping, commit)
+        insert_metric_values(db, metric_values, has_data, commit)
 
 
 def test_get_previous_sha_previous_existing_sha(sandbox):
@@ -47,6 +44,6 @@ def test_get_previous_sha_previous_existing_sha(sandbox):
 
 def test_insert_and_get_metric_values(sandbox):
     with sandbox.db() as db:
-        fake_metrics = get_fake_metrics(get_metric_mapping(db))
+        fake_metrics = dict.fromkeys(get_metric_mapping(db).values(), 2)
         insert_fake_metrics(db)
-        assert fake_metrics == get_metric_values(db, 'a' * 40)
+        assert fake_metrics == get_metric_values(db, 'b' * 40)

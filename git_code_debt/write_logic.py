@@ -7,14 +7,14 @@ def insert_metric_ids(db, metric_ids):
     db.executemany("INSERT INTO metric_names (name) VALUES (?)", values)
 
 
-def insert_metric_values(db, metric_values, metric_mapping, commit):
+def insert_metric_values(db, metric_values, has_data, commit):
     values = [
-        [commit.sha, metric_mapping[metric_name], commit.date, value]
-        for metric_name, value in metric_values.items()
+        (commit.sha, metric_id, commit.date, value)
+        for metric_id, value in metric_values.items()
+        if has_data[metric_id]
     ]
     db.executemany(
-        'INSERT INTO metric_data\n'
-        '(sha, metric_id, timestamp, running_value)\n'
+        'INSERT INTO metric_data (sha, metric_id, timestamp, running_value)\n'
         'VALUES (?, ?, ?, ?)\n',
         values,
     )
@@ -30,16 +30,9 @@ def insert_metric_changes(db, metrics, metric_mapping, commit):
     values = [
         [commit.sha, metric_mapping[metric.name], metric.value]
         for metric in metrics
-        # Sparse table, ignore zero.
         if metric.value != 0
     ]
     db.executemany(
         'INSERT INTO metric_changes (sha, metric_id, value) VALUES (?, ?, ?)',
         values,
     )
-
-
-def update_has_data(db, metrics, metric_mapping):
-    query = 'UPDATE metric_names SET has_data=1 WHERE id = ?'
-    for metric_id in [metric_mapping[m.name] for m in metrics if m.value > 0]:
-        db.execute(query, (metric_id,))

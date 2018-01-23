@@ -42,7 +42,8 @@ class SimpleLineCounterBase(DiffParserBase):
                     if self.line_matches_metric(line, file_diff_stat):
                         metric_value -= 1
 
-        yield Metric(self.metric_name, metric_value)
+        if metric_value:
+            yield Metric(self.metric_name, metric_value)
 
     def get_possible_metric_ids(self):
         return [self.metric_name]
