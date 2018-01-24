@@ -47,3 +47,9 @@ ColorOverrides: []
 #     {sha} - Points to the full (40-character) sha of the commit
 CommitLinks:
     View on Github: https://github.com/FIXME_USER/FIXME_PROJECT/commit/{sha}
+
+
+# These denote the metrics to show in the widget.
+# (Currently the values are intentionally empty maps)
+WidgetMetrics:
+    TotalLinesOfCode: {}
