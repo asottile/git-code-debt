@@ -29,7 +29,7 @@
             frame = $('<iframe scrolling="no" seamless="seamless">');
             frame.css({border: 0, width: 0, height: 0});
             // In firefox, about:blank is loaded asynchronously
-            // http://stackoverflow.com/questions/10531909/source-less-iframe-bug-firefox
+            // https://stackoverflow.com/q/10531909/812183
             frame.on('load', function () {
                 var reference,
                     frameBody = frame.contents().find('body').css('margin', 0),
