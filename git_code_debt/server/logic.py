@@ -60,7 +60,7 @@ def get_metrics_for_sha(sha):
         [sha],
     ).fetchall()
 
-    return dict(result)
+    return collections.defaultdict(int, result)
 
 
 def metrics_for_dates(metric_name, dates):
@@ -93,50 +93,19 @@ def get_first_data_timestamp(metric_name, db=None):
     db = db or flask.g.db
 
     # Find the first change for that metric
-    first_sha = db.execute(
-        '\n'.join((
-            'SELECT',
-            '    sha',
-            'FROM metric_changes',
-            'INNER JOIN metric_names',
-            '    ON metric_changes.metric_id = metric_names.id',
-            'WHERE metric_names.name = ?',
-            'ORDER BY metric_changes.ROWID ASC',
-            'LIMIT 1',
-        )),
-        [metric_name],
+    first_timestamp = db.execute(
+        'SELECT timestamp\n'
+        'FROM metric_data\n'
+        'INNER JOIN metric_names ON metric_names.id = metric_data.metric_id\n'
+        'WHERE metric_names.name = ?\n'
+        'ORDER BY metric_data.ROWID ASC\n'
+        'LIMIT 1\n',
+        (metric_name,),
     ).fetchone()
-
-    # No data for that metric? Return 0
-    if not first_sha:
+    if not first_timestamp:
         return 0
     else:
-        first_sha = first_sha[0]
-
-    # Find the timestamp just before that change
-    previous_timestamp = db.execute(
-        '\n'.join((
-            'SELECT',
-            '    timestamp',
-            'FROM metric_data',
-            'WHERE',
-            '    ROWID < (',
-            '        SELECT ROWID FROM metric_data WHERE sha = ? LIMIT 1',
-            '    )',
-            'ORDER BY ROWID DESC',
-            'LIMIT 1',
-        )),
-        [first_sha],
-    ).fetchone()
-
-    # If we didn't get a row that means the first change added data so
-    # return that timestamp.
-    if not previous_timestamp:
-        return db.execute(
-            'SELECT MIN(timestamp) FROM metric_data',
-        ).fetchone()[0]
-    else:
-        return previous_timestamp[0]
+        return first_timestamp[0]
 
 
 def get_metric_changes(db, sha):

@@ -45,5 +45,4 @@ def test_submodule_count_detects_ignores_moved():
         ),
     ]
 
-    metric, = parser.get_metrics_from_stat(Commit.blank, input_stats)
-    assert metric == Metric('SubmoduleCount', 0)
+    assert not tuple(parser.get_metrics_from_stat(Commit.blank, input_stats))

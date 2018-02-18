@@ -26,15 +26,17 @@ from testing.utilities.cwd import cwd
 
 
 def test_increment_metrics_first_time():
-    metrics = collections.defaultdict(int)
-    increment_metric_values(metrics, [Metric('foo', 1), Metric('bar', 2)])
-    assert metrics == {'foo': 1, 'bar': 2}
+    metric_values = collections.Counter()
+    metrics = [Metric('foo', 1), Metric('bar', 2)]
+    increment_metric_values(metric_values, {'foo': 0, 'bar': 1}, metrics)
+    assert metric_values == {0: 1, 1: 2}
 
 
 def test_increment_metrics_already_there():
-    metrics = collections.defaultdict(int, {'foo': 2, 'bar': 3})
-    increment_metric_values(metrics, [Metric('foo', 1), Metric('bar', 2)])
-    assert metrics == {'foo': 3, 'bar': 5}
+    metric_values = collections.Counter({0: 2, 1: 3})
+    metrics = [Metric('foo', 1), Metric('bar', 2)]
+    increment_metric_values(metric_values, {'foo': 0, 'bar': 1}, metrics)
+    assert metric_values == {0: 3, 1: 5}
 
 
 def test_get_metrics_inner_first_commit(cloneable_with_commits):
@@ -84,8 +86,8 @@ def get_metric_data_count(sandbox):
         return db.execute('SELECT COUNT(*) FROM metric_data').fetchone()[0]
 
 
-def test_generate_integration_previous_data(sandbox, cloneable):
-    cfg = sandbox.gen_config(repo=cloneable)
+def test_generate_integration_previous_data(sandbox, cloneable_with_commits):
+    cfg = sandbox.gen_config(repo=cloneable_with_commits.path)
     main(('-C', cfg))
     before_data_count = get_metric_data_count(sandbox)
     assert before_data_count > 0
@@ -94,13 +96,16 @@ def test_generate_integration_previous_data(sandbox, cloneable):
     assert before_data_count == after_data_count
 
 
-def test_generate_new_data_created(sandbox, cloneable):
-    cfg = sandbox.gen_config(repo=cloneable)
+def test_generate_new_data_created(sandbox, cloneable_with_commits):
+    cfg = sandbox.gen_config(repo=cloneable_with_commits.path)
     main(('-C', cfg))
     before_data_count = get_metric_data_count(sandbox)
     # Add some commits
-    with cwd(cloneable):
-        cmd_output('git', 'commit', '--allow-empty', '-m', 'bar')
+    with cwd(cloneable_with_commits.path):
+        with open('new_file.py', 'w') as f:
+            f.write('# test\n')
+        cmd_output('git', 'add', 'new_file.py')
+        cmd_output('git', 'commit', '-m', 'bar')
     main(('-C', cfg))
     after_data_count = get_metric_data_count(sandbox)
     assert after_data_count > before_data_count
@@ -142,6 +147,29 @@ def test_moves_handled_properly(sandbox, cloneable):
 
     # Used to raise AssertionError
     assert not main(('-C', sandbox.gen_config(repo=cloneable)))
+
+
+def test_internal_zero_populated(sandbox, cloneable):
+    with cwd(cloneable):
+        with io.open('f.py', 'w') as f:
+            f.write('# hello world\n')
+        cmd_output('git', 'add', 'f.py')
+        cmd_output('git', 'commit', '-m', 'add f')
+        cmd_output('git', 'rm', 'f.py')
+        cmd_output('git', 'commit', '-m', 'remove f')
+        cmd_output('git', 'revert', 'HEAD', '--no-edit')
+
+    assert not main(('-C', sandbox.gen_config(repo=cloneable)))
+    with sandbox.db() as db:
+        query = (
+            'SELECT running_value\n'
+            'FROM metric_data\n'
+            'INNER JOIN metric_names ON\n'
+            '    metric_data.metric_id == metric_names.id\n'
+            'WHERE name = "TotalLinesOfCode_python"\n'
+        )
+        vals = [x for x, in db.execute(query).fetchall()]
+        assert vals == [1, 0, 1]
 
 
 def test_exclude_pattern(sandbox, cloneable_with_commits):

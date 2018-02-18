@@ -23,7 +23,8 @@ class SubmoduleCount(DiffParserBase):
                 elif file_diff_stat.status is Status.DELETED:
                     submodule_delta -= 1
 
-        yield Metric(type(self).__name__, submodule_delta)
+        if submodule_delta:
+            yield Metric(type(self).__name__, submodule_delta)
 
     def get_possible_metric_ids(self):
         return [type(self).__name__]

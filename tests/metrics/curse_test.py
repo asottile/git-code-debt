@@ -24,5 +24,6 @@ def test_curse_words_parser():
         ),
     ]
     metrics = set(parser.get_metrics_from_stat(Commit.blank, input_stats))
-    assert Metric('TotalCurseWords_ruby', 1) in metrics
-    assert Metric('TotalCurseWords_python', 0) in metrics
+    assert metrics == {
+        Metric('TotalCurseWords', 1), Metric('TotalCurseWords_ruby', 1),
+    }

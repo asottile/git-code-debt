@@ -13,12 +13,12 @@ def test_no_data_returns_zero(sandbox):
         assert get_first_data_timestamp('PythonImportCount', db=db) == 0
 
 
-def insert(db, sha, timestamp, value):
+def insert(db, sha, timestamp, value, has_data=True):
     metric_mapping = get_metric_mapping(db)
     write_logic.insert_metric_values(
         db,
-        {'PythonImportCount': value, 'TODOCount': value},
-        metric_mapping,
+        {metric_mapping['PythonImportCount']: value},
+        {metric_mapping['PythonImportCount']: has_data},
         Commit(sha, timestamp),
     )
 
@@ -35,17 +35,17 @@ def insert_metric_changes(db, sha, change):
 
 def test_some_data_returns_first_timestamp(sandbox):
     with sandbox.db() as db:
-        insert(db, '1' * 40, 1111, 0)
+        insert(db, '1' * 40, 1111, 0, has_data=False)
         assert get_first_data_timestamp('PythonImportCount', db=db) == 0
 
 
 def test_some_data_returns_last_zero_before_data(sandbox):
     with sandbox.db() as db:
-        insert(db, '1' * 40, 1111, 0)
-        insert(db, '2' * 40, 2222, 0)
+        insert(db, '1' * 40, 1111, 0, has_data=False)
+        insert(db, '2' * 40, 2222, 0, has_data=False)
         insert(db, '3' * 40, 3333, 1)
         insert_metric_changes(db, '3' * 40, 1)
-        assert get_first_data_timestamp('PythonImportCount', db=db) == 2222
+        assert get_first_data_timestamp('PythonImportCount', db=db) == 3333
 
 
 def test_first_commit_introduces_data(sandbox):

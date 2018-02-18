@@ -45,5 +45,4 @@ def test_binary_file_count_detects_ignores_moved():
         ),
     ]
 
-    metric, = parser.get_metrics_from_stat(Commit.blank, input_stats)
-    assert metric == Metric('BinaryFileCount', 0)
+    assert not tuple(parser.get_metrics_from_stat(Commit.blank, input_stats))
