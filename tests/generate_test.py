@@ -169,9 +169,7 @@ def test_get_options_from_config_no_config_file():
 
 
 def test_create_schema(tmpdir):
-    db_path = os.path.join(tmpdir.strpath, 'db.db')
-
-    with sqlite3.connect(db_path) as db:
+    with sqlite3.connect(tmpdir.join('db.db').strpath) as db:
         create_schema(db)
 
         results = db.execute(
@@ -184,9 +182,7 @@ def test_create_schema(tmpdir):
 
 
 def test_populate_metric_ids(tmpdir):
-    db_path = os.path.join(tmpdir.strpath, 'db.db')
-
-    with sqlite3.connect(db_path) as db:
+    with sqlite3.connect(tmpdir.join('db.db').strpath) as db:
         create_schema(db)
         populate_metric_ids(db, (), False)
 
