@@ -6,7 +6,8 @@ import collections
 import flask
 
 
-Metric = collections.namedtuple('Metric', ('name', 'value', 'date'))
+Metric = collections.namedtuple('Metric', ('value', 'date'))
+MetricInfo = collections.namedtuple('MetricInfo', ('id', 'description'))
 
 
 def get_metric_ids(db):
@@ -15,10 +16,15 @@ def get_metric_ids(db):
     return [name for name, in res]
 
 
+def get_metric_info(db, metric_name):
+    query = 'SELECT id, description FROM metric_names WHERE name = ?'
+    res = db.execute(query, (metric_name,)).fetchone()
+    return MetricInfo(*res)
+
+
 def get_latest_sha():
-    result = flask.g.db.execute(
-        'SELECT sha FROM metric_data ORDER BY timestamp DESC LIMIT 1',
-    ).fetchone()
+    query = 'SELECT sha FROM metric_data ORDER BY timestamp DESC LIMIT 1'
+    result = flask.g.db.execute(query).fetchone()
 
     # If there is no data result will be None
     return result[0] if result else None
@@ -63,28 +69,20 @@ def get_metrics_for_sha(sha):
     return collections.defaultdict(int, result)
 
 
-def metrics_for_dates(metric_name, dates):
+def metrics_for_dates(metric_id, dates):
     def get_metric_for_timestamp(timestamp):
         result = flask.g.db.execute(
-            '\n'.join((
-                'SELECT',
-                '    running_value,',
-                '    timestamp',
-                'FROM metric_data',
-                'INNER JOIN metric_names ON',
-                '    metric_names.id = metric_data.metric_id',
-                'WHERE',
-                '    metric_names.name = ? AND',
-                '    timestamp < ?',
-                'ORDER BY timestamp DESC',
-                'LIMIT 1',
-            )),
-            [metric_name, timestamp],
+            'SELECT running_value, timestamp\n'
+            'FROM metric_data\n'
+            'WHERE metric_id = ? AND timestamp < ?\n'
+            'ORDER BY timestamp DESC\n'
+            'LIMIT 1\n',
+            (metric_id, timestamp),
         ).fetchone()
         if result:
-            return Metric(metric_name, *result)
+            return Metric(*result)
         else:
-            return Metric(metric_name, 0, timestamp)
+            return Metric(0, timestamp)
 
     return [get_metric_for_timestamp(date) for date in dates]
 
@@ -124,7 +122,7 @@ def get_metric_changes(db, sha):
 
 
 def get_major_changes_for_metric(
-        db, start_timestamp, end_timestamp, metric_name,
+        db, start_timestamp, end_timestamp, metric_id,
 ):
     return db.execute(
         '\n'.join((
@@ -136,14 +134,12 @@ def get_major_changes_for_metric(
             'INNER JOIN metric_data ON',
             '    metric_changes.sha = metric_data.sha AND',
             '    metric_changes.metric_id = metric_data.metric_id',
-            'INNER JOIN metric_names ON',
-            '    metric_changes.metric_id = metric_names.id',
             'WHERE',
             '    metric_data.timestamp >= ? AND',
             '    metric_data.timestamp < ? AND',
-            '    metric_names.name = ?',
+            '    metric_changes.metric_id = ?',
             'ORDER BY ABS(metric_changes.value) DESC',
             'LIMIT 50',
         )),
-        [start_timestamp, end_timestamp, metric_name],
+        (start_timestamp, end_timestamp, metric_id),
     ).fetchall()

@@ -38,6 +38,7 @@ setup(
         'flask',
         'identify',
         'mako',
+        'markdown-code-blocks',
         'pyyaml',
         'six',
     ],

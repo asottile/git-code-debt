@@ -42,12 +42,14 @@ def main(argv=None):
 
     for metric_parser_cls in metric_parsers_sorted:
         print(
-            '{} {} {!r}'.format(
+            '{} {}'.format(
                 color(metric_parser_cls.__module__, CYAN, color_setting),
                 metric_parser_cls.__name__,
-                sorted(metric_parser_cls().get_possible_metric_ids()),
             ),
         )
+        for name, description in metric_parser_cls().get_metrics_info():
+            description = ': {}'.format(description) if description else ''
+            print('    {}{}'.format(name, description))
 
 
 if __name__ == '__main__':

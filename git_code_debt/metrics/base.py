@@ -1,11 +1,22 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
+import collections
+import inspect
+
 from git_code_debt.metric import Metric
 
 
+def from_class(cls, c):
+    return cls(c.__name__, inspect.cleandoc(c.__doc__ or ''))
+
+
+MetricInfo = collections.namedtuple('MetricInfo', ('name', 'description'))
+MetricInfo.__new__.__defaults__ = ('',)
+MetricInfo.from_class = classmethod(from_class)
+
+
 class DiffParserBase(object):
-    """Generates metrics from git show"""
     # Specify __metric__ = False to not be included (useful for base classes)
     __metric__ = False
 
@@ -23,11 +34,14 @@ class DiffParserBase(object):
         raise NotImplementedError
 
     def get_possible_metric_ids(self):
+        """Deprecated, use `get_metrics_info`."""
         raise NotImplementedError
+
+    def get_metrics_info(self):
+        return [MetricInfo(name) for name in self.get_possible_metric_ids()]
 
 
 class SimpleLineCounterBase(DiffParserBase):
-    """Simple counter for various file types and line types."""
     __metric__ = False
 
     def get_metrics_from_stat(self, _, file_diff_stats):
@@ -45,15 +59,22 @@ class SimpleLineCounterBase(DiffParserBase):
         if metric_value:
             yield Metric(self.metric_name, metric_value)
 
-    def get_possible_metric_ids(self):
-        return [self.metric_name]
+    def get_metrics_info(self):
+        return [MetricInfo(self.metric_name, self.metric_description)]
 
     @property
     def metric_name(self):
         """Override me or make a class-level metric_name attribute to set the
-        metric name.
+        metric name.  Defaults to class name
         """
         return type(self).__name__
+
+    @property
+    def metric_description(self):
+        """Override me or make a class-level metric_description attribute to
+        set the metric description.  Defaults to metric docstring.
+        """
+        return inspect.cleandoc(type(self).__doc__ or '')
 
     def should_include_file(self, file_diff_stat):
         """Implement me to return whether a filename should be included.

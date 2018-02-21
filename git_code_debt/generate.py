@@ -16,7 +16,6 @@ import six
 import yaml
 
 from git_code_debt import options
-from git_code_debt import write_logic
 from git_code_debt.discovery import get_metric_parsers_from_args
 from git_code_debt.file_diff_stat import get_file_diff_stats_from_output
 from git_code_debt.generate_config import GenerateOptions
@@ -135,18 +134,22 @@ def create_schema(db):
             db.executescript(resource.read())
 
 
-def get_metric_ids(metric_parsers):
-    metric_ids = set()
+def get_metrics_info(metric_parsers):
+    metrics_info = set()
     for metric_parser_cls in metric_parsers:
-        for metric_id in metric_parser_cls().get_possible_metric_ids():
-            metric_ids.add(metric_id)
-    return sorted(metric_ids)
+        metrics_info.update(metric_parser_cls().get_metrics_info())
+    return sorted(metrics_info)
+
+
+def insert_metrics_info(db, metrics_info):
+    query = "INSERT INTO metric_names (name, description) VALUES (?, ?)"
+    db.executemany(query, metrics_info)
 
 
 def populate_metric_ids(db, package_names, skip_defaults):
     metric_parsers = get_metric_parsers_from_args(package_names, skip_defaults)
-    metric_ids = get_metric_ids(metric_parsers)
-    write_logic.insert_metric_ids(db, metric_ids)
+    metrics_info = get_metrics_info(metric_parsers)
+    insert_metrics_info(db, metrics_info)
 
 
 def create_database(args):

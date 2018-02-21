@@ -2,11 +2,6 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 
-def insert_metric_ids(db, metric_ids):
-    values = [[x] for x in metric_ids]
-    db.executemany("INSERT INTO metric_names (name) VALUES (?)", values)
-
-
 def insert_metric_values(db, metric_values, has_data, commit):
     values = [
         (commit.sha, metric_id, commit.date, value)

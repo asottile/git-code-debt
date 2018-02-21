@@ -3,13 +3,27 @@ from __future__ import unicode_literals
 
 from git_code_debt.file_diff_stat import FileDiffStat
 from git_code_debt.metric import Metric
+from git_code_debt.metrics.base import DiffParserBase
+from git_code_debt.metrics.base import MetricInfo
 from git_code_debt.metrics.base import SimpleLineCounterBase
 from git_code_debt.repo_parser import Commit
+
+
+def test_backward_compat_metric_info():
+    class MyParser(DiffParserBase):
+        def get_possible_metric_ids(self):
+            return ['Metric1']
+
+    parser = MyParser()
+    info, = parser.get_metrics_info()
+    assert info == MetricInfo('Metric1')
 
 
 def test_simple_base_counter():
     """Smoke test for SimpleLineCounterBase"""
     class TestCounter(SimpleLineCounterBase):
+        """This is the test counter!"""
+
         def should_include_file(self, file_diff_stat):
             return True
 
@@ -17,7 +31,8 @@ def test_simple_base_counter():
             return True
 
     parser = TestCounter()
-    assert parser.get_possible_metric_ids() == ['TestCounter']
+    info, = parser.get_metrics_info()
+    assert info == MetricInfo('TestCounter', 'This is the test counter!')
 
     input_stats = [
         FileDiffStat(
