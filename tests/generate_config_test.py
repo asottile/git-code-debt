@@ -3,14 +3,14 @@ from __future__ import unicode_literals
 
 import re
 
-import jsonschema.exceptions
+import cfgv
 import pytest
 
 from git_code_debt.generate_config import GenerateOptions
 
 
 def test_empty_config_invalid():
-    with pytest.raises(jsonschema.exceptions.ValidationError):
+    with pytest.raises(cfgv.ValidationError):
         GenerateOptions.from_yaml({})
 
 
