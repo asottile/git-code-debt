@@ -34,9 +34,9 @@ setup(
         ],
     },
     install_requires=[
+        'cfgv',
         'flask',
         'identify',
-        'jsonschema',
         'mako',
         'pyyaml',
         'six',

@@ -4,23 +4,21 @@ from __future__ import unicode_literals
 import collections
 import re
 
-import jsonschema
+import cfgv
 
 
 DEFAULT_GENERATE_CONFIG_FILENAME = 'generate_config.yaml'
+SCHEMA = cfgv.Map(
+    'Config', 'repo',
 
-
-GENERATE_OPTIONS_SCHEMA = {
-    'type': 'object',
-    'required': ['repo', 'database'],
-    'properties': {
-        'skip_default_metrics': {'type': 'boolean'},
-        'metric_package_names': {'type': 'array', 'items': {'type': 'string'}},
-        'repo': {'type': 'string'},
-        'database': {'type': 'string'},
-        'exclude': {'type': 'string'},
-    },
-}
+    cfgv.Required('repo', cfgv.check_string),
+    cfgv.Required('database', cfgv.check_string),
+    cfgv.Optional('skip_default_metrics', cfgv.check_bool, False),
+    cfgv.Optional(
+        'metric_package_names', cfgv.check_array(cfgv.check_string), [],
+    ),
+    cfgv.Optional('exclude', cfgv.check_regex, '^$'),
+)
 
 
 class GenerateOptions(collections.namedtuple(
@@ -34,12 +32,12 @@ class GenerateOptions(collections.namedtuple(
         ),
 )):
     @classmethod
-    def from_yaml(cls, yaml_dict):
-        jsonschema.validate(yaml_dict, GENERATE_OPTIONS_SCHEMA)
+    def from_yaml(cls, dct):
+        dct = cfgv.apply_defaults(cfgv.validate(dct, SCHEMA), SCHEMA)
         return cls(
-            skip_default_metrics=yaml_dict.get('skip_default_metrics', False),
-            metric_package_names=yaml_dict.get('metric_package_names', []),
-            repo=yaml_dict['repo'],
-            database=yaml_dict['database'],
-            exclude=re.compile(yaml_dict.get('exclude', '^$').encode()),
+            skip_default_metrics=dct['skip_default_metrics'],
+            metric_package_names=dct['metric_package_names'],
+            repo=dct['repo'],
+            database=dct['database'],
+            exclude=re.compile(dct['exclude'].encode()),
         )
