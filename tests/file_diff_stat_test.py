@@ -273,9 +273,9 @@ def test_commit_with_terrible():
     assert len(ret[0].lines_added) == 1
 
 
-def test_all_metric_parsers_have_possible_metrics():
+def test_all_metric_parsers_have_info():
     for metric_parser_cls in get_metric_parsers():
-        assert metric_parser_cls().get_possible_metric_ids()
+        assert metric_parser_cls().get_metrics_info()
 
 
 def test_adding_symlink():

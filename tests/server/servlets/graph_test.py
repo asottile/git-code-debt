@@ -5,6 +5,7 @@ import flask
 import mock
 import six
 
+from git_code_debt.metrics.binary_file_count import BinaryFileCount
 from git_code_debt.metrics.imports import PythonImportCount
 from git_code_debt.metrics.symlink_count import SymlinkCount
 from testing.assertions.response import assert_no_response_errors
@@ -60,10 +61,7 @@ def test_all_data_no_data(server):
     assert_redirect(
         resp,
         flask.url_for('graph.show', metric_name=PythonImportCount.__name__),
-        {
-            'start': ['0'],
-            'end': [mock.ANY],
-        },
+        {'start': ['0'], 'end': [mock.ANY]},
     )
 
 
@@ -86,3 +84,18 @@ def test_show_succeeds_for_empty_range(server):
         end='0',
     ))
     assert_no_response_errors(resp)
+
+
+def test_renders_description(server):
+    resp = server.client.get(flask.url_for(
+        'graph.show',
+        metric_name=BinaryFileCount.__name__,
+        start='0',
+        end='0',
+    ))
+    assert_no_response_errors(resp)
+    desc = resp.pq.find('.description')
+    expected = 'Counts the number of files considered to be binary by git.'
+    assert desc.text() == expected
+    # should have formatted the markdown
+    assert desc.find('code')

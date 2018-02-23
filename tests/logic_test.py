@@ -2,7 +2,7 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 from git_code_debt.discovery import get_metric_parsers
-from git_code_debt.generate import get_metric_ids
+from git_code_debt.generate import get_metrics_info
 from git_code_debt.logic import get_metric_mapping
 from git_code_debt.logic import get_metric_values
 from git_code_debt.logic import get_previous_sha
@@ -14,10 +14,8 @@ def test_get_metric_mapping(sandbox):
     with sandbox.db() as db:
         ret = get_metric_mapping(db)
 
-        assert (
-            set(ret.keys()) ==
-            set(get_metric_ids(get_metric_parsers()))
-        )
+        expected = {m.name for m in get_metrics_info(get_metric_parsers())}
+        assert set(ret) == expected
 
 
 def test_get_previous_sha_no_previous_sha(sandbox):

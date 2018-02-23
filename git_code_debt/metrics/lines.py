@@ -7,6 +7,7 @@ from identify import identify
 
 from git_code_debt.metric import Metric
 from git_code_debt.metrics.base import DiffParserBase
+from git_code_debt.metrics.base import MetricInfo
 from git_code_debt.metrics.common import ALL_TAGS
 from git_code_debt.metrics.common import UNKNOWN
 
@@ -39,7 +40,7 @@ class LinesOfCodeParser(DiffParserBase):
             if tag in ALL_TAGS and val:
                 yield Metric('TotalLinesOfCode_{}'.format(tag), val)
 
-    def get_possible_metric_ids(self):
-        return ['TotalLinesOfCode'] + [
-            'TotalLinesOfCode_{}'.format(tag) for tag in ALL_TAGS
-        ]
+    def get_metrics_info(self):
+        metric_names = ['TotalLinesOfCode_{}'.format(tag) for tag in ALL_TAGS]
+        metric_names.append('TotalLinesOfCode')
+        return [MetricInfo(metric_name) for metric_name in metric_names]

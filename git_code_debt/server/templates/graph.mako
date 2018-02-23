@@ -2,6 +2,8 @@
 
 <%!
     import flask
+    import markdown_code_blocks
+    import markupsafe
 
     from git_code_debt.util.iter import chunk_iter
 %>
@@ -28,6 +30,9 @@
     </form>
 </div>
 
+<div class="description">
+    ${markupsafe.Markup(markdown_code_blocks.highlight(description))}
+</div>
 
 <h2>Changes</h2>
 <div class="changes-container" data-ajax-url="${changes_url}">

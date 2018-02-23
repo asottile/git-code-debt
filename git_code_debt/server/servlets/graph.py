@@ -20,20 +20,22 @@ def show(metric_name):
     start_timestamp = int(flask.request.args.get('start'))
     end_timestamp = int(flask.request.args.get('end'))
 
+    metric_info = logic.get_metric_info(flask.g.db, metric_name)
+
     data_points = data_points_for_time_range(
         start_timestamp,
         end_timestamp,
         data_points=250,
     )
-    metrics_for_dates = logic.metrics_for_dates(metric_name, data_points)
+    metrics_for_dates = logic.metrics_for_dates(metric_info.id, data_points)
 
     metrics_for_js = sorted({
-        (m.date * 1000, m.value)
-        for m in metrics_for_dates
+        (m.date * 1000, m.value) for m in metrics_for_dates
     })
 
     return render_template(
         'graph.mako',
+        description=metric_info.description,
         metric_name=metric_name,
         metrics=json.dumps(metrics_for_js),
         start_timestamp=start_timestamp,

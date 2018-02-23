@@ -9,10 +9,8 @@ import sqlite3
 
 import pytest
 
-from git_code_debt.discovery import get_metric_parsers_from_args
 from git_code_debt.generate import _get_metrics_inner
 from git_code_debt.generate import create_schema
-from git_code_debt.generate import get_metric_ids
 from git_code_debt.generate import get_options_from_config
 from git_code_debt.generate import increment_metric_values
 from git_code_debt.generate import main
@@ -216,7 +214,4 @@ def test_populate_metric_ids(tmpdir):
 
         results = db.execute('SELECT * FROM metric_names').fetchall()
         # Smoke test assertion
-        assert (
-            len(results) ==
-            len(get_metric_ids(get_metric_parsers_from_args((), False)))
-        )
+        assert results

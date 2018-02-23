@@ -97,6 +97,8 @@ from git_code_debt.metrics.base import SimpleLineCounterBase
 
 
 class Python__init__LineCount(SimpleLineCounterBase):
+    """Counts the number of lines in __init__.py"""
+
     def should_include_file(self, file_diff_stat):
         return file_diff_stat.filename == b'__init__.py'
 
@@ -109,7 +111,6 @@ More complex metrics can extend `DiffParserBase`
 
 ```python
 class DiffParserBase(object):
-    """Generates metrics from git show"""
     # Specify __metric__ = False to not be included (useful for base classes)
     __metric__ = False
 
@@ -126,7 +127,8 @@ class DiffParserBase(object):
         """
         raise NotImplementedError
 
-    def get_possible_metric_ids(self):
+    def get_metrics_info(self):
+        """Implement me to yield `MetricInfo` objects."""
         raise NotImplementedError
 ```
 
