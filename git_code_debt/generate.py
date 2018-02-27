@@ -142,7 +142,7 @@ def get_metrics_info(metric_parsers):
 
 
 def insert_metrics_info(db, metrics_info):
-    query = "INSERT INTO metric_names (name, description) VALUES (?, ?)"
+    query = 'INSERT INTO metric_names (name, description) VALUES (?, ?)'
     db.executemany(query, metrics_info)
 
 
