@@ -20,7 +20,7 @@ setup(
         'Programming Language :: Python :: Implementation :: CPython',
     ],
 
-    packages=find_packages('.', exclude=('tests*', 'testing*')),
+    packages=find_packages(exclude=('tests*', 'testing*')),
     package_data={
         'git_code_debt': [
             'schema/*.sql',
