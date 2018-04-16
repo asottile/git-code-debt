@@ -20,7 +20,8 @@ A dashboard for monitoring code debt in a git repository.
 #### make a `generate_config.yaml`
 
 ```yaml
-# required: repository to clone
+# required: repository to clone (can be anything `git clone` understands) even
+# a repository already on disk
 repo: git@github.com:asottile/git-code-debt
 
 # required: database generation path
