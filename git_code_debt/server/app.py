@@ -94,6 +94,7 @@ def main(argv=None):  # pragma: no cover (starts a web server)
     kwargs = {'port': args.port, 'debug': args.debug}
     if not args.debug:
         kwargs['processes'] = args.processes
+        kwargs['threaded'] = False
 
     app.run('0.0.0.0', **kwargs)
 
