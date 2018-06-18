@@ -172,7 +172,7 @@ def test_internal_zero_populated(sandbox, cloneable):
 
 def test_exclude_pattern(sandbox, cloneable_with_commits):
     cfg = sandbox.gen_config(
-        repo=cloneable_with_commits.path, exclude='\.tmpl$',
+        repo=cloneable_with_commits.path, exclude=r'\.tmpl$',
     )
     assert not main(('-C', cfg))
     with sandbox.db() as db:
