@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/asottile/git-code-debt.svg?branch=master)](https://travis-ci.org/asottile/git-code-debt)
 [![Coverage Status](https://img.shields.io/coveralls/asottile/git-code-debt.svg)](https://coveralls.io/r/asottile/git-code-debt?branch=master)
+[![Code Quality: Python](https://img.shields.io/lgtm/grade/python/g/Yelp/git-code-debt.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Yelp/git-code-debt/context:python)
+[![Total Alerts](https://img.shields.io/lgtm/alerts/g/Yelp/git-code-debt.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Yelp/git-code-debt/alerts)
 
 git-code-debt
 =============
