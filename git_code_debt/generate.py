@@ -7,7 +7,6 @@ import collections
 import io
 import itertools
 import multiprocessing.pool
-import os
 import os.path
 import sqlite3
 
