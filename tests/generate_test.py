@@ -12,7 +12,7 @@ import pytest
 from git_code_debt.generate import _get_metrics_inner
 from git_code_debt.generate import create_schema
 from git_code_debt.generate import get_options_from_config
-from git_code_debt.generate import increment_metric_values
+from git_code_debt.generate import increment_metrics
 from git_code_debt.generate import main
 from git_code_debt.generate import mapper
 from git_code_debt.generate import populate_metric_ids
@@ -26,14 +26,14 @@ from testing.utilities.cwd import cwd
 def test_increment_metrics_first_time():
     metric_values = collections.Counter()
     metrics = [Metric('foo', 1), Metric('bar', 2)]
-    increment_metric_values(metric_values, {'foo': 0, 'bar': 1}, metrics)
+    increment_metrics(metric_values, {'foo': 0, 'bar': 1}, metrics)
     assert metric_values == {0: 1, 1: 2}
 
 
 def test_increment_metrics_already_there():
     metric_values = collections.Counter({0: 2, 1: 3})
     metrics = [Metric('foo', 1), Metric('bar', 2)]
-    increment_metric_values(metric_values, {'foo': 0, 'bar': 1}, metrics)
+    increment_metrics(metric_values, {'foo': 0, 'bar': 1}, metrics)
     assert metric_values == {0: 3, 1: 5}
 
 
@@ -64,8 +64,9 @@ def square(x):
 
 @pytest.mark.parametrize('jobs', (1, 4))
 def test_mapper(jobs):
-    ret = tuple(mapper(jobs)(square, (3, 5, 9)))
-    assert ret == (9, 25, 81)
+    with mapper(jobs) as do_map:
+        ret = tuple(do_map(square, (3, 5, 9)))
+        assert ret == (9, 25, 81)
 
 
 def test_generate_integration(sandbox, cloneable):

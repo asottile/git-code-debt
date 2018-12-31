@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 import argparse
 import collections
+import contextlib
 import io
 import itertools
 import multiprocessing.pool
@@ -44,7 +45,7 @@ def get_metrics(commit, diff, metric_parsers, exclude):
     return tuple(get_all_metrics(file_diff_stats))
 
 
-def increment_metric_values(metric_values, metric_mapping, metrics):
+def increment_metrics(metric_values, metric_mapping, metrics):
     metric_values.update({metric_mapping[m.name]: m.value for m in metrics})
 
 
@@ -57,11 +58,13 @@ def _get_metrics_inner(mp_args):
     return get_metrics(commit, diff, metric_parsers, exclude)
 
 
+@contextlib.contextmanager
 def mapper(jobs):
     if jobs == 1:
-        return map
+        yield map
     else:
-        return multiprocessing.Pool(jobs).imap
+        with contextlib.closing(multiprocessing.Pool(jobs)) as pool:
+            yield pool.imap
 
 
 def update_has_data(db, metrics, metric_mapping, has_data):
@@ -112,14 +115,14 @@ def load_data(
                 itertools.repeat(metric_parsers),
                 itertools.repeat(exclude),
             )
-            do_map = mapper(jobs)
-            for commit, metrics in six.moves.zip(
-                    commits, do_map(_get_metrics_inner, mp_args),
-            ):
-                update_has_data(db, metrics, metric_mapping, has_data)
-                increment_metric_values(metric_values, metric_mapping, metrics)
-                insert_metric_values(db, metric_values, has_data, commit)
-                insert_metric_changes(db, metrics, metric_mapping, commit)
+            with mapper(jobs) as do_map:
+                for commit, metrics in six.moves.zip(
+                        commits, do_map(_get_metrics_inner, mp_args),
+                ):
+                    update_has_data(db, metrics, metric_mapping, has_data)
+                    increment_metrics(metric_values, metric_mapping, metrics)
+                    insert_metric_values(db, metric_values, has_data, commit)
+                    insert_metric_changes(db, metrics, metric_mapping, commit)
 
 
 def create_schema(db):
