@@ -14,13 +14,9 @@
 # NOTE: metrics and metric_expressions may be omitted
 
 Groups:
-    - Cheetah:
-        metrics: ['TotalLinesOfCode_Template']
-        metric_expressions:
-            - ^.*Cheetah.*$
     - Python:
         metric_expressions:
-            - ^.*Python.*$
+            - (?i)^.*Python.*$
     - CurseWords:
         metric_expressions:
             - ^TotalCurseWords.*$
