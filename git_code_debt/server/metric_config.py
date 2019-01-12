@@ -4,8 +4,6 @@ from __future__ import unicode_literals
 import collections
 import re
 
-CONFIG_NAMESPACE = 'metric_config'
-
 
 class Group(collections.namedtuple(
         'Group', ('name', 'metrics', 'metric_expressions'),
