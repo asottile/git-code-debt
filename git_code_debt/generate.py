@@ -86,8 +86,8 @@ def load_data(
     metric_parsers = get_metric_parsers_from_args(package_names, skip_defaults)
 
     with sqlite3.connect(database_file) as db:
-        metric_mapping = get_metric_mapping(db)  # type: Dict[str, int]
-        has_data = get_metric_has_data(db)  # type: Dict[int, bool]
+        metric_mapping = get_metric_mapping(db)
+        has_data = get_metric_has_data(db)
 
         repo_parser = RepoParser(repo)
 
@@ -100,7 +100,7 @@ def load_data(
                 return
 
             # Maps metric_id to a running value
-            metric_values = collections.Counter()  # type: Counter[int]
+            metric_values = collections.Counter()
 
             # Grab the state of our metrics at the last place
             compare_commit = None
