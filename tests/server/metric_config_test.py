@@ -53,22 +53,30 @@ def test_Group_contains_by_regex():
 def test_get_groups_from_yaml_smoke():
     # Grapped from sample run
     groups_yaml = [
-        {'Cheetah': {
-            'metrics': [],
-            'metric_expressions': ['^.*Cheetah.*$'],
-        }},
-        {'Python': {
-            'metrics': [],
-            'metric_expressions': ['^.*Python.*$'],
-        }},
-        {'CurseWords': {
-            'metrics': [],
-            'metric_expressions': ['^TotalCurseWords.*$'],
-        }},
-        {'LinesOfCode': {
-            'metrics': [],
-            'metric_expressions': ['^TotalLinesOfCode.*$'],
-        }},
+        {
+            'Cheetah': {
+                'metrics': [],
+                'metric_expressions': ['^.*Cheetah.*$'],
+            },
+        },
+        {
+            'Python': {
+                'metrics': [],
+                'metric_expressions': ['^.*Python.*$'],
+            },
+        },
+        {
+            'CurseWords': {
+                'metrics': [],
+                'metric_expressions': ['^TotalCurseWords.*$'],
+            },
+        },
+        {
+            'LinesOfCode': {
+                'metrics': [],
+                'metric_expressions': ['^TotalLinesOfCode.*$'],
+            },
+        },
     ]
 
     groups = _get_groups_from_yaml(groups_yaml)

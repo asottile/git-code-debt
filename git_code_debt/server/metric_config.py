@@ -5,9 +5,11 @@ import collections
 import re
 
 
-class Group(collections.namedtuple(
-        'Group', ('name', 'metrics', 'metric_expressions'),
-)):
+class Group(
+        collections.namedtuple(
+            'Group', ('name', 'metrics', 'metric_expressions'),
+        ),
+):
     __slots__ = ()
 
     def contains(self, metric_name):
@@ -53,9 +55,12 @@ def _get_commit_links_from_yaml(yaml):
     return tuple(sorted(yaml.items()))
 
 
-class Config(collections.namedtuple(
-    'Config', ('color_overrides', 'commit_links', 'groups', 'widget_metrics'),
-)):
+class Config(
+        collections.namedtuple(
+            'Config',
+            ('color_overrides', 'commit_links', 'groups', 'widget_metrics'),
+        ),
+):
     __slots__ = ()
 
     @classmethod

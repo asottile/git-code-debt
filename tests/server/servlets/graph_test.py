@@ -13,10 +13,12 @@ from testing.assertions.response import assert_redirect
 
 
 def test_all_data(server_with_data):
-    resp = server_with_data.server.client.get(flask.url_for(
-        'graph.all_data',
-        metric_name=PythonImportCount.__name__,
-    ))
+    resp = server_with_data.server.client.get(
+        flask.url_for(
+            'graph.all_data',
+            metric_name=PythonImportCount.__name__,
+        ),
+    )
 
     # Should redirect to a show url
     assert_redirect(
@@ -38,10 +40,12 @@ def test_all_data(server_with_data):
 
 
 def test_all_data_no_data_for_metric(server_with_data):
-    resp = server_with_data.server.client.get(flask.url_for(
-        'graph.all_data',
-        metric_name=SymlinkCount.__name__,
-    ))
+    resp = server_with_data.server.client.get(
+        flask.url_for(
+            'graph.all_data',
+            metric_name=SymlinkCount.__name__,
+        ),
+    )
 
     # Should redirect to a show url
     assert_redirect(
@@ -52,10 +56,12 @@ def test_all_data_no_data_for_metric(server_with_data):
 
 
 def test_all_data_no_data(server):
-    resp = server.client.get(flask.url_for(
-        'graph.all_data',
-        metric_name=PythonImportCount.__name__,
-    ))
+    resp = server.client.get(
+        flask.url_for(
+            'graph.all_data',
+            metric_name=PythonImportCount.__name__,
+        ),
+    )
 
     # Should redirect to start of 0
     assert_redirect(
@@ -67,32 +73,38 @@ def test_all_data_no_data(server):
 
 def test_show(server_with_data):
     timestamp = server_with_data.cloneable_with_commits.commits[0].date
-    resp = server_with_data.server.client.get(flask.url_for(
-        'graph.show',
-        metric_name=PythonImportCount.__name__,
-        start=six.text_type(timestamp - 1000),
-        end=six.text_type(timestamp + 1000),
-    ))
+    resp = server_with_data.server.client.get(
+        flask.url_for(
+            'graph.show',
+            metric_name=PythonImportCount.__name__,
+            start=six.text_type(timestamp - 1000),
+            end=six.text_type(timestamp + 1000),
+        ),
+    )
     assert_no_response_errors(resp)
 
 
 def test_show_succeeds_for_empty_range(server):
-    resp = server.client.get(flask.url_for(
-        'graph.show',
-        metric_name=PythonImportCount.__name__,
-        start='0',
-        end='0',
-    ))
+    resp = server.client.get(
+        flask.url_for(
+            'graph.show',
+            metric_name=PythonImportCount.__name__,
+            start='0',
+            end='0',
+        ),
+    )
     assert_no_response_errors(resp)
 
 
 def test_renders_description(server):
-    resp = server.client.get(flask.url_for(
-        'graph.show',
-        metric_name=BinaryFileCount.__name__,
-        start='0',
-        end='0',
-    ))
+    resp = server.client.get(
+        flask.url_for(
+            'graph.show',
+            metric_name=BinaryFileCount.__name__,
+            start='0',
+            end='0',
+        ),
+    )
     assert_no_response_errors(resp)
     desc = resp.pq.find('.description')
     expected = 'Counts the number of files considered to be binary by git.'

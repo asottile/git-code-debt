@@ -4,9 +4,11 @@ from __future__ import unicode_literals
 import collections
 
 
-class CommitDelta(collections.namedtuple(
-        'CommitDelta', ('metric_name', 'classname', 'delta'),
-)):
+class CommitDelta(
+        collections.namedtuple(
+            'CommitDelta', ('metric_name', 'classname', 'delta'),
+        ),
+):
     __slots__ = ()
 
     @classmethod

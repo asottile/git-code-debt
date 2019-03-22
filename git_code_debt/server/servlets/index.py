@@ -28,16 +28,18 @@ DATE_NAMES_TO_TIMEDELTAS = (
 Group = collections.namedtuple('Group', ('name', 'metrics'))
 
 
-class Metric(collections.namedtuple(
-        'Metric',
-        (
-            'name',
-            'color_override',
-            'current_value',
-            'historic_deltas',
-            'all_data_url',
+class Metric(
+        collections.namedtuple(
+            'Metric',
+            (
+                'name',
+                'color_override',
+                'current_value',
+                'historic_deltas',
+                'all_data_url',
+            ),
         ),
-)):
+):
     __slots__ = ()
 
     @property
