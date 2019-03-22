@@ -54,9 +54,11 @@ def all_data(metric_name):
     earliest_timestamp = logic.get_first_data_timestamp(metric_name)
     now = datetime.datetime.today()
 
-    return flask.redirect(flask.url_for(
-        'graph.show',
-        metric_name=metric_name,
-        start=str(earliest_timestamp),
-        end=str(to_timestamp(now)),
-    ))
+    return flask.redirect(
+        flask.url_for(
+            'graph.show',
+            metric_name=metric_name,
+            start=str(earliest_timestamp),
+            end=str(to_timestamp(now)),
+        ),
+    )

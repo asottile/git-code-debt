@@ -33,10 +33,12 @@ def test_redirect_not_a_redirect():
 
 def test_redirect_custom_status_code():
     assert_redirect(
-        auto_namedtuple(response=auto_namedtuple(
-            status_code=303,
-            location='/foo',
-        )),
+        auto_namedtuple(
+            response=auto_namedtuple(
+                status_code=303,
+                location='/foo',
+            ),
+        ),
         '/foo',
         {},
         redirect_status_code=303,
@@ -46,10 +48,12 @@ def test_redirect_custom_status_code():
 def test_redirect_wrong_path():
     with pytest.raises(AssertionError):
         assert_redirect(
-            auto_namedtuple(response=auto_namedtuple(
-                status_code=302,
-                location='/foo',
-            )),
+            auto_namedtuple(
+                response=auto_namedtuple(
+                    status_code=302,
+                    location='/foo',
+                ),
+            ),
             '/bar',
             {},
         )
@@ -58,10 +62,12 @@ def test_redirect_wrong_path():
 def test_redirect_wrong_query():
     with pytest.raises(AssertionError):
         assert_redirect(
-            auto_namedtuple(response=auto_namedtuple(
-                status_code=302,
-                location='/foo?bar=baz',
-            )),
+            auto_namedtuple(
+                response=auto_namedtuple(
+                    status_code=302,
+                    location='/foo?bar=baz',
+                ),
+            ),
             '/foo',
             {'bar': ['biz']},
         )
@@ -69,10 +75,12 @@ def test_redirect_wrong_query():
 
 def test_correct_redirect():
     assert_redirect(
-        auto_namedtuple(response=auto_namedtuple(
-            status_code=302,
-            location='/foo?bar=baz',
-        )),
+        auto_namedtuple(
+            response=auto_namedtuple(
+                status_code=302,
+                location='/foo?bar=baz',
+            ),
+        ),
         '/foo',
         {'bar': ['baz']},
     )

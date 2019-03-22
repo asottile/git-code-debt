@@ -21,9 +21,11 @@ def show(metric_name, start_timestamp, end_timestamp):
     end_timestamp = int(end_timestamp)
     metric_info = logic.get_metric_info(flask.g.db, metric_name)
 
-    metric_changes = sorted(logic.get_major_changes_for_metric(
-        flask.g.db, start_timestamp, end_timestamp, metric_info.id,
-    ))
+    metric_changes = sorted(
+        logic.get_major_changes_for_metric(
+            flask.g.db, start_timestamp, end_timestamp, metric_info.id,
+        ),
+    )
     metric_changes = [
         (
             datetime.datetime.fromtimestamp(timestamp).strftime(

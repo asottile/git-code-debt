@@ -21,16 +21,18 @@ SCHEMA = cfgv.Map(
 )
 
 
-class GenerateOptions(collections.namedtuple(
-        'GenerateOptions',
-        (
-            'skip_default_metrics',
-            'metric_package_names',
-            'repo',
-            'database',
-            'exclude',
+class GenerateOptions(
+        collections.namedtuple(
+            'GenerateOptions',
+            (
+                'skip_default_metrics',
+                'metric_package_names',
+                'repo',
+                'database',
+                'exclude',
+            ),
         ),
-)):
+):
     @classmethod
     def from_yaml(cls, dct):
         dct = cfgv.apply_defaults(cfgv.validate(dct, SCHEMA), SCHEMA)
