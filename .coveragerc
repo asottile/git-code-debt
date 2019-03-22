@@ -6,6 +6,8 @@ omit =
     /usr/*
     setup.py
     *_mako
+    # https://github.com/pallets/werkzeug/issues/1487
+    *generated
 
 [report]
 show_missing = True
