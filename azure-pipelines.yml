@@ -13,6 +13,7 @@ resources:
       ref: refs/tags/v0.0.8
 
 jobs:
+- template: job--pre-commit.yml@asottile
 - template: job--python-tox.yml@asottile
   parameters:
     toxenvs: [py37]
@@ -20,7 +21,6 @@ jobs:
     name_postfix: _latest_git
     pre_test:
     - template: step--git-install.yml
-
 - template: job--python-tox.yml@asottile
   parameters:
     toxenvs: [py27, py36, py37]
