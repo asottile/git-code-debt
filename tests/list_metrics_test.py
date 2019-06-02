@@ -1,32 +1,23 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-import mock
-import pytest
-import six
-
 from git_code_debt.list_metrics import color
 from git_code_debt.list_metrics import CYAN
 from git_code_debt.list_metrics import main
 from git_code_debt.list_metrics import NORMAL
 
 
-@pytest.fixture
-def print_mock():
-    with mock.patch.object(six.moves.builtins, 'print') as print_mock:
-        yield print_mock
-
-
-def test_list_metrics_smoke(print_mock):
+def test_list_metrics_smoke(capsys):
     # This test is just to make sure that it doesn't fail catastrophically
     main([])
-    assert print_mock.called
+    assert capsys.readouterr().out
 
 
-def test_list_metrics_no_color_smoke(print_mock):
+def test_list_metrics_no_color_smoke(capsys):
     main(['--color', 'never'])
-    calls_args = [call[0][0] for call in print_mock.call_args_list]
-    assert all(['\033' not in calls_args])
+    out, err = capsys.readouterr()
+    assert '\033' not in out
+    assert '\033' not in err
 
 
 def test_color_no_color():

@@ -5,7 +5,6 @@ import io
 import json
 
 import flask
-import yaml
 
 from git_code_debt.discovery import get_metric_parsers_from_args
 from git_code_debt.generate import get_metrics
@@ -14,6 +13,7 @@ from git_code_debt.repo_parser import Commit
 from git_code_debt.server.presentation.commit_delta import CommitDelta
 from git_code_debt.server.presentation.delta import Delta
 from git_code_debt.server.render_mako import render_template
+from git_code_debt.util import yaml
 
 
 widget = flask.Blueprint('widget', __name__)

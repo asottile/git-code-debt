@@ -9,7 +9,6 @@ import sqlite3
 
 import flask
 import pkg_resources
-import yaml
 
 from git_code_debt.server.metric_config import Config
 from git_code_debt.server.servlets.changes import changes
@@ -18,6 +17,7 @@ from git_code_debt.server.servlets.graph import graph
 from git_code_debt.server.servlets.index import index
 from git_code_debt.server.servlets.status import status
 from git_code_debt.server.servlets.widget import widget
+from git_code_debt.util import yaml
 
 
 app = flask.Flask(__name__)
