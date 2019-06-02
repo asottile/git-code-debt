@@ -10,12 +10,12 @@ import subprocess
 
 import pytest
 import six
-import yaml
 
 from git_code_debt.generate import create_schema
 from git_code_debt.generate import populate_metric_ids
 from git_code_debt.repo_parser import Commit
 from git_code_debt.repo_parser import COMMIT_FORMAT
+from git_code_debt.util import yaml
 from git_code_debt.util.subprocess import cmd_output
 from testing.utilities.auto_namedtuple import auto_namedtuple
 from testing.utilities.cwd import cwd
@@ -46,7 +46,7 @@ class Sandbox(collections.namedtuple('Sandbox', ['directory'])):
     def gen_config(self, **data):
         path = os.path.join(self.directory, 'generate_config.yaml')
         with io.open(path, 'w') as f:
-            yaml.safe_dump(
+            yaml.dump(
                 dict({'database': self.db_path}, **data),
                 f,
                 encoding=None,

@@ -13,7 +13,6 @@ import sqlite3
 
 import pkg_resources
 import six
-import yaml
 
 from git_code_debt import options
 from git_code_debt.discovery import get_metric_parsers_from_args
@@ -24,6 +23,7 @@ from git_code_debt.logic import get_metric_mapping
 from git_code_debt.logic import get_metric_values
 from git_code_debt.logic import get_previous_sha
 from git_code_debt.repo_parser import RepoParser
+from git_code_debt.util import yaml
 from git_code_debt.write_logic import insert_metric_changes
 from git_code_debt.write_logic import insert_metric_values
 
