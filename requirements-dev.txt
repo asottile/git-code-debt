@@ -1,6 +1,5 @@
 coverage
 mock
-pre-commit
 pyquery
 pytest
 pytest-env
