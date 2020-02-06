@@ -64,7 +64,7 @@ $ git-code-debt-generate
 
 
 The simplest way to write your own custom metrics is to extend
-`git_code_debt.metrics.base.SimpleLineCounterBase`
+`git_code_debt.metrics.base.SimpleLineCounterBase`.
 
 
 Here's what the base class looks like
@@ -106,6 +106,21 @@ class Python__init__LineCount(SimpleLineCounterBase):
     def line_matches_metric(self, line, file_diff_stat):
         # All lines in __init__.py match
         return True
+```
+
+An additional class is provided which feeds lines as text
+(`SimpleLineCounterBase` presents them as `bytes`): `TextLineCounterBase`.
+Here is an example metric using that base class:
+
+```python
+from git_code_debt.metrics.base import TextLineCounterBase
+
+
+class XXXLineCount(TextLineCounterBase):
+    """Counts the number of lines which are XXX comments"""
+
+    def text_line_matches_metric(self, line, file_diff_stat):
+        return '# XXX' in line
 ```
 
 More complex metrics can extend `DiffParserBase`
