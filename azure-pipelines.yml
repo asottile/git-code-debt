@@ -23,5 +23,15 @@ jobs:
     - template: step--git-install.yml
 - template: job--python-tox.yml@asottile
   parameters:
+    toxenvs: [pypy, pypy3]
+    os: linux
+    name_postfix: _pypy
+    pre_test:
+    - script: |
+        sudo apt-get update
+        sudo apt-get install -y --no-install-recommends libxml2-dev libxslt1-dev
+      displayName: install lxml dependencies
+- template: job--python-tox.yml@asottile
+  parameters:
     toxenvs: [py27, py36, py37]
     os: linux
