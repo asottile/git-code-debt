@@ -6,6 +6,7 @@ from git_code_debt.metric import Metric
 from git_code_debt.metrics.base import DiffParserBase
 from git_code_debt.metrics.base import MetricInfo
 from git_code_debt.metrics.base import SimpleLineCounterBase
+from git_code_debt.metrics.base import TextLineCounterBase
 from git_code_debt.repo_parser import Commit
 
 
@@ -50,3 +51,15 @@ def test_simple_base_counter():
 def test_includes_file_by_default():
     counter = SimpleLineCounterBase()
     assert counter.should_include_file(None)
+
+
+def test_text_line_counter_base():
+    class Counter(TextLineCounterBase):
+        def text_line_matches_metric(self, line, file_diff_stat):
+            return 'foo' in line
+
+    parser = Counter()
+    stats = [FileDiffStat('test.py', [b'hello', b'foo world'], [], 'ignored')]
+
+    metric, = parser.get_metrics_from_stat(Commit.blank, stats)
+    assert metric == Metric('Counter', 1)

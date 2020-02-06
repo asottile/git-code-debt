@@ -91,3 +91,14 @@ class SimpleLineCounterBase(DiffParserBase):
         :param FileDiffStat file_diff_stat:
         """
         raise NotImplementedError
+
+
+class TextLineCounterBase(SimpleLineCounterBase):
+    __metric__ = False
+
+    def text_line_matches_metric(self, line, file_diff_stat):
+        raise NotImplementedError
+
+    def line_matches_metric(self, line, file_diff_stat):
+        text = line.decode('UTF-8', 'ignore')
+        return self.text_line_matches_metric(text, file_diff_stat)
