@@ -1,8 +1,6 @@
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
-
 import argparse
+from typing import Optional
+from typing import Sequence
 
 from git_code_debt import options
 from git_code_debt.discovery import get_metric_parsers_from_args
@@ -13,14 +11,14 @@ CYAN = '\033[1;36m'
 NORMAL = '\033[0m'
 
 
-def color(text, color_value, color_setting):
+def color(text: str, color_value: str, color_setting: bool) -> str:
     if not color_setting:
         return text
+    else:
+        return f'{color_value}{text}{NORMAL}'
 
-    return '{}{}{}'.format(color_value, text, NORMAL)
 
-
-def main(argv=None):
+def main(argv: Optional[Sequence[str]] = None) -> int:
     parser = argparse.ArgumentParser(description='List metric parsers')
     # optional
     options.add_color(parser)
@@ -48,8 +46,9 @@ def main(argv=None):
             ),
         )
         for name, description in metric_parser_cls().get_metrics_info():
-            description = ': {}'.format(description) if description else ''
-            print('    {}{}'.format(name, description))
+            description = f': {description}' if description else ''
+            print(f'    {name}{description}')
+    return 0
 
 
 if __name__ == '__main__':

@@ -1,6 +1,3 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
 import flask
 
 from git_code_debt.server import logic
@@ -13,7 +10,7 @@ commit = flask.Blueprint('commit', __name__)
 
 
 @commit.route('/commit/<sha>')
-def show(sha):
+def show(sha: str) -> str:
     changes = logic.get_metric_changes(flask.g.db, sha)
 
     commit_deltas = sorted(

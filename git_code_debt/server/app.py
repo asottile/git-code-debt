@@ -1,11 +1,10 @@
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
-
 import argparse
 import os.path
 import shutil
 import sqlite3
+from typing import NoReturn
+from typing import Optional
+from typing import Sequence
 
 import flask
 import pkg_resources
@@ -29,24 +28,24 @@ app.register_blueprint(status)
 app.register_blueprint(widget)
 
 
-class AppContext(object):
+class AppContext:
     database_path = 'database.db'
-    config = None
+    config: Optional[Config] = None
 
 
 @app.before_request
-def before_request():
+def before_request() -> None:
     flask.g.config = AppContext.config
     flask.g.db = sqlite3.connect(AppContext.database_path)
 
 
 @app.teardown_request
-def teardown_request(_):
+def teardown_request(_: Optional[Exception]) -> None:
     flask.g.config = None
     flask.g.db.close()
 
 
-def create_metric_config_if_not_exists():
+def create_metric_config_if_not_exists() -> None:
     """Creates the sameple metric_config.yaml in the current directory if
     it does not exist.
     """
@@ -62,7 +61,7 @@ def create_metric_config_if_not_exists():
     )
 
 
-def main(argv=None):  # pragma: no cover (starts a web server)
+def main(argv: Optional[Sequence[str]] = None) -> NoReturn:  # pragma: no cover
     parser = argparse.ArgumentParser()
     parser.add_argument('database_path', type=str)
     parser.add_argument('-p', '--port', type=int, default=5000)
@@ -81,9 +80,9 @@ def main(argv=None):  # pragma: no cover (starts a web server)
     args = parser.parse_args(argv)
 
     if not os.path.exists(args.database_path):
-        print('Not found: {}'.format(args.database_path))
+        print(f'Not found: {args.database_path}')
         print('Use git-code-debt-generate to create a database.')
-        return 1
+        raise SystemExit(1)
 
     create_metric_config_if_not_exists()
     with open('metric_config.yaml') as f:
@@ -97,6 +96,7 @@ def main(argv=None):  # pragma: no cover (starts a web server)
         kwargs['threaded'] = False
 
     app.run('0.0.0.0', **kwargs)
+    raise SystemExit(1)
 
 
 if __name__ == '__main__':

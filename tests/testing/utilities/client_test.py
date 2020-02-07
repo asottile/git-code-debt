@@ -1,8 +1,6 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
+from unittest import mock
 
 import flask.testing
-import mock
 import pytest
 
 from testing.utilities.auto_namedtuple import auto_namedtuple

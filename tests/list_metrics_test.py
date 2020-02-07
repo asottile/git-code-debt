@@ -1,6 +1,3 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
 from git_code_debt.list_metrics import color
 from git_code_debt.list_metrics import CYAN
 from git_code_debt.list_metrics import main

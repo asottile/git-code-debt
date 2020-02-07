@@ -1,28 +1,37 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
 import collections
+import sqlite3
+from typing import Dict
+from typing import List
+from typing import NamedTuple
+from typing import Optional
+from typing import Tuple
 
 import flask
 
 
-Metric = collections.namedtuple('Metric', ('value', 'date'))
-MetricInfo = collections.namedtuple('MetricInfo', ('id', 'description'))
+class Metric(NamedTuple):
+    value: int
+    date: int
 
 
-def get_metric_ids(db):
+class MetricInfo(NamedTuple):
+    id: int
+    description: str
+
+
+def get_metric_ids(db: sqlite3.Connection) -> List[str]:
     query = 'SELECT name FROM metric_names WHERE has_data=1 ORDER BY name'
     res = db.execute(query).fetchall()
     return [name for name, in res]
 
 
-def get_metric_info(db, metric_name):
+def get_metric_info(db: sqlite3.Connection, metric_name: str) -> MetricInfo:
     query = 'SELECT id, description FROM metric_names WHERE name = ?'
     res = db.execute(query, (metric_name,)).fetchone()
     return MetricInfo(*res)
 
 
-def get_latest_sha():
+def get_latest_sha() -> Optional[str]:
     query = 'SELECT sha FROM metric_data ORDER BY timestamp DESC LIMIT 1'
     result = flask.g.db.execute(query).fetchone()
 
@@ -30,7 +39,7 @@ def get_latest_sha():
     return result[0] if result else None
 
 
-def get_sha_for_date(date):
+def get_sha_for_date(date: int) -> Optional[str]:
     result = flask.g.db.execute(
         '\n'.join((
             'SELECT',
@@ -48,7 +57,7 @@ def get_sha_for_date(date):
     return result[0] if result else None
 
 
-def get_metrics_for_sha(sha):
+def get_metrics_for_sha(sha: Optional[str]) -> Dict[str, int]:
     # For no sha, we default all metrics to 0
     if not sha:
         return collections.defaultdict(int)
@@ -69,8 +78,8 @@ def get_metrics_for_sha(sha):
     return collections.defaultdict(int, result)
 
 
-def metrics_for_dates(metric_id, dates):
-    def get_metric_for_timestamp(timestamp):
+def metrics_for_dates(metric_id: int, dates: Tuple[int, ...]) -> List[Metric]:
+    def get_metric_for_timestamp(timestamp: int) -> Metric:
         result = flask.g.db.execute(
             'SELECT running_value, timestamp\n'
             'FROM metric_data\n'
@@ -87,7 +96,10 @@ def metrics_for_dates(metric_id, dates):
     return [get_metric_for_timestamp(date) for date in dates]
 
 
-def get_first_data_timestamp(metric_name, db=None):
+def get_first_data_timestamp(
+        metric_name: str,
+        db: Optional[sqlite3.Connection] = None,
+) -> int:
     db = db or flask.g.db
 
     # Find the first change for that metric
@@ -106,7 +118,10 @@ def get_first_data_timestamp(metric_name, db=None):
         return first_timestamp[0]
 
 
-def get_metric_changes(db, sha):
+def get_metric_changes(
+        db: sqlite3.Connection,
+        sha: str,
+) -> List[Tuple[str, int]]:
     return db.execute(
         '\n'.join((
             'SELECT',
@@ -122,8 +137,11 @@ def get_metric_changes(db, sha):
 
 
 def get_major_changes_for_metric(
-        db, start_timestamp, end_timestamp, metric_id,
-):
+        db: sqlite3.Connection,
+        start_timestamp: int,
+        end_timestamp: int,
+        metric_id: int,
+) -> List[Tuple[int, str, int]]:
     return db.execute(
         '\n'.join((
             'SELECT',

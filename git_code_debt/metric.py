@@ -1,7 +1,6 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
-import collections
+from typing import NamedTuple
 
 
-Metric = collections.namedtuple('Metric', ('name', 'value'))
+class Metric(NamedTuple):
+    name: str
+    value: int

@@ -1,11 +1,16 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
 import inspect
 import pkgutil
+from types import ModuleType
+from typing import Any
+from typing import Callable
+from typing import Set
+from typing import Type
 
 
-def discover(package, cls_match_func):
+def discover(
+        package: ModuleType,
+        cls_match_func: Callable[[Type[Any]], bool],
+) -> Set[Type[Any]]:
     """Returns a set of classes in the directory matched by cls_match_func
 
     Args:
@@ -16,10 +21,11 @@ def discover(package, cls_match_func):
     matched_classes = set()
 
     for _, module_name, _ in pkgutil.walk_packages(
-            package.__path__,
+            # https://github.com/python/mypy/issues/1422
+            package.__path__,  # type: ignore
             prefix=package.__name__ + '.',
     ):
-        module = __import__(module_name, fromlist=[str('__trash')], level=0)
+        module = __import__(module_name, fromlist=['__trash'], level=0)
 
         # Check all the classes in that module
         for _, imported_class in inspect.getmembers(module, inspect.isclass):

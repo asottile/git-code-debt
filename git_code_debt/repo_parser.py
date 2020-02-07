@@ -1,30 +1,35 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
-import collections
 import contextlib
 import shutil
 import subprocess
 import tempfile
+from typing import Generator
+from typing import List
+from typing import NamedTuple
+from typing import Optional
 
 from git_code_debt.util.iter import chunk_iter
 from git_code_debt.util.subprocess import cmd_output
+from git_code_debt.util.subprocess import cmd_output_b
 
 
-Commit = collections.namedtuple('Commit', ('sha', 'date'))
-Commit.blank = Commit('0' * 40, 0)
+class Commit(NamedTuple):
+    sha: str
+    date: int
+
+
+BLANK_COMMIT = Commit('0' * 40, 0)
 
 COMMIT_FORMAT = '--format=%H%n%ct'
 
 
-class RepoParser(object):
+class RepoParser:
 
-    def __init__(self, git_repo):
+    def __init__(self, git_repo: str) -> None:
         self.git_repo = git_repo
-        self.tempdir = None
+        self.tempdir: Optional[str] = None
 
     @contextlib.contextmanager
-    def repo_checked_out(self):
+    def repo_checked_out(self) -> Generator[None, None, None]:
         assert not self.tempdir
         self.tempdir = tempfile.mkdtemp(suffix='temp-repo')
         try:
@@ -38,7 +43,7 @@ class RepoParser(object):
             shutil.rmtree(self.tempdir)
             self.tempdir = None
 
-    def get_commit(self, sha):
+    def get_commit(self, sha: str) -> Commit:
         output = cmd_output(
             'git', 'show', COMMIT_FORMAT, sha, cwd=self.tempdir,
         )
@@ -46,7 +51,7 @@ class RepoParser(object):
 
         return Commit(sha, int(date))
 
-    def get_commits(self, since_sha=None):
+    def get_commits(self, since_sha: Optional[str] = None) -> List[Commit]:
         """Returns a list of Commit objects.
 
         Args:
@@ -57,7 +62,7 @@ class RepoParser(object):
         cmd = ['git', 'log', '--first-parent', '--reverse', COMMIT_FORMAT]
         if since_sha:
             commits = [self.get_commit(since_sha)]
-            cmd.append('{}..HEAD'.format(since_sha))
+            cmd.append(f'{since_sha}..HEAD')
         else:
             commits = []
             cmd.append('HEAD')
@@ -69,17 +74,13 @@ class RepoParser(object):
 
         return commits
 
-    def get_original_commit(self, sha):
+    def get_original_commit(self, sha: str) -> bytes:
         assert self.tempdir
-        output = cmd_output(
-            'git', 'show', sha, cwd=self.tempdir, encoding=None,
-        )
-        return output
+        return cmd_output_b('git', 'show', sha, cwd=self.tempdir)
 
-    def get_commit_diff(self, previous_sha, sha):
+    def get_commit_diff(self, previous_sha: str, sha: str) -> bytes:
         assert self.tempdir
-        output = cmd_output(
+        return cmd_output_b(
             'git', 'diff', previous_sha, sha, '--no-renames',
-            cwd=self.tempdir, encoding=None,
+            cwd=self.tempdir,
         )
-        return output

@@ -1,6 +1,3 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
 import flask
 import pyquery
 
@@ -12,9 +9,9 @@ def test_changes_endpoint(server_with_data):
         flask.url_for(
             'changes.show',
             metric_name='PythonImportCount',
-            start_timestamp=0,
+            start_ts=0,
             # Some sufficiently large number to include all the data
-            end_timestamp=2 ** 62,
+            end_ts=2 ** 62,
         ),
     )
     assert_no_response_errors(resp)

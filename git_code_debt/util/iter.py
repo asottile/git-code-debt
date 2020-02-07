@@ -1,10 +1,16 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
 import itertools
+from typing import Generator
+from typing import Iterable
+from typing import Tuple
+from typing import TypeVar
+
+T = TypeVar('T')
 
 
-def chunk_iter(iterable, n):
+def chunk_iter(
+        iterable: Iterable[T],
+        n: int,
+) -> Generator[Tuple[T, ...], None, None]:
     """Yields an iterator in chunks
 
     For example you can do

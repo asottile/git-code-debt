@@ -1,9 +1,7 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
+import urllib.parse
+from unittest import mock
 
 import flask
-import mock
-import six
 
 from git_code_debt.metrics.binary_file_count import BinaryFileCount
 from git_code_debt.metrics.imports import PythonImportCount
@@ -32,8 +30,8 @@ def test_all_data(server_with_data):
     # the underlying function and give a fuzzy check here.  The important part
     # about this endpoint is it redirects to a show url and doesn't start at 0
     timestamp = server_with_data.cloneable_with_commits.commits[-1].date
-    parsed_qs = six.moves.urllib_parse.parse_qs(
-        six.moves.urllib_parse.urlparse(resp.response.location).query,
+    parsed_qs = urllib.parse.parse_qs(
+        urllib.parse.urlparse(resp.response.location).query,
     )
     assert int(parsed_qs['start'][0]) > 0
     assert int(parsed_qs['start'][0]) <= timestamp
@@ -77,8 +75,8 @@ def test_show(server_with_data):
         flask.url_for(
             'graph.show',
             metric_name=PythonImportCount.__name__,
-            start=six.text_type(timestamp - 1000),
-            end=six.text_type(timestamp + 1000),
+            start=str(timestamp - 1000),
+            end=str(timestamp + 1000),
         ),
     )
     assert_no_response_errors(resp)

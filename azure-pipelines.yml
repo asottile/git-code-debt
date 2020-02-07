@@ -23,7 +23,7 @@ jobs:
     - template: step--git-install.yml
 - template: job--python-tox.yml@asottile
   parameters:
-    toxenvs: [pypy, pypy3]
+    toxenvs: [pypy3]
     os: linux
     name_postfix: _pypy
     pre_test:
@@ -33,5 +33,5 @@ jobs:
       displayName: install lxml dependencies
 - template: job--python-tox.yml@asottile
   parameters:
-    toxenvs: [py27, py36, py37]
+    toxenvs: [py36, py37]
     os: linux

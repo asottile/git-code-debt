@@ -1,10 +1,8 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
+from git_code_debt.file_diff_stat import FileDiffStat
 from git_code_debt.metrics.base import SimpleLineCounterBase
 
 
-def is_python_import(line):
+def is_python_import(line: bytes) -> bool:
     line = line.lstrip()
     if line.startswith(b'import'):
         return True
@@ -13,7 +11,7 @@ def is_python_import(line):
     return False
 
 
-def is_template_import(line):
+def is_template_import(line: bytes) -> bool:
     line = line.lstrip()
     return (
         line.startswith(b'#') and
@@ -22,16 +20,24 @@ def is_template_import(line):
 
 
 class PythonImportCount(SimpleLineCounterBase):
-    def should_include_file(self, file_diff_stat):
+    def should_include_file(self, file_diff_stat: FileDiffStat) -> bool:
         return file_diff_stat.extension == b'.py'
 
-    def line_matches_metric(self, line, file_diff_stat):
+    def line_matches_metric(
+            self,
+            line: bytes,
+            file_diff_stat: FileDiffStat,
+    ) -> bool:
         return is_python_import(line)
 
 
 class CheetahTemplateImportCount(SimpleLineCounterBase):
-    def should_include_file(self, file_diff_stat):
+    def should_include_file(self, file_diff_stat: FileDiffStat) -> bool:
         return file_diff_stat.extension == b'.tmpl'
 
-    def line_matches_metric(self, line, file_diff_stat):
+    def line_matches_metric(
+            self,
+            line: bytes,
+            file_diff_stat: FileDiffStat,
+    ) -> bool:
         return is_template_import(line)

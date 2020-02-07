@@ -1,7 +1,5 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
+from unittest import mock
 
-import mock
 import pytest
 
 from testing.assertions.response import assert_no_response_errors

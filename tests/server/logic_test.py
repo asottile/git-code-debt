@@ -1,6 +1,3 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
 from git_code_debt import write_logic
 from git_code_debt.logic import get_metric_mapping
 from git_code_debt.metric import Metric
@@ -27,9 +24,9 @@ def insert_metric_changes(db, sha, change):
     metric_mapping = get_metric_mapping(db)
     write_logic.insert_metric_changes(
         db,
-        [Metric('PythonImportCount', change)],
+        (Metric('PythonImportCount', change),),
         metric_mapping,
-        Commit(sha, None),
+        Commit(sha, 0),
     )
 
 

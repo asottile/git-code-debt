@@ -5,7 +5,6 @@ repos:
     -   id: trailing-whitespace
     -   id: end-of-file-fixer
     -   id: check-docstring-first
-    -   id: check-json
     -   id: check-yaml
     -   id: debug-statements
     -   id: name-tests-test
@@ -23,15 +22,22 @@ repos:
     rev: v1.9.0
     hooks:
     -   id: reorder-python-imports
+        args: [--py3-plus]
 -   repo: https://github.com/asottile/pyupgrade
     rev: v1.26.2
     hooks:
     -   id: pyupgrade
+        args: [--py36-plus]
 -   repo: https://github.com/asottile/add-trailing-comma
     rev: v1.5.0
     hooks:
     -   id: add-trailing-comma
+        args: [--py36-plus]
 -   repo: https://github.com/asottile/setup-cfg-fmt
     rev: v1.6.0
     hooks:
     -   id: setup-cfg-fmt
+-   repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v0.761
+    hooks:
+    -   id: mypy

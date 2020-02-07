@@ -1,6 +1,3 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
 import datetime
 
 from git_code_debt.util.time import data_points_for_time_range

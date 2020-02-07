@@ -1,17 +1,24 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
+from typing import Generator
+from typing import List
+from typing import Tuple
 
+from git_code_debt.file_diff_stat import FileDiffStat
 from git_code_debt.file_diff_stat import SpecialFileType
 from git_code_debt.file_diff_stat import Status
 from git_code_debt.metric import Metric
 from git_code_debt.metrics.base import DiffParserBase
 from git_code_debt.metrics.base import MetricInfo
+from git_code_debt.repo_parser import Commit
 
 
 class SubmoduleCount(DiffParserBase):
     """Counts the number of git submodules in a repository."""
 
-    def get_metrics_from_stat(self, _, file_diff_stats):
+    def get_metrics_from_stat(
+            self,
+            _: Commit,
+            file_diff_stats: Tuple[FileDiffStat, ...],
+    ) -> Generator[Metric, None, None]:
         submodule_delta = 0
 
         for file_diff_stat in file_diff_stats:
@@ -29,5 +36,5 @@ class SubmoduleCount(DiffParserBase):
         if submodule_delta:
             yield Metric(type(self).__name__, submodule_delta)
 
-    def get_metrics_info(self):
+    def get_metrics_info(self) -> List[MetricInfo]:
         return [MetricInfo.from_class(type(self))]

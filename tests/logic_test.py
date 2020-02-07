@@ -1,6 +1,3 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
 from git_code_debt.discovery import get_metric_parsers
 from git_code_debt.generate import get_metrics_info
 from git_code_debt.logic import get_metric_mapping

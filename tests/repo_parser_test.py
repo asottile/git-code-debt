@@ -1,11 +1,7 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
 import os.path
+from unittest import mock
 
-import mock
 import pytest
-import six
 
 from git_code_debt import repo_parser
 from testing.utilities.auto_namedtuple import auto_namedtuple
@@ -40,7 +36,7 @@ def test_get_commits_all_of_them(checked_out_repo):
     with mock.patch.object(repo_parser, 'cmd_output') as cmd_output_mock:
         commit = repo_parser.Commit('sha', 123)
         cmd_output_mock.return_value = '\n'.join(
-            six.text_type(part) for part in commit
+            str(part) for part in commit
         ) + '\n'
         all_commits = checked_out_repo.repo_parser.get_commits()
         assert all_commits == [commit]
@@ -51,11 +47,11 @@ def test_get_commits_after_date(checked_out_repo):
         previous_sha = '29d0d321f43950fd2aa1d1df9fc81dee0e9046b3'
         commit = repo_parser.Commit(previous_sha, 123)
         cmd_output_mock.return_value = '\n'.join(
-            six.text_type(part) for part in commit
+            str(part) for part in commit
         ) + '\n'
         checked_out_repo.repo_parser.get_commits(previous_sha)
         assert (
-            '{}..HEAD'.format(previous_sha) in
+            f'{previous_sha}..HEAD' in
             cmd_output_mock.call_args[0]
         )
 

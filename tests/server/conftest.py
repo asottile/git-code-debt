@@ -1,9 +1,6 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
 import contextlib
+from unittest import mock
 
-import mock
 import pytest
 
 from git_code_debt.generate import main
@@ -14,7 +11,7 @@ from testing.utilities.auto_namedtuple import auto_namedtuple
 from testing.utilities.client import Client
 
 
-class GitCodeDebtServer(object):
+class GitCodeDebtServer:
     def __init__(self, client, sandbox):
         self.client = client
         self.sandbox = sandbox

@@ -1,6 +1,3 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
 import datetime
 import json
 
@@ -15,15 +12,13 @@ from git_code_debt.server.render_mako import render_template
 changes = flask.Blueprint('changes', __name__)
 
 
-@changes.route('/changes/<metric_name>/<start_timestamp>/<end_timestamp>')
-def show(metric_name, start_timestamp, end_timestamp):
-    start_timestamp = int(start_timestamp)
-    end_timestamp = int(end_timestamp)
+@changes.route('/changes/<metric_name>/<int:start_ts>/<int:end_ts>')
+def show(metric_name: str, start_ts: int, end_ts: int) -> str:
     metric_info = logic.get_metric_info(flask.g.db, metric_name)
 
-    metric_changes = sorted(
+    metric_changes_from_db = sorted(
         logic.get_major_changes_for_metric(
-            flask.g.db, start_timestamp, end_timestamp, metric_info.id,
+            flask.g.db, start_ts, end_ts, metric_info.id,
         ),
     )
     metric_changes = [
@@ -37,7 +32,7 @@ def show(metric_name, start_timestamp, end_timestamp):
                 color_overrides=flask.g.config.color_overrides,
             ),
         )
-        for timestamp, sha, value in metric_changes
+        for timestamp, sha, value in metric_changes_from_db
     ]
 
     override_classname = (

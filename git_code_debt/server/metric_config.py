@@ -1,25 +1,31 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
-import collections
 import re
+from typing import Any
+from typing import Dict
+from typing import FrozenSet
+from typing import List
+from typing import NamedTuple
+from typing import Pattern
+from typing import Tuple
 
 
-class Group(
-        collections.namedtuple(
-            'Group', ('name', 'metrics', 'metric_expressions'),
-        ),
-):
-    __slots__ = ()
+class Group(NamedTuple):
+    name: str
+    metrics: FrozenSet[str]
+    metric_expressions: Tuple[Pattern[str], ...]
 
-    def contains(self, metric_name):
+    def contains(self, metric_name: str) -> bool:
         return (
             metric_name in self.metrics or
             any(expr.search(metric_name) for expr in self.metric_expressions)
         )
 
     @classmethod
-    def from_yaml(cls, name, metrics, metric_expressions):
+    def from_yaml(
+            cls,
+            name: str,
+            metrics: List[str],
+            metric_expressions: List[str],
+    ) -> 'Group':
         if not metrics and not metric_expressions:
             raise TypeError(
                 'Group {} must define at least one of '
@@ -32,7 +38,7 @@ class Group(
         )
 
 
-def _get_groups_from_yaml(yaml):
+def _get_groups_from_yaml(yaml: List[Dict[str, Any]]) -> Tuple[Group, ...]:
     # A group dict maps it's name to a dict containing metrics and
     # metric_expressions
     # Here's an example yaml:
@@ -47,7 +53,9 @@ def _get_groups_from_yaml(yaml):
     )
 
 
-def _get_commit_links_from_yaml(yaml):
+def _get_commit_links_from_yaml(
+        yaml: Dict[str, str],
+) -> Tuple[Tuple[str, str], ...]:
     # The CommitLinks will look like
     # LinkName: 'link_value'
     # OtherLinkName: 'other_link_value'
@@ -55,16 +63,14 @@ def _get_commit_links_from_yaml(yaml):
     return tuple(sorted(yaml.items()))
 
 
-class Config(
-        collections.namedtuple(
-            'Config',
-            ('color_overrides', 'commit_links', 'groups', 'widget_metrics'),
-        ),
-):
-    __slots__ = ()
+class Config(NamedTuple):
+    color_overrides: FrozenSet[str]
+    commit_links: Tuple[Tuple[str, str], ...]
+    groups: Tuple[Group, ...]
+    widget_metrics: List[str]
 
     @classmethod
-    def from_data(cls, data):
+    def from_data(cls, data: Dict[str, Any]) -> 'Config':
         return cls(
             color_overrides=frozenset(data['ColorOverrides']),
             commit_links=_get_commit_links_from_yaml(data['CommitLinks']),
