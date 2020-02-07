@@ -1,6 +1,3 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
 import testing.testing_package.package_a
 import testing.testing_package.package_b
 from git_code_debt.util.discovery import discover

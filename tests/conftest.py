@@ -1,15 +1,10 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
-import collections
 import contextlib
-import io
 import os.path
 import sqlite3
 import subprocess
+from typing import NamedTuple
 
 import pytest
-import six
 
 from git_code_debt.generate import create_schema
 from git_code_debt.generate import populate_metric_ids
@@ -23,12 +18,12 @@ from testing.utilities.cwd import cwd
 
 @pytest.fixture
 def tempdir_factory(tmpdir):
-    class TmpdirFactory(object):
+    class TmpdirFactory:
         def __init__(self):
             self.tmpdir_count = 0
 
         def get(self):
-            path = tmpdir.join(six.text_type(self.tmpdir_count)).strpath
+            path = tmpdir.join(str(self.tmpdir_count)).strpath
             self.tmpdir_count += 1
             os.mkdir(path)
             return path
@@ -36,8 +31,8 @@ def tempdir_factory(tmpdir):
     yield TmpdirFactory()
 
 
-class Sandbox(collections.namedtuple('Sandbox', ['directory'])):
-    __slots__ = ()
+class Sandbox(NamedTuple):
+    directory: str
 
     @property
     def db_path(self):
@@ -45,7 +40,7 @@ class Sandbox(collections.namedtuple('Sandbox', ['directory'])):
 
     def gen_config(self, **data):
         path = os.path.join(self.directory, 'generate_config.yaml')
-        with io.open(path, 'w') as f:
+        with open(path, 'w') as f:
             yaml.dump(
                 dict({'database': self.db_path}, **data),
                 f,
@@ -65,7 +60,7 @@ def sandbox(tempdir_factory):
     ret = Sandbox(tempdir_factory.get())
     with ret.db() as db:
         create_schema(db)
-        populate_metric_ids(db, (), False)
+        populate_metric_ids(db, [], False)
 
     yield ret
 
@@ -92,12 +87,12 @@ def cloneable_with_commits(cloneable):
     def make_commit(filename, contents):
         # Make the graph tests more deterministic
         # import time; time.sleep(2)
-        with io.open(filename, 'w') as file_obj:
+        with open(filename, 'w') as file_obj:
             file_obj.write(contents)
 
         subprocess.check_call(('git', 'add', filename))
         subprocess.check_call((
-            'git', 'commit', '-m', 'Add {}'.format(filename),
+            'git', 'commit', '-m', f'Add {filename}',
         ))
         append_commit()
 

@@ -1,18 +1,21 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
+from typing import NamedTuple
+from typing import Set
 
-import collections
+from git_code_debt.server.presentation.delta import Delta
 
 
-class CommitDelta(
-        collections.namedtuple(
-            'CommitDelta', ('metric_name', 'classname', 'delta'),
-        ),
-):
-    __slots__ = ()
+class CommitDelta(NamedTuple):
+    metric_name: str
+    classname: str
+    delta: Delta
 
     @classmethod
-    def from_data(cls, metric_name, delta, color_overrides):
+    def from_data(
+            cls,
+            metric_name: str,
+            delta: Delta,
+            color_overrides: Set[str],
+    ) -> 'CommitDelta':
         return cls(
             metric_name,
             # TODO: duplicated in Metric

@@ -1,48 +1,34 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
-import collections
+import enum
 import os.path
 import re
+from typing import List
+from typing import NamedTuple
+from typing import Optional
 
 
-class Status(object):
-    ADDED = object()
-    DELETED = object()
-    ALREADY_EXISTING = object()
+Status = enum.Enum('Status', 'ADDED DELETED ALREADY_EXISTING')
+SpecialFileType = enum.Enum('SpecialFileType', 'SUBMODULE SYMLINK BINARY')
 
 
-class SpecialFileType(object):
-    SUBMODULE = object()
-    SYMLINK = object()
-    BINARY = object()
+class SpecialFile(NamedTuple):
+    file_type: SpecialFileType
+    added: Optional[bytes]
+    removed: Optional[bytes]
 
 
-SpecialFile = collections.namedtuple(
-    'SpecialFile', ('file_type', 'added', 'removed'),
-)
-
-
-class FileDiffStat(
-        collections.namedtuple(
-            'FileDiffStat',
-            ('path', 'lines_added', 'lines_removed', 'status', 'special_file'),
-        ),
-):
-    __slots__ = ()
-
-    def __new__(cls, *args, **kwargs):
-        # Default special_file to None in the case it is not provided
-        # (mostly for backwards compatibility)
-        kwargs.setdefault('special_file', None)
-        return super(FileDiffStat, cls).__new__(cls, *args, **kwargs)
+class FileDiffStat(NamedTuple):
+    path: bytes
+    lines_added: List[bytes]
+    lines_removed: List[bytes]
+    status: Status
+    special_file: Optional[SpecialFile] = None
 
     @property
-    def extension(self):
+    def extension(self) -> bytes:
         return os.path.splitext(self.path)[1]
 
     @property
-    def filename(self):
+    def filename(self) -> bytes:
         return os.path.split(self.path)[1]
 
 
@@ -50,7 +36,7 @@ SUBMODULE_MODE = b'160000'
 SYMLINK_MODE = b'120000'
 
 
-def _to_file_diff_stat(file_diff):
+def _to_file_diff_stat(file_diff: bytes) -> FileDiffStat:
     lines = file_diff.split(b'\n')
     diff_line_filename = lines[0].split()[-1].lstrip(b'b').lstrip(b'/')
     is_binary = False
@@ -144,8 +130,7 @@ def _to_file_diff_stat(file_diff):
 GIT_DIFF_RE = re.compile(b'^diff --git', flags=re.MULTILINE)
 
 
-def get_file_diff_stats_from_output(output):
-    assert type(output) is bytes, (type(output), output)
+def get_file_diff_stats_from_output(output: bytes) -> List[FileDiffStat]:
     files = GIT_DIFF_RE.split(output)
     assert not files[0].strip() or files[0].startswith(b'commit ')
     return [_to_file_diff_stat(file_diff) for file_diff in files[1:]]

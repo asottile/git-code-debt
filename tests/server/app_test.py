@@ -1,12 +1,13 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
+import pytest
 
 from git_code_debt.server.app import create_metric_config_if_not_exists
 from git_code_debt.server.app import main
 
 
 def test_file_does_not_exist():
-    assert main(argv=['i_dont_exist.db']) == 1
+    with pytest.raises(SystemExit) as excinfo:
+        main(argv=['i_dont_exist.db'])
+    assert excinfo.value.code == 1
 
 
 def test_create_metric_config_if_not_exists_existing(tmpdir):

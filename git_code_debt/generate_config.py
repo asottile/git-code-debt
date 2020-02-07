@@ -1,8 +1,9 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
-import collections
 import re
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import NamedTuple
+from typing import Pattern
 
 import cfgv
 
@@ -21,20 +22,15 @@ SCHEMA = cfgv.Map(
 )
 
 
-class GenerateOptions(
-        collections.namedtuple(
-            'GenerateOptions',
-            (
-                'skip_default_metrics',
-                'metric_package_names',
-                'repo',
-                'database',
-                'exclude',
-            ),
-        ),
-):
+class GenerateOptions(NamedTuple):
+    skip_default_metrics: bool
+    metric_package_names: List[str]
+    repo: str
+    database: str
+    exclude: Pattern[bytes]
+
     @classmethod
-    def from_yaml(cls, dct):
+    def from_yaml(cls, dct: Dict[str, Any]) -> 'GenerateOptions':
         dct = cfgv.apply_defaults(cfgv.validate(dct, SCHEMA), SCHEMA)
         return cls(
             skip_default_metrics=dct['skip_default_metrics'],

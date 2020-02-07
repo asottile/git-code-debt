@@ -1,11 +1,8 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
 import collections
-import io
 import os.path
 import re
 import sqlite3
+from typing import Counter
 
 import pytest
 
@@ -24,15 +21,15 @@ from testing.utilities.cwd import cwd
 
 
 def test_increment_metrics_first_time():
-    metric_values = collections.Counter()
-    metrics = [Metric('foo', 1), Metric('bar', 2)]
+    metric_values: Counter[int] = collections.Counter()
+    metrics = (Metric('foo', 1), Metric('bar', 2))
     increment_metrics(metric_values, {'foo': 0, 'bar': 1}, metrics)
     assert metric_values == {0: 1, 1: 2}
 
 
 def test_increment_metrics_already_there():
     metric_values = collections.Counter({0: 2, 1: 3})
-    metrics = [Metric('foo', 1), Metric('bar', 2)]
+    metrics = (Metric('foo', 1), Metric('bar', 2))
     increment_metrics(metric_values, {'foo': 0, 'bar': 1}, metrics)
     assert metric_values == {0: 3, 1: 5}
 
@@ -42,7 +39,7 @@ def test_get_metrics_inner_first_commit(cloneable_with_commits):
     with repo_parser.repo_checked_out():
         metrics = _get_metrics_inner((
             None, cloneable_with_commits.commits[0],
-            repo_parser, [LinesOfCodeParser], re.compile(b'^$'),
+            repo_parser, {LinesOfCodeParser}, re.compile(b'^$'),
         ))
         assert Metric(name='TotalLinesOfCode', value=0) in metrics
 
@@ -53,7 +50,7 @@ def test_get_metrics_inner_nth_commit(cloneable_with_commits):
         metrics = _get_metrics_inner((
             cloneable_with_commits.commits[-2],
             cloneable_with_commits.commits[-1],
-            repo_parser, [LinesOfCodeParser], re.compile(b'^$'),
+            repo_parser, {LinesOfCodeParser}, re.compile(b'^$'),
         ))
         assert Metric(name='TotalLinesOfCode', value=2) in metrics
 
@@ -137,7 +134,7 @@ def test_regression_for_issue_10(sandbox, cloneable):
 
 def test_moves_handled_properly(sandbox, cloneable):
     with cwd(cloneable):
-        with io.open('f', 'w') as f:
+        with open('f', 'w') as f:
             f.write('foo\nbar\nbaz\n')
         cmd_output('git', 'add', 'f')
         cmd_output('git', 'commit', '-m', 'add f')
@@ -150,7 +147,7 @@ def test_moves_handled_properly(sandbox, cloneable):
 
 def test_internal_zero_populated(sandbox, cloneable):
     with cwd(cloneable):
-        with io.open('f.py', 'w') as f:
+        with open('f.py', 'w') as f:
             f.write('# hello world\n')
         cmd_output('git', 'add', 'f.py')
         cmd_output('git', 'commit', '-m', 'add f')
@@ -211,7 +208,7 @@ def test_create_schema(tmpdir):
 def test_populate_metric_ids(tmpdir):
     with sqlite3.connect(tmpdir.join('db.db').strpath) as db:
         create_schema(db)
-        populate_metric_ids(db, (), False)
+        populate_metric_ids(db, [], False)
 
         results = db.execute('SELECT * FROM metric_names').fetchall()
         # Smoke test assertion

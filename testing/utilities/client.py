@@ -1,13 +1,11 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
 import json
+from typing import TYPE_CHECKING
 
 import flask.testing
 import pyquery
 
 
-class Response(object):
+class Response:
     """A Response wraps a response from a testing Client."""
 
     def __init__(self, response):
@@ -26,8 +24,14 @@ class Response(object):
         return json.loads(self.text)
 
 
-class Client(flask.testing.FlaskClient):
+if TYPE_CHECKING:
+    ClientBase = flask.testing.FlaskClient[Response]
+else:
+    ClientBase = flask.testing.FlaskClient
+
+
+class Client(ClientBase):
     """A Client wraps the client given by flask to add other utilities."""
 
     def open(self, *args, **kwargs):
-        return Response(super(Client, self).open(*args, **kwargs))
+        return Response(super().open(*args, **kwargs))

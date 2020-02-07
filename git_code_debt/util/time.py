@@ -1,14 +1,16 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import unicode_literals
-
 import calendar
+import datetime
+from typing import Tuple
 
 
-def to_timestamp(dt):
+def to_timestamp(dt: datetime.datetime) -> int:
     return calendar.timegm(dt.utctimetuple())
 
 
-def data_points_for_time_range(start_timestamp, end_timestamp, data_points=25):
+def data_points_for_time_range(
+        start_timestamp: int,
+        end_timestamp: int,
+        data_points: int = 25,
+) -> Tuple[int, ...]:
     interval = ((end_timestamp - start_timestamp) // data_points) or 1
     return tuple(range(start_timestamp, end_timestamp + interval, interval))

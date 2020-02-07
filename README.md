@@ -74,7 +74,7 @@ Here's what the base class looks like
 class SimpleLineCounterBase(DiffParserBase):
     # ...
 
-    def should_include_file(self, file_diff_stat):
+    def should_include_file(self, file_diff_stat: FileDiffStat) -> bool:
         """Implement me to return whether a filename should be included.
         By default, this returns True.
 
@@ -82,7 +82,7 @@ class SimpleLineCounterBase(DiffParserBase):
         """
         return True
 
-    def line_matches_metric(self, line, file_diff_stat):
+    def line_matches_metric(self, line: bytes, file_diff_stat: FileDiffStat) -> bool:
         """Implement me to return whether a line matches the metric.
 
         :param bytes line: Line in the file
@@ -100,10 +100,10 @@ from git_code_debt.metrics.base import SimpleLineCounterBase
 class Python__init__LineCount(SimpleLineCounterBase):
     """Counts the number of lines in __init__.py"""
 
-    def should_include_file(self, file_diff_stat):
+    def should_include_file(self, file_diff_stat: FileDiffStat) -> bool:
         return file_diff_stat.filename == b'__init__.py'
 
-    def line_matches_metric(self, line, file_diff_stat):
+    def line_matches_metric(self, line: bytes, file_diff_stat -> FileDiffStat) -> bool:
         # All lines in __init__.py match
         return True
 ```
@@ -119,7 +119,7 @@ from git_code_debt.metrics.base import TextLineCounterBase
 class XXXLineCount(TextLineCounterBase):
     """Counts the number of lines which are XXX comments"""
 
-    def text_line_matches_metric(self, line, file_diff_stat):
+    def text_line_matches_metric(self, line: str, file_diff_stat: FileDiffStat) -> bool:
         return '# XXX' in line
 ```
 
@@ -130,7 +130,7 @@ class DiffParserBase(object):
     # Specify __metric__ = False to not be included (useful for base classes)
     __metric__ = False
 
-    def get_metrics_from_stat(self, commit, file_diff_stats):
+    def get_metrics_from_stat(self, commit: Commit, file_diff_stats: Tuple[FileDiffStat, ...]) -> bool:
         """Implement me to yield Metric objects from the input list of
         FileStat objects.
 
@@ -143,7 +143,7 @@ class DiffParserBase(object):
         """
         raise NotImplementedError
 
-    def get_metrics_info(self):
+    def get_metrics_info(self) -> List[MetricInfo]:
         """Implement me to yield `MetricInfo` objects."""
         raise NotImplementedError
 ```

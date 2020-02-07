@@ -1,10 +1,7 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
 import contextlib
+from unittest import mock
 
 import flask
-import mock
 import pyquery
 
 from git_code_debt.server.app import AppContext

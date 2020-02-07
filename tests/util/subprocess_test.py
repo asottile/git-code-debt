@@ -1,25 +1,20 @@
-# -*- coding: UTF-8 -*-
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
 import pytest
-import six
 
 from git_code_debt.util.subprocess import CalledProcessError
 from git_code_debt.util.subprocess import cmd_output
+from git_code_debt.util.subprocess import cmd_output_b
 
 
 def test_subprocess_encoding():
     # Defaults to utf-8
-    ret = cmd_output('echo', '☃'.encode('UTF-8'))
-    assert type(ret) is six.text_type
+    ret = cmd_output('echo', '☃')
+    assert type(ret) is str
     assert ret == '☃\n'
 
 
 def test_no_encoding_gives_bytes():
-    ret = cmd_output('echo', '☃'.encode('UTF-8'), encoding=None)
-    assert type(ret) is bytes
-    assert ret == '☃\n'.encode('UTF-8')
+    ret = cmd_output_b('echo', '☃')
+    assert ret == '☃\n'.encode()
 
 
 def test_raises_on_nonzero():

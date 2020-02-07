@@ -1,7 +1,4 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
-import mock
+from unittest import mock
 
 from git_code_debt.server.presentation.commit_delta import CommitDelta
 

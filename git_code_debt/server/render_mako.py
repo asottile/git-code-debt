@@ -1,5 +1,4 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
+from typing import Any
 
 import mako.lookup
 import pkg_resources
@@ -14,6 +13,6 @@ template_lookup = mako.lookup.TemplateLookup(
 )
 
 
-def render_template(template_name, **env):
+def render_template(template_name: str, **env: Any) -> str:
     template = template_lookup.get_template(template_name)
     return template.render(**env)

@@ -1,13 +1,14 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import unicode_literals
-
-import collections
 import datetime
+from typing import Dict
+from typing import FrozenSet
+from typing import List
+from typing import NamedTuple
+from typing import Tuple
 
 import flask
 
 from git_code_debt.server import logic
+from git_code_debt.server.metric_config import Config
 from git_code_debt.server.presentation.delta import Delta
 from git_code_debt.server.render_mako import render_template
 from git_code_debt.util.time import to_timestamp
@@ -25,25 +26,15 @@ DATE_NAMES_TO_TIMEDELTAS = (
 )
 
 
-Group = collections.namedtuple('Group', ('name', 'metrics'))
-
-
-class Metric(
-        collections.namedtuple(
-            'Metric',
-            (
-                'name',
-                'color_override',
-                'current_value',
-                'historic_deltas',
-                'all_data_url',
-            ),
-        ),
-):
-    __slots__ = ()
+class Metric(NamedTuple):
+    name: str
+    color_override: bool
+    current_value: int
+    historic_deltas: Tuple[Delta, ...]
+    all_data_url: str
 
     @property
-    def classname(self):
+    def classname(self) -> str:
         if self.color_override:
             return 'color-override'
         else:
@@ -52,13 +43,13 @@ class Metric(
     @classmethod
     def from_data(
             cls,
-            metric_name,
-            today_timestamp,
-            offsets,
-            current_values,
-            metric_data,
-            color_overrides,
-    ):
+            metric_name: str,
+            today_timestamp: int,
+            offsets: List[Tuple[str, int]],
+            current_values: Dict[str, int],
+            metric_data: Dict[str, Dict[str, int]],
+            color_overrides: FrozenSet[str],
+    ) -> 'Metric':
         return cls(
             metric_name,
             metric_name in color_overrides,
@@ -82,14 +73,19 @@ class Metric(
         )
 
 
+class Group(NamedTuple):
+    name: str
+    metrics: Tuple[Metric, ...]
+
+
 def format_groups(
-        config,
-        metric_names,
-        today_timestamp,
-        offsets,
-        current_values,
-        metric_data,
-):
+        config: Config,
+        metric_names: List[str],
+        today_timestamp: int,
+        offsets: List[Tuple[str, int]],
+        current_values: Dict[str, int],
+        metric_data: Dict[str, Dict[str, int]],
+) -> List[Group]:
     metrics = {
         metric_name: Metric.from_data(
             metric_name,
@@ -131,7 +127,7 @@ def format_groups(
 
 
 @index.route('/')
-def show():
+def show() -> str:
     metric_names = logic.get_metric_ids(flask.g.db)
     today = datetime.datetime.today()
     today_timestamp = to_timestamp(today)

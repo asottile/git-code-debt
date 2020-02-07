@@ -1,23 +1,30 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
 import collections
+from typing import Dict
+from typing import Generator
+from typing import List
+from typing import Tuple
 
 from identify import identify
 
+from git_code_debt.file_diff_stat import FileDiffStat
 from git_code_debt.metric import Metric
 from git_code_debt.metrics.base import DiffParserBase
 from git_code_debt.metrics.base import MetricInfo
 from git_code_debt.metrics.common import ALL_TAGS
 from git_code_debt.metrics.common import UNKNOWN
+from git_code_debt.repo_parser import Commit
 
 
 class LinesOfCodeParser(DiffParserBase):
     """Counts lines of code in a repository, overall and by file types."""
 
-    def get_metrics_from_stat(self, _, file_diff_stats):
+    def get_metrics_from_stat(
+            self,
+            _: Commit,
+            file_diff_stats: Tuple[FileDiffStat, ...],
+    ) -> Generator[Metric, None, None]:
         total_lines = 0
-        lines_by_file_type = collections.defaultdict(int)
+        lines_by_file_type: Dict[str, int] = collections.defaultdict(int)
 
         for file_diff_stat in file_diff_stats:
             lines_changed = (
@@ -38,9 +45,9 @@ class LinesOfCodeParser(DiffParserBase):
         yield Metric('TotalLinesOfCode', total_lines)
         for tag, val in lines_by_file_type.items():
             if tag in ALL_TAGS and val:
-                yield Metric('TotalLinesOfCode_{}'.format(tag), val)
+                yield Metric(f'TotalLinesOfCode_{tag}', val)
 
-    def get_metrics_info(self):
-        metric_names = ['TotalLinesOfCode_{}'.format(tag) for tag in ALL_TAGS]
+    def get_metrics_info(self) -> List[MetricInfo]:
+        metric_names = [f'TotalLinesOfCode_{tag}' for tag in ALL_TAGS]
         metric_names.append('TotalLinesOfCode')
         return [MetricInfo(metric_name) for metric_name in metric_names]

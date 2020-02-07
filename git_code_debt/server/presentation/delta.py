@@ -1,8 +1,4 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import unicode_literals
-
-import collections
+from typing import NamedTuple
 
 
 SIGNS_TO_CLASSNAMES = {
@@ -12,11 +8,12 @@ SIGNS_TO_CLASSNAMES = {
 }
 
 
-class Delta(collections.namedtuple('Delta', ('url', 'value'))):
-    __slots__ = ()
+class Delta(NamedTuple):
+    url: str
+    value: int
 
     @property
-    def classname(self):
+    def classname(self) -> str:
         if not self.value:
             sign = 0
         else:

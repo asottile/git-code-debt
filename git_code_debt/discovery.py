@@ -1,11 +1,15 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
+from types import ModuleType
+from typing import Any
+from typing import List
+from typing import Sequence
+from typing import Set
+from typing import Type
 
 from git_code_debt.metrics.base import DiffParserBase
 from git_code_debt.util.discovery import discover
 
 
-def is_metric_cls(cls):
+def is_metric_cls(cls: Type[Any]) -> bool:
     """A metric class is defined as follows:
 
         - It inherits DiffParserBase
@@ -19,7 +23,10 @@ def is_metric_cls(cls):
     )
 
 
-def get_metric_parsers(metric_packages=tuple(), include_defaults=True):
+def get_metric_parsers(
+        metric_packages: Sequence[ModuleType] = (),
+        include_defaults: bool = True,
+) -> Set[Type[DiffParserBase]]:
     """Gets all of the metric parsers.
 
     Args:
@@ -40,7 +47,7 @@ def get_metric_parsers(metric_packages=tuple(), include_defaults=True):
     return metric_parsers
 
 
-def get_modules(module_names):
+def get_modules(module_names: List[str]) -> List[ModuleType]:
     """Returns module objects for each module name.  Has the side effect of
     importing each module.
 
@@ -51,12 +58,15 @@ def get_modules(module_names):
         Module objects for each module specified in module_names
     """
     return [
-        __import__(module_name, fromlist=[str('__trash__')])
+        __import__(module_name, fromlist=['__trash__'])
         for module_name in module_names
     ]
 
 
-def get_metric_parsers_from_args(metric_package_names, skip_defaults):
+def get_metric_parsers_from_args(
+        metric_package_names: List[str],
+        skip_defaults: bool,
+) -> Set[Type[DiffParserBase]]:
     packages = get_modules(metric_package_names)
     return get_metric_parsers(
         metric_packages=packages, include_defaults=not skip_defaults,

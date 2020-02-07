@@ -1,6 +1,3 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
 from git_code_debt.discovery import get_metric_parsers
 from git_code_debt.discovery import get_modules
 from git_code_debt.discovery import is_metric_cls
@@ -20,7 +17,7 @@ def test_is_metric_parser_not_DiffParserBase():
 
 
 def test_is_metric_parser_definitely_isnt_DiffParserBase():
-    class Bar(object):
+    class Bar:
         pass
 
     assert not is_metric_cls(Bar)
