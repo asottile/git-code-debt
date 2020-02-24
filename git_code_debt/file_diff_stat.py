@@ -21,26 +21,15 @@ class FileDiffStat(NamedTuple):
     lines_added: List[bytes]
     lines_removed: List[bytes]
     status: Status
-    special_file: Optional[SpecialFile]
+    special_file: Optional[SpecialFile] = None
 
+    @property
+    def extension(self) -> bytes:
+        return os.path.splitext(self.path)[1]
 
-FileDiffStat.__new__.__defaults__ = (None,)
-
-
-@property
-def extension(self) -> bytes:
-    return os.path.splitext(self.path)[1]
-
-
-FileDiffStat.extension = extension
-
-
-@property
-def filename(self) -> bytes:
-    return os.path.split(self.path)[1]
-
-
-FileDiffStat.filename = filename
+    @property
+    def filename(self) -> bytes:
+        return os.path.split(self.path)[1]
 
 
 SUBMODULE_MODE = b'160000'
