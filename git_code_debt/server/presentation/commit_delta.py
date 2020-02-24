@@ -9,16 +9,20 @@ class CommitDelta(NamedTuple):
     classname: str
     delta: Delta
 
-    @classmethod
-    def from_data(
-            cls,
-            metric_name: str,
-            delta: Delta,
-            color_overrides: Set[str],
-    ) -> 'CommitDelta':
-        return cls(
-            metric_name,
-            # TODO: duplicated in Metric
-            'color-override' if metric_name in color_overrides else '',
-            delta,
-        )
+
+@classmethod
+def from_data(
+        cls,
+        metric_name: str,
+        delta: Delta,
+        color_overrides: Set[str],
+) -> 'CommitDelta':
+    return cls(
+        metric_name,
+        # TODO: duplicated in Metric
+        'color-override' if metric_name in color_overrides else '',
+        delta,
+    )
+
+
+CommitDelta.from_data = from_data

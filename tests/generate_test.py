@@ -2,7 +2,7 @@ import collections
 import os.path
 import re
 import sqlite3
-from typing import Counter
+from typing import TYPE_CHECKING
 
 import pytest
 
@@ -18,6 +18,9 @@ from git_code_debt.metrics.lines import LinesOfCodeParser
 from git_code_debt.repo_parser import RepoParser
 from git_code_debt.util.subprocess import cmd_output
 from testing.utilities.cwd import cwd
+
+if TYPE_CHECKING:
+    from typing import Counter
 
 
 def test_increment_metrics_first_time():
