@@ -21,7 +21,6 @@ from git_code_debt.util import yaml
 if TYPE_CHECKING:
     from typing import NoReturn
 
-
 app = flask.Flask(__name__)
 app.register_blueprint(changes)
 app.register_blueprint(commit)

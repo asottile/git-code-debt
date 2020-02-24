@@ -38,3 +38,7 @@ repos:
     rev: v1.6.0
     hooks:
     -   id: setup-cfg-fmt
+-   repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v0.761
+    hooks:
+    -   id: mypy

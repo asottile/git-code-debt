@@ -33,52 +33,44 @@ class Metric(NamedTuple):
     historic_deltas: Tuple[Delta, ...]
     all_data_url: str
 
+    @property
+    def classname(self) -> str:
+        if self.color_override:
+            return 'color-override'
+        else:
+            return ''
 
-@property
-def classname(self) -> str:
-    if self.color_override:
-        return 'color-override'
-    else:
-        return ''
-
-
-Metric.classname = classname
-
-
-@classmethod
-def from_data(
-        cls,
-        metric_name: str,
-        today_timestamp: int,
-        offsets: List[Tuple[str, int]],
-        current_values: Dict[str, int],
-        metric_data: Dict[str, Dict[str, int]],
-        color_overrides: FrozenSet[str],
-) -> 'Metric':
-    return cls(
-        metric_name,
-        metric_name in color_overrides,
-        current_values[metric_name],
-        tuple(
-            Delta(
-                flask.url_for(
-                    'graph.show',
-                    metric_name=metric_name,
-                    start=str(timestamp),
-                    end=str(today_timestamp),
-                ),
-                (
-                    current_values[metric_name] -
-                    metric_data[time_name][metric_name]
-                ),
-            )
-            for time_name, timestamp in offsets
-        ),
-        flask.url_for('graph.all_data', metric_name=metric_name),
-    )
-
-
-Metric.from_data = from_data
+    @classmethod
+    def from_data(
+            cls,
+            metric_name: str,
+            today_timestamp: int,
+            offsets: List[Tuple[str, int]],
+            current_values: Dict[str, int],
+            metric_data: Dict[str, Dict[str, int]],
+            color_overrides: FrozenSet[str],
+    ) -> 'Metric':
+        return cls(
+            metric_name,
+            metric_name in color_overrides,
+            current_values[metric_name],
+            tuple(
+                Delta(
+                    flask.url_for(
+                        'graph.show',
+                        metric_name=metric_name,
+                        start=str(timestamp),
+                        end=str(today_timestamp),
+                    ),
+                    (
+                        current_values[metric_name] -
+                        metric_data[time_name][metric_name]
+                    ),
+                )
+                for time_name, timestamp in offsets
+            ),
+            flask.url_for('graph.all_data', metric_name=metric_name),
+        )
 
 
 class Group(NamedTuple):

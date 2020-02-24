@@ -12,15 +12,11 @@ class Delta(NamedTuple):
     url: str
     value: int
 
+    @property
+    def classname(self) -> str:
+        if not self.value:
+            sign = 0
+        else:
+            sign = self.value // abs(self.value)
 
-@property
-def classname(self) -> str:
-    if not self.value:
-        sign = 0
-    else:
-        sign = self.value // abs(self.value)
-
-    return SIGNS_TO_CLASSNAMES[sign]
-
-
-Delta.classname = classname
+        return SIGNS_TO_CLASSNAMES[sign]

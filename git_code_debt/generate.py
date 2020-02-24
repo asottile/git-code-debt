@@ -6,6 +6,7 @@ import multiprocessing.pool
 import os.path
 import sqlite3
 from typing import Callable
+from typing import Counter
 from typing import Dict
 from typing import Generator
 from typing import Iterable
@@ -16,7 +17,6 @@ from typing import Sequence
 from typing import Set
 from typing import Tuple
 from typing import Type
-from typing import TYPE_CHECKING
 from typing import TypeVar
 
 import pkg_resources
@@ -38,9 +38,6 @@ from git_code_debt.repo_parser import RepoParser
 from git_code_debt.util import yaml
 from git_code_debt.write_logic import insert_metric_changes
 from git_code_debt.write_logic import insert_metric_values
-
-if TYPE_CHECKING:
-    from typing import Counter
 
 
 def get_metrics(
@@ -66,7 +63,7 @@ def get_metrics(
 
 
 def increment_metrics(
-        metric_values: 'Counter[int]',
+        metric_values: Counter[int],
         metric_mapping: Dict[str, int],
         metrics: Tuple[Metric, ...],
 ) -> None:

@@ -13,37 +13,29 @@ class Group(NamedTuple):
     metrics: FrozenSet[str]
     metric_expressions: Tuple[Pattern[str], ...]
 
-
-def contains(self, metric_name: str) -> bool:
-    return (
-        metric_name in self.metrics or
-        any(expr.search(metric_name) for expr in self.metric_expressions)
-    )
-
-
-Group.contains = contains
-
-
-@classmethod
-def from_yaml(
-        cls,
-        name: str,
-        metrics: List[str],
-        metric_expressions: List[str],
-) -> 'Group':
-    if not metrics and not metric_expressions:
-        raise TypeError(
-            'Group {} must define at least one of '
-            '`metrics` or `metric_expressions`'.format(name),
+    def contains(self, metric_name: str) -> bool:
+        return (
+            metric_name in self.metrics or
+            any(expr.search(metric_name) for expr in self.metric_expressions)
         )
-    return cls(
-        name,
-        frozenset(metrics),
-        tuple(re.compile(expr) for expr in metric_expressions),
-    )
 
-
-Group.from_yaml = from_yaml
+    @classmethod
+    def from_yaml(
+            cls,
+            name: str,
+            metrics: List[str],
+            metric_expressions: List[str],
+    ) -> 'Group':
+        if not metrics and not metric_expressions:
+            raise TypeError(
+                'Group {} must define at least one of '
+                '`metrics` or `metric_expressions`'.format(name),
+            )
+        return cls(
+            name,
+            frozenset(metrics),
+            tuple(re.compile(expr) for expr in metric_expressions),
+        )
 
 
 def _get_groups_from_yaml(yaml: List[Dict[str, Any]]) -> Tuple[Group, ...]:
@@ -77,15 +69,11 @@ class Config(NamedTuple):
     groups: Tuple[Group, ...]
     widget_metrics: List[str]
 
-
-@classmethod
-def from_data(cls, data: Dict[str, Any]) -> 'Config':
-    return cls(
-        color_overrides=frozenset(data['ColorOverrides']),
-        commit_links=_get_commit_links_from_yaml(data['CommitLinks']),
-        groups=_get_groups_from_yaml(data['Groups']),
-        widget_metrics=data['WidgetMetrics'],
-    )
-
-
-Config.from_data = from_data
+    @classmethod
+    def from_data(cls, data: Dict[str, Any]) -> 'Config':
+        return cls(
+            color_overrides=frozenset(data['ColorOverrides']),
+            commit_links=_get_commit_links_from_yaml(data['CommitLinks']),
+            groups=_get_groups_from_yaml(data['Groups']),
+            widget_metrics=data['WidgetMetrics'],
+        )

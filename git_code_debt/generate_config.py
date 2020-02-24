@@ -29,17 +29,13 @@ class GenerateOptions(NamedTuple):
     database: str
     exclude: Pattern[bytes]
 
-
-@classmethod
-def from_yaml(cls, dct: Dict[str, Any]) -> 'GenerateOptions':
-    dct = cfgv.apply_defaults(cfgv.validate(dct, SCHEMA), SCHEMA)
-    return cls(
-        skip_default_metrics=dct['skip_default_metrics'],
-        metric_package_names=dct['metric_package_names'],
-        repo=dct['repo'],
-        database=dct['database'],
-        exclude=re.compile(dct['exclude'].encode()),
-    )
-
-
-GenerateOptions.from_yaml = from_yaml
+    @classmethod
+    def from_yaml(cls, dct: Dict[str, Any]) -> 'GenerateOptions':
+        dct = cfgv.apply_defaults(cfgv.validate(dct, SCHEMA), SCHEMA)
+        return cls(
+            skip_default_metrics=dct['skip_default_metrics'],
+            metric_package_names=dct['metric_package_names'],
+            repo=dct['repo'],
+            database=dct['database'],
+            exclude=re.compile(dct['exclude'].encode()),
+        )
