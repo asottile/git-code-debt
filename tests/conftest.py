@@ -34,25 +34,37 @@ def tempdir_factory(tmpdir):
 class Sandbox(NamedTuple):
     directory: str
 
-    @property
-    def db_path(self):
-        return os.path.join(self.directory, 'db.db')
 
-    def gen_config(self, **data):
-        path = os.path.join(self.directory, 'generate_config.yaml')
-        with open(path, 'w') as f:
-            yaml.dump(
-                dict({'database': self.db_path}, **data),
-                f,
-                encoding=None,
-                default_flow_style=False,
-            )
-        return path
+@property
+def db_path(self):
+    return os.path.join(self.directory, 'db.db')
 
-    @contextlib.contextmanager
-    def db(self):
-        with sqlite3.connect(self.db_path) as db:
-            yield db
+
+Sandbox.db_path = db_path
+
+
+def gen_config(self, **data):
+    path = os.path.join(self.directory, 'generate_config.yaml')
+    with open(path, 'w') as f:
+        yaml.dump(
+            dict({'database': self.db_path}, **data),
+            f,
+            encoding=None,
+            default_flow_style=False,
+        )
+    return path
+
+
+Sandbox.gen_config = gen_config
+
+
+@contextlib.contextmanager
+def db(self):
+    with sqlite3.connect(self.db_path) as db:
+        yield db
+
+
+Sandbox.db = db
 
 
 @pytest.fixture

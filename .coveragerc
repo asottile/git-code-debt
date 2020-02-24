@@ -23,6 +23,7 @@ exclude_lines =
     # Ignore typing-related things
     ^if (False|TYPE_CHECKING):
     : \.\.\.$
+    -> ['"]?NoReturn['"]?:
 
     # Don't complain if non-runnable code isn't run:
     ^if __name__ == ['"]__main__['"]:$

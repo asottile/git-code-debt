@@ -12,11 +12,18 @@ from git_code_debt.repo_parser import Commit
 
 class MetricInfo(NamedTuple):
     name: str
-    description: str = ''
+    description: str
 
-    @classmethod
-    def from_class(cls, c: 'Type[DiffParserBase]') -> 'MetricInfo':
-        return cls(c.__name__, inspect.cleandoc(c.__doc__ or ''))
+
+MetricInfo.__new__.__defaults__ = ('',)
+
+
+@classmethod
+def from_class(cls, c: 'Type[DiffParserBase]') -> 'MetricInfo':
+    return cls(c.__name__, inspect.cleandoc(c.__doc__ or ''))
+
+
+MetricInfo.from_class = from_class
 
 
 class DiffParserBase:
