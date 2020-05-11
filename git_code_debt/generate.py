@@ -172,7 +172,7 @@ def create_schema(db: sqlite3.Connection) -> None:
 
     for sql_file in schema_files:
         resource_filename = os.path.join(schema_dir, sql_file)
-        with open(resource_filename, 'r') as resource:
+        with open(resource_filename) as resource:
             db.executescript(resource.read())
 
 
