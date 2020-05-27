@@ -1,6 +1,5 @@
 covdefaults
 coverage
-pre-commit
 pyquery
 pytest
 pytest-env
