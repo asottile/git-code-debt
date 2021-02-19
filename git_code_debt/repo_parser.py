@@ -1,5 +1,4 @@
 import contextlib
-import shutil
 import subprocess
 import tempfile
 from typing import Generator
@@ -31,17 +30,16 @@ class RepoParser:
     @contextlib.contextmanager
     def repo_checked_out(self) -> Generator[None, None, None]:
         assert not self.tempdir
-        self.tempdir = tempfile.mkdtemp(suffix='temp-repo')
-        try:
-            subprocess.check_call((
-                'git', 'clone',
-                '--no-checkout', '--quiet', '--shared',
-                self.git_repo, self.tempdir,
-            ))
-            yield
-        finally:
-            shutil.rmtree(self.tempdir)
-            self.tempdir = None
+        with tempfile.TemporaryDirectory(suffix='temp-repo') as self.tempdir:
+            try:
+                subprocess.check_call((
+                    'git', 'clone',
+                    '--no-checkout', '--quiet', '--shared',
+                    self.git_repo, self.tempdir,
+                ))
+                yield
+            finally:
+                self.tempdir = None
 
     def get_commit(self, sha: str) -> Commit:
         output = cmd_output(
