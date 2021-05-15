@@ -26,6 +26,7 @@ from git_code_debt.discovery import get_metric_parsers_from_args
 from git_code_debt.file_diff_stat import FileDiffStat
 from git_code_debt.file_diff_stat import get_file_diff_stats_from_output
 from git_code_debt.generate_config import GenerateOptions
+from git_code_debt.git_repo_parser import GitRepoParser
 from git_code_debt.logic import get_metric_has_data
 from git_code_debt.logic import get_metric_mapping
 from git_code_debt.logic import get_metric_values
@@ -118,6 +119,7 @@ def update_has_data(
 def load_data(
         database_file: str,
         repo: str,
+        repo_type: str,
         package_names: List[str],
         skip_defaults: bool,
         exclude: Pattern[bytes],
@@ -129,7 +131,8 @@ def load_data(
         metric_mapping = get_metric_mapping(db)
         has_data = get_metric_has_data(db)
 
-        repo_parser = RepoParser(repo)
+        if repo_type == 'git':
+            repo_parser = GitRepoParser(repo)
 
         with repo_parser.repo_checked_out():
             previous_sha = get_previous_sha(db)
@@ -237,6 +240,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     load_data(
         args.database,
         args.repo,
+        args.repo_type,
         args.metric_package_names,
         args.skip_default_metrics,
         args.exclude,

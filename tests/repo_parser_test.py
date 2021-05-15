@@ -3,12 +3,12 @@ from unittest import mock
 
 import pytest
 
-from git_code_debt import repo_parser
+from git_code_debt import git_repo_parser
 from testing.utilities.auto_namedtuple import auto_namedtuple
 
 
 def test_repo_checked_out(cloneable):
-    parser = repo_parser.RepoParser(cloneable)
+    parser = git_repo_parser.GitRepoParser(cloneable)
     assert parser.tempdir is None
 
     with parser.repo_checked_out():
@@ -24,7 +24,7 @@ def test_repo_checked_out(cloneable):
 
 @pytest.fixture
 def checked_out_repo(cloneable_with_commits):
-    parser = repo_parser.RepoParser(cloneable_with_commits.path)
+    parser = git_repo_parser.GitRepoParser(cloneable_with_commits.path)
     with parser.repo_checked_out():
         yield auto_namedtuple(
             repo_parser=parser,
@@ -33,8 +33,8 @@ def checked_out_repo(cloneable_with_commits):
 
 
 def test_get_commits_all_of_them(checked_out_repo):
-    with mock.patch.object(repo_parser, 'cmd_output') as cmd_output_mock:
-        commit = repo_parser.Commit('sha', 123)
+    with mock.patch.object(git_repo_parser, 'cmd_output') as cmd_output_mock:
+        commit = git_repo_parser.Commit('sha', 123)
         cmd_output_mock.return_value = '\n'.join(
             str(part) for part in commit
         ) + '\n'
@@ -43,9 +43,9 @@ def test_get_commits_all_of_them(checked_out_repo):
 
 
 def test_get_commits_after_date(checked_out_repo):
-    with mock.patch.object(repo_parser, 'cmd_output') as cmd_output_mock:
+    with mock.patch.object(git_repo_parser, 'cmd_output') as cmd_output_mock:
         previous_sha = '29d0d321f43950fd2aa1d1df9fc81dee0e9046b3'
-        commit = repo_parser.Commit(previous_sha, 123)
+        commit = git_repo_parser.Commit(previous_sha, 123)
         cmd_output_mock.return_value = '\n'.join(
             str(part) for part in commit
         ) + '\n'

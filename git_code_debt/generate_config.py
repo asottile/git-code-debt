@@ -14,6 +14,7 @@ SCHEMA = cfgv.Map(
 
     cfgv.Required('repo', cfgv.check_string),
     cfgv.Required('database', cfgv.check_string),
+    cfgv.Optional('repo_type', cfgv.check_one_of(['git']), 'git'),
     cfgv.Optional('skip_default_metrics', cfgv.check_bool, False),
     cfgv.Optional(
         'metric_package_names', cfgv.check_array(cfgv.check_string), [],
@@ -26,6 +27,7 @@ class GenerateOptions(NamedTuple):
     skip_default_metrics: bool
     metric_package_names: List[str]
     repo: str
+    repo_type: str
     database: str
     exclude: Pattern[bytes]
 
@@ -36,6 +38,7 @@ class GenerateOptions(NamedTuple):
             skip_default_metrics=dct['skip_default_metrics'],
             metric_package_names=dct['metric_package_names'],
             repo=dct['repo'],
+            repo_type=dct['repo_type'],
             database=dct['database'],
             exclude=re.compile(dct['exclude'].encode()),
         )

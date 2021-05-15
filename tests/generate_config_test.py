@@ -16,6 +16,7 @@ def test_with_all_options_specified():
         'skip_default_metrics': True,
         'metric_package_names': ['my_package'],
         'repo': '.',
+        'repo_type': 'git',
         'database': 'database.db',
         'exclude': '^vendor/',
     })
@@ -23,6 +24,7 @@ def test_with_all_options_specified():
         skip_default_metrics=True,
         metric_package_names=['my_package'],
         repo='.',
+        repo_type='git',
         database='database.db',
         exclude=re.compile(b'^vendor/'),
     )
@@ -34,6 +36,7 @@ def test_minimal_defaults():
         skip_default_metrics=False,
         metric_package_names=[],
         repo='./',
+        repo_type='git',
         database='database.db',
         exclude=re.compile(b'^$'),
     )

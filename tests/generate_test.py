@@ -13,9 +13,9 @@ from git_code_debt.generate import increment_metrics
 from git_code_debt.generate import main
 from git_code_debt.generate import mapper
 from git_code_debt.generate import populate_metric_ids
+from git_code_debt.git_repo_parser import GitRepoParser
 from git_code_debt.metric import Metric
 from git_code_debt.metrics.lines import LinesOfCodeParser
-from git_code_debt.repo_parser import RepoParser
 from git_code_debt.util.subprocess import cmd_output
 from testing.utilities.cwd import cwd
 
@@ -35,7 +35,7 @@ def test_increment_metrics_already_there():
 
 
 def test_get_metrics_inner_first_commit(cloneable_with_commits):
-    repo_parser = RepoParser(cloneable_with_commits.path)
+    repo_parser = GitRepoParser(cloneable_with_commits.path)
     with repo_parser.repo_checked_out():
         metrics = _get_metrics_inner((
             None, cloneable_with_commits.commits[0],
@@ -45,7 +45,7 @@ def test_get_metrics_inner_first_commit(cloneable_with_commits):
 
 
 def test_get_metrics_inner_nth_commit(cloneable_with_commits):
-    repo_parser = RepoParser(cloneable_with_commits.path)
+    repo_parser = GitRepoParser(cloneable_with_commits.path)
     with repo_parser.repo_checked_out():
         metrics = _get_metrics_inner((
             cloneable_with_commits.commits[-2],

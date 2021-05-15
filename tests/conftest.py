@@ -8,8 +8,8 @@ import pytest
 
 from git_code_debt.generate import create_schema
 from git_code_debt.generate import populate_metric_ids
+from git_code_debt.git_repo_parser import COMMIT_FORMAT
 from git_code_debt.repo_parser import Commit
-from git_code_debt.repo_parser import COMMIT_FORMAT
 from git_code_debt.util import yaml
 from git_code_debt.util.subprocess import cmd_output
 from testing.utilities.auto_namedtuple import auto_namedtuple
