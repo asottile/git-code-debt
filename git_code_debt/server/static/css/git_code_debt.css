@@ -32,7 +32,7 @@ tbody.collapsed {
     border-top: 0;
 }
 
-tbody .dummy-row {
+tbody .empty-row {
     display: none;
 }
 
@@ -40,7 +40,7 @@ tbody.collapsed tr {
     display: none;
 }
 
-tbody.collapsed .dummy-row {
+tbody.collapsed .empty-row {
     display: table-row;
 }
 
@@ -84,7 +84,7 @@ td {
     white-space: nowrap;
 }
 
-.dummy-cell {
+.empty-cell {
     border: 0;
 }
 

@@ -15,7 +15,7 @@ from git_code_debt.server.servlets.index import DATE_NAMES_TO_TIMEDELTAS
 
 <table>
     <thead>
-        <th class="dummy-cell"></th>
+        <th class="empty-cell"></th>
         <th>Metric</th>
         <th>Current Value</th>
         % for time_name, _ in DATE_NAMES_TO_TIMEDELTAS:
@@ -44,12 +44,12 @@ from git_code_debt.server.servlets.index import DATE_NAMES_TO_TIMEDELTAS
                     % endfor
                 </tr>
             % endfor
-            <tr class="dummy-row">
+            <tr class="empty-row">
                 <th class="group-name">
                     ${group.name}
                 </th>
                 <td
-                    class="dummy-cell"
+                    class="empty-cell"
                     rowspan="${len(group.metrics)}"
                     colspan="${len(DATE_NAMES_TO_TIMEDELTAS) + 2}"
                 ></td>
