@@ -15,6 +15,7 @@ from git_code_debt.util.subprocess import cmd_output_b
 
 TEMPLATE = 'commit {node}\nAuthor: {author}\nDate:   {date|date}\n\n{indent(desc, \"    \")}\n\n'
 
+
 class HgRepoParser(RepoParser):
 
     def __init__(self, repo: str) -> None:

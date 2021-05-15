@@ -47,5 +47,3 @@ class RepoParser(abc.ABC):
     @abc.abstractmethod
     def get_commit_diff(self, previous_sha: str, sha: str) -> bytes:
         """Returns the raw output of the diff between previous_sha and sha"""
-
-
