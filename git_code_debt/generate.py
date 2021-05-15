@@ -27,6 +27,7 @@ from git_code_debt.file_diff_stat import FileDiffStat
 from git_code_debt.file_diff_stat import get_file_diff_stats_from_output
 from git_code_debt.generate_config import GenerateOptions
 from git_code_debt.git_repo_parser import GitRepoParser
+from git_code_debt.hg_repo_parser import HgRepoParser
 from git_code_debt.logic import get_metric_has_data
 from git_code_debt.logic import get_metric_mapping
 from git_code_debt.logic import get_metric_values
@@ -133,6 +134,8 @@ def load_data(
 
         if repo_type == 'git':
             repo_parser = GitRepoParser(repo)
+        elif repo_type == 'hg':
+            repo_parser = HgRepoParser(repo)
 
         with repo_parser.repo_checked_out():
             previous_sha = get_previous_sha(db)

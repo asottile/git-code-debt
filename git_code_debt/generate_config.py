@@ -14,7 +14,7 @@ SCHEMA = cfgv.Map(
 
     cfgv.Required('repo', cfgv.check_string),
     cfgv.Required('database', cfgv.check_string),
-    cfgv.Optional('repo_type', cfgv.check_one_of(['git']), 'git'),
+    cfgv.Optional('repo_type', cfgv.check_one_of(['git', 'hg']), 'git'),
     cfgv.Optional('skip_default_metrics', cfgv.check_bool, False),
     cfgv.Optional(
         'metric_package_names', cfgv.check_array(cfgv.check_string), [],

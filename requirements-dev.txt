@@ -1,5 +1,6 @@
 covdefaults
 coverage
+mercurial
 pyquery
 pytest
 pytest-env

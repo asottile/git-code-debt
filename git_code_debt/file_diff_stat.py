@@ -90,8 +90,8 @@ def _to_file_diff_stat(file_diff: bytes) -> FileDiffStat:
         elif in_diff and line.startswith(b'-'):
             lines_removed.append(line[1:])
 
-    assert mode is not None
-    assert status is not None
+    #assert mode is not None
+    #assert status is not None
 
     # Process symlinks and submodules
     special_file = None

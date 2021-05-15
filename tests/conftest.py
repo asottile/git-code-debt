@@ -76,6 +76,22 @@ def cloneable(tempdir_factory):
 
 
 @pytest.fixture
+def hg_cloneable(tempdir_factory):
+    repo_path = tempdir_factory.get()
+    with cwd(repo_path):
+        subprocess.check_call(('hg', 'init', '.'))
+        # hg doesn't allow empty commits so we create an empty file  and
+        # commit that
+        with open('readme.md', 'w') as file_obj:
+            file_obj.write('')
+
+        subprocess.check_call(('hg', 'add', 'readme.md'))
+        subprocess.check_call(('hg', 'commit', '-m', 'add testing branch'))
+
+    yield repo_path
+
+
+@pytest.fixture
 def cloneable_with_commits(cloneable):
     commits = []
 
@@ -105,3 +121,32 @@ def cloneable_with_commits(cloneable):
         make_commit('foo.tmpl', '#import foo\n#import bar\n')
 
     yield auto_namedtuple(path=cloneable, commits=commits)
+
+
+@pytest.fixture
+def hg_cloneable_with_commits(hg_cloneable):
+    commits = []
+
+    def append_commit():
+        output = cmd_output(
+            'hg', 'log', '--template={node}\n{word(0, date, \".\")}\n', '--rev', '.',
+        )
+        sha, date = output.splitlines()[:2]
+        commits.append(Commit(sha, int(date)))
+
+    def make_commit(filename, contents):
+        with open(filename, 'w') as file_obj:
+            file_obj.write(contents)
+
+        subprocess.check_call(('hg', 'add', filename))
+        subprocess.check_call(('hg', 'ci', '-m', f'Add {filename}'))
+        append_commit()
+
+    with cwd(hg_cloneable):
+        append_commit()
+        make_commit('bar.py', '')
+        make_commit('baz.py', '')
+        make_commit('test.py', 'import foo\nimport bar\n')
+        make_commit('foo.tmpl', '#import foo\n#import bar\n')
+
+    yield auto_namedtuple(path=hg_cloneable, commits=commits)
