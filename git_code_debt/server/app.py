@@ -102,4 +102,4 @@ def main(argv: Optional[Sequence[str]] = None) -> 'NoReturn':
 
 
 if __name__ == '__main__':
-    exit(main())
+    raise SystemExit(main())
