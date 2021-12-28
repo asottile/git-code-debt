@@ -21,8 +21,7 @@ def discover(
     matched_classes = set()
 
     for _, module_name, _ in pkgutil.walk_packages(
-            # https://github.com/python/mypy/issues/1422
-            package.__path__,  # type: ignore
+            package.__path__,
             prefix=package.__name__ + '.',
     ):
         module = __import__(module_name, fromlist=['__trash'], level=0)
