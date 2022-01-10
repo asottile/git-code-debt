@@ -61,8 +61,7 @@ def square(x):
 
 @pytest.mark.parametrize('jobs', (1, 4))
 def test_mapper(jobs):
-    # https://github.com/python/mypy/issues/11852
-    with mapper(jobs) as do_map:  # type: ignore
+    with mapper(jobs) as do_map:
         ret = tuple(do_map(square, (3, 5, 9)))
         assert ret == (9, 25, 81)
 
