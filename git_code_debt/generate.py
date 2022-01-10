@@ -155,8 +155,7 @@ def load_data(
                 itertools.repeat(metric_parsers),
                 itertools.repeat(exclude),
             )
-            # https://github.com/python/mypy/issues/11852
-            with mapper(jobs) as do_map:  # type: ignore
+            with mapper(jobs) as do_map:
                 for commit, metrics in zip(
                         commits, do_map(_get_metrics_inner, mp_args),
                 ):
