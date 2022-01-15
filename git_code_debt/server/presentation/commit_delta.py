@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from typing import NamedTuple
-from typing import Set
 
 from git_code_debt.server.presentation.delta import Delta
 
@@ -14,8 +15,8 @@ class CommitDelta(NamedTuple):
             cls,
             metric_name: str,
             delta: Delta,
-            color_overrides: Set[str],
-    ) -> 'CommitDelta':
+            color_overrides: set[str],
+    ) -> CommitDelta:
         return cls(
             metric_name,
             # TODO: duplicated in Metric

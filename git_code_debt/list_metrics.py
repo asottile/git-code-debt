@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 import argparse
-from typing import Optional
 from typing import Sequence
 
 from git_code_debt import options
@@ -18,7 +19,7 @@ def color(text: str, color_value: str, color_setting: bool) -> str:
         return f'{color_value}{text}{NORMAL}'
 
 
-def main(argv: Optional[Sequence[str]] = None) -> int:
+def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description='List metric parsers')
     # optional
     options.add_color(parser)

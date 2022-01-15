@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import datetime
 
 from git_code_debt.util.time import data_points_for_time_range

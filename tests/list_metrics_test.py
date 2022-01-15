@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from git_code_debt.list_metrics import color
 from git_code_debt.list_metrics import CYAN
 from git_code_debt.list_metrics import main

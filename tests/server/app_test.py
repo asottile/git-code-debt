@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import pytest
 
 from git_code_debt.server.app import create_metric_config_if_not_exists

@@ -1,10 +1,10 @@
+from __future__ import annotations
+
 import contextlib
 import subprocess
 import tempfile
 from typing import Generator
-from typing import List
 from typing import NamedTuple
-from typing import Optional
 
 from git_code_debt.util.iter import chunk_iter
 from git_code_debt.util.subprocess import cmd_output
@@ -25,7 +25,7 @@ class RepoParser:
 
     def __init__(self, git_repo: str) -> None:
         self.git_repo = git_repo
-        self.tempdir: Optional[str] = None
+        self.tempdir: str | None = None
 
     @contextlib.contextmanager
     def repo_checked_out(self) -> Generator[None, None, None]:
@@ -49,7 +49,7 @@ class RepoParser:
 
         return Commit(sha, int(date))
 
-    def get_commits(self, since_sha: Optional[str] = None) -> List[Commit]:
+    def get_commits(self, since_sha: str | None = None) -> list[Commit]:
         """Returns a list of Commit objects.
 
         Args:

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import argparse
 
 from git_code_debt.generate_config import DEFAULT_GENERATE_CONFIG_FILENAME

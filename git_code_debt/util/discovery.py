@@ -1,16 +1,16 @@
+from __future__ import annotations
+
 import inspect
 import pkgutil
 from types import ModuleType
 from typing import Any
 from typing import Callable
-from typing import Set
-from typing import Type
 
 
 def discover(
         package: ModuleType,
-        cls_match_func: Callable[[Type[Any]], bool],
-) -> Set[Type[Any]]:
+        cls_match_func: Callable[[type[Any]], bool],
+) -> set[type[Any]]:
     """Returns a set of classes in the directory matched by cls_match_func
 
     Args:

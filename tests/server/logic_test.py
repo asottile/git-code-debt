@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from git_code_debt import write_logic
 from git_code_debt.logic import get_metric_mapping
 from git_code_debt.metric import Metric

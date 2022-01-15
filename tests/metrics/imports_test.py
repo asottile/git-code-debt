@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import pytest
 
 from git_code_debt.file_diff_stat import FileDiffStat

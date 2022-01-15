@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import flask
 
 from git_code_debt.server.servlets.index import Metric

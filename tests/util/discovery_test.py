@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import testing.testing_package.package_a
 import testing.testing_package.package_b
 from git_code_debt.util.discovery import discover

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from git_code_debt.file_diff_stat import FileDiffStat
 from git_code_debt.metrics.base import SimpleLineCounterBase
 

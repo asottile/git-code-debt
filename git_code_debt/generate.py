@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import argparse
 import collections
 import contextlib
@@ -7,16 +9,10 @@ import os.path
 import sqlite3
 from typing import Callable
 from typing import Counter
-from typing import Dict
 from typing import Generator
 from typing import Iterable
-from typing import List
-from typing import Optional
 from typing import Pattern
 from typing import Sequence
-from typing import Set
-from typing import Tuple
-from typing import Type
 from typing import TypeVar
 
 import pkg_resources
@@ -43,11 +39,11 @@ from git_code_debt.write_logic import insert_metric_values
 def get_metrics(
         commit: Commit,
         diff: bytes, metric_parsers:
-        Set[Type[DiffParserBase]],
+        set[type[DiffParserBase]],
         exclude: Pattern[bytes],
-) -> Tuple[Metric, ...]:
+) -> tuple[Metric, ...]:
     def get_all_metrics(
-            file_diff_stats: Tuple[FileDiffStat, ...],
+            file_diff_stats: tuple[FileDiffStat, ...],
     ) -> Generator[Metric, None, None]:
         for metric_parser_cls in metric_parsers:
             metric_parser = metric_parser_cls()
@@ -64,21 +60,21 @@ def get_metrics(
 
 def increment_metrics(
         metric_values: Counter[int],
-        metric_mapping: Dict[str, int],
-        metrics: Tuple[Metric, ...],
+        metric_mapping: dict[str, int],
+        metrics: tuple[Metric, ...],
 ) -> None:
     metric_values.update({metric_mapping[m.name]: m.value for m in metrics})
 
 
 def _get_metrics_inner(
-        mp_args: Tuple[
-            Optional[Commit],
+        mp_args: tuple[
+            Commit | None,
             Commit,
             RepoParser,
-            Set[Type[DiffParserBase]],
+            set[type[DiffParserBase]],
             Pattern[bytes],
         ],
-) -> Tuple[Metric, ...]:
+) -> tuple[Metric, ...]:
     compare_commit, commit, repo_parser, metric_parsers, exclude = mp_args
     if compare_commit is None:
         diff = repo_parser.get_original_commit(commit.sha)
@@ -104,9 +100,9 @@ def mapper(jobs: int) -> Generator[
 
 def update_has_data(
         db: sqlite3.Connection,
-        metrics: Tuple[Metric, ...],
-        metric_mapping: Dict[str, int],
-        has_data: Dict[int, bool],
+        metrics: tuple[Metric, ...],
+        metric_mapping: dict[str, int],
+        has_data: dict[int, bool],
 ) -> None:
     query = 'UPDATE metric_names SET has_data=1 WHERE id = ?'
     for metric_id in [metric_mapping[m.name] for m in metrics if m.value]:
@@ -118,7 +114,7 @@ def update_has_data(
 def load_data(
         database_file: str,
         repo: str,
-        package_names: List[str],
+        package_names: list[str],
         skip_defaults: bool,
         exclude: Pattern[bytes],
         jobs: int,
@@ -177,8 +173,8 @@ def create_schema(db: sqlite3.Connection) -> None:
 
 
 def get_metrics_info(
-        metric_parsers: Set[Type[DiffParserBase]],
-) -> List[MetricInfo]:
+        metric_parsers: set[type[DiffParserBase]],
+) -> list[MetricInfo]:
     metrics_info = set()
     for metric_parser_cls in metric_parsers:
         metrics_info.update(metric_parser_cls().get_metrics_info())
@@ -187,7 +183,7 @@ def get_metrics_info(
 
 def insert_metrics_info(
         db: sqlite3.Connection,
-        metrics_info: List[MetricInfo],
+        metrics_info: list[MetricInfo],
 ) -> None:
     query = 'INSERT INTO metric_names (name, description) VALUES (?, ?)'
     db.executemany(query, metrics_info)
@@ -195,7 +191,7 @@ def insert_metrics_info(
 
 def populate_metric_ids(
         db: sqlite3.Connection,
-        package_names: List[str],
+        package_names: list[str],
         skip_defaults: bool,
 ) -> None:
     metric_parsers = get_metric_parsers_from_args(package_names, skip_defaults)
@@ -222,7 +218,7 @@ def get_options_from_config(config_filename: str) -> GenerateOptions:
         return GenerateOptions.from_yaml(yaml.load(config_file))
 
 
-def main(argv: Optional[Sequence[str]] = None) -> int:
+def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     options.add_generate_config_filename(parser)
     parser.add_argument(

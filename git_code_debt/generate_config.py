@@ -1,7 +1,7 @@
+from __future__ import annotations
+
 import re
 from typing import Any
-from typing import Dict
-from typing import List
 from typing import NamedTuple
 from typing import Pattern
 
@@ -24,13 +24,13 @@ SCHEMA = cfgv.Map(
 
 class GenerateOptions(NamedTuple):
     skip_default_metrics: bool
-    metric_package_names: List[str]
+    metric_package_names: list[str]
     repo: str
     database: str
     exclude: Pattern[bytes]
 
     @classmethod
-    def from_yaml(cls, dct: Dict[str, Any]) -> 'GenerateOptions':
+    def from_yaml(cls, dct: dict[str, Any]) -> GenerateOptions:
         dct = cfgv.apply_defaults(cfgv.validate(dct, SCHEMA), SCHEMA)
         return cls(
             skip_default_metrics=dct['skip_default_metrics'],

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import flask
 
 from testing.assertions.response import assert_no_response_errors

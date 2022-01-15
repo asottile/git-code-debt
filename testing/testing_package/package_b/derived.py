@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from testing.testing_package.package_a.base import Base
 
 

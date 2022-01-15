@@ -1,20 +1,20 @@
+from __future__ import annotations
+
 import sqlite3
-from typing import Dict
-from typing import Optional
 
 
-def get_metric_mapping(db: sqlite3.Connection) -> Dict[str, int]:
+def get_metric_mapping(db: sqlite3.Connection) -> dict[str, int]:
     """Gets a mapping from metric_name to metric_id."""
     results = db.execute('SELECT name, id FROM metric_names').fetchall()
     return dict(results)
 
 
-def get_metric_has_data(db: sqlite3.Connection) -> Dict[int, bool]:
+def get_metric_has_data(db: sqlite3.Connection) -> dict[int, bool]:
     res = db.execute('SELECT id, has_data FROM metric_names').fetchall()
     return {k: bool(v) for k, v in res}
 
 
-def get_previous_sha(db: sqlite3.Connection) -> Optional[str]:
+def get_previous_sha(db: sqlite3.Connection) -> str | None:
     """Gets the latest inserted SHA."""
     result = db.execute(
         # Use ROWID as a free, auto-incrementing, primary key.
@@ -24,7 +24,7 @@ def get_previous_sha(db: sqlite3.Connection) -> Optional[str]:
     return result[0] if result else None
 
 
-def get_metric_values(db: sqlite3.Connection, sha: str) -> Dict[int, int]:
+def get_metric_values(db: sqlite3.Connection, sha: str) -> dict[int, int]:
     """Gets the metric values from a specific commit.
 
     :param db: Database object
