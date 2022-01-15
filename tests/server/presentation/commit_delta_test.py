@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from unittest import mock
 
 from git_code_debt.server.presentation.commit_delta import CommitDelta

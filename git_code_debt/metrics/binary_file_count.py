@@ -1,6 +1,6 @@
+from __future__ import annotations
+
 from typing import Generator
-from typing import List
-from typing import Tuple
 
 from git_code_debt.file_diff_stat import FileDiffStat
 from git_code_debt.file_diff_stat import SpecialFileType
@@ -16,7 +16,7 @@ class BinaryFileCount(DiffParserBase):
 
     def get_metrics_from_stat(
             self, _: Commit,
-            file_diff_stats: Tuple[FileDiffStat, ...],
+            file_diff_stats: tuple[FileDiffStat, ...],
     ) -> Generator[Metric, None, None]:
         binary_delta = 0
 
@@ -35,5 +35,5 @@ class BinaryFileCount(DiffParserBase):
         if binary_delta:
             yield Metric(type(self).__name__, binary_delta)
 
-    def get_metrics_info(self) -> List[MetricInfo]:
+    def get_metrics_info(self) -> list[MetricInfo]:
         return [MetricInfo.from_class(type(self))]

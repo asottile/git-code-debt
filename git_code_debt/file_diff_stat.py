@@ -1,9 +1,9 @@
+from __future__ import annotations
+
 import enum
 import os.path
 import re
-from typing import List
 from typing import NamedTuple
-from typing import Optional
 
 
 Status = enum.Enum('Status', 'ADDED DELETED ALREADY_EXISTING')
@@ -12,16 +12,16 @@ SpecialFileType = enum.Enum('SpecialFileType', 'SUBMODULE SYMLINK BINARY')
 
 class SpecialFile(NamedTuple):
     file_type: SpecialFileType
-    added: Optional[bytes]
-    removed: Optional[bytes]
+    added: bytes | None
+    removed: bytes | None
 
 
 class FileDiffStat(NamedTuple):
     path: bytes
-    lines_added: List[bytes]
-    lines_removed: List[bytes]
+    lines_added: list[bytes]
+    lines_removed: list[bytes]
     status: Status
-    special_file: Optional[SpecialFile] = None
+    special_file: SpecialFile | None = None
 
     @property
     def extension(self) -> bytes:
@@ -130,7 +130,7 @@ def _to_file_diff_stat(file_diff: bytes) -> FileDiffStat:
 GIT_DIFF_RE = re.compile(b'^diff --git', flags=re.MULTILINE)
 
 
-def get_file_diff_stats_from_output(output: bytes) -> List[FileDiffStat]:
+def get_file_diff_stats_from_output(output: bytes) -> list[FileDiffStat]:
     files = GIT_DIFF_RE.split(output)
     assert not files[0].strip() or files[0].startswith(b'commit ')
     return [_to_file_diff_stat(file_diff) for file_diff in files[1:]]

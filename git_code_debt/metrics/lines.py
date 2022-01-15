@@ -1,8 +1,7 @@
+from __future__ import annotations
+
 import collections
-from typing import Dict
 from typing import Generator
-from typing import List
-from typing import Tuple
 
 from identify import identify
 
@@ -21,10 +20,10 @@ class LinesOfCodeParser(DiffParserBase):
     def get_metrics_from_stat(
             self,
             _: Commit,
-            file_diff_stats: Tuple[FileDiffStat, ...],
+            file_diff_stats: tuple[FileDiffStat, ...],
     ) -> Generator[Metric, None, None]:
         total_lines = 0
-        lines_by_file_type: Dict[str, int] = collections.defaultdict(int)
+        lines_by_file_type: dict[str, int] = collections.defaultdict(int)
 
         for file_diff_stat in file_diff_stats:
             lines_changed = (
@@ -47,7 +46,7 @@ class LinesOfCodeParser(DiffParserBase):
             if tag in ALL_TAGS and val:
                 yield Metric(f'TotalLinesOfCode_{tag}', val)
 
-    def get_metrics_info(self) -> List[MetricInfo]:
+    def get_metrics_info(self) -> list[MetricInfo]:
         metric_names = [f'TotalLinesOfCode_{tag}' for tag in ALL_TAGS]
         metric_names.append('TotalLinesOfCode')
         return [MetricInfo(metric_name) for metric_name in metric_names]

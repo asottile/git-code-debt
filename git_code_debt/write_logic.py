@@ -1,6 +1,6 @@
+from __future__ import annotations
+
 import sqlite3
-from typing import Dict
-from typing import Tuple
 
 from git_code_debt.metric import Metric
 from git_code_debt.repo_parser import Commit
@@ -8,8 +8,8 @@ from git_code_debt.repo_parser import Commit
 
 def insert_metric_values(
         db: sqlite3.Connection,
-        metric_values: Dict[int, int],
-        has_data: Dict[int, bool],
+        metric_values: dict[int, int],
+        has_data: dict[int, bool],
         commit: Commit,
 ) -> None:
     values = [
@@ -26,8 +26,8 @@ def insert_metric_values(
 
 def insert_metric_changes(
         db: sqlite3.Connection,
-        metrics: Tuple[Metric, ...],
-        metric_mapping: Dict[str, int],
+        metrics: tuple[Metric, ...],
+        metric_mapping: dict[str, int],
         commit: Commit,
 ) -> None:
     """Insert into the metric_changes tables.

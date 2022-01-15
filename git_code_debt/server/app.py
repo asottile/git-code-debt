@@ -1,8 +1,9 @@
+from __future__ import annotations
+
 import argparse
 import os.path
 import shutil
 import sqlite3
-from typing import Optional
 from typing import Sequence
 from typing import TYPE_CHECKING
 
@@ -32,7 +33,7 @@ app.register_blueprint(widget)
 
 class AppContext:
     database_path = 'database.db'
-    config: Optional[Config] = None
+    config: Config | None = None
 
 
 @app.before_request
@@ -42,7 +43,7 @@ def before_request() -> None:
 
 
 @app.teardown_request
-def teardown_request(_: Optional[Exception]) -> None:
+def teardown_request(_: Exception | None) -> None:
     flask.g.config = None
     flask.g.db.close()
 
@@ -63,7 +64,7 @@ def create_metric_config_if_not_exists() -> None:
     )
 
 
-def main(argv: Optional[Sequence[str]] = None) -> 'NoReturn':
+def main(argv: Sequence[str] | None = None) -> NoReturn:
     parser = argparse.ArgumentParser()
     parser.add_argument('database_path', type=str)
     parser.add_argument('-p', '--port', type=int, default=5000)

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from git_code_debt.server.presentation.delta import Delta
 
 

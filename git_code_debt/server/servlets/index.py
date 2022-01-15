@@ -1,9 +1,7 @@
+from __future__ import annotations
+
 import datetime
-from typing import Dict
-from typing import FrozenSet
-from typing import List
 from typing import NamedTuple
-from typing import Tuple
 
 import flask
 
@@ -30,7 +28,7 @@ class Metric(NamedTuple):
     name: str
     color_override: bool
     current_value: int
-    historic_deltas: Tuple[Delta, ...]
+    historic_deltas: tuple[Delta, ...]
     all_data_url: str
 
     @property
@@ -45,11 +43,11 @@ class Metric(NamedTuple):
             cls,
             metric_name: str,
             today_timestamp: int,
-            offsets: List[Tuple[str, int]],
-            current_values: Dict[str, int],
-            metric_data: Dict[str, Dict[str, int]],
-            color_overrides: FrozenSet[str],
-    ) -> 'Metric':
+            offsets: list[tuple[str, int]],
+            current_values: dict[str, int],
+            metric_data: dict[str, dict[str, int]],
+            color_overrides: frozenset[str],
+    ) -> Metric:
         return cls(
             metric_name,
             metric_name in color_overrides,
@@ -75,17 +73,17 @@ class Metric(NamedTuple):
 
 class Group(NamedTuple):
     name: str
-    metrics: Tuple[Metric, ...]
+    metrics: tuple[Metric, ...]
 
 
 def format_groups(
         config: Config,
-        metric_names: List[str],
+        metric_names: list[str],
         today_timestamp: int,
-        offsets: List[Tuple[str, int]],
-        current_values: Dict[str, int],
-        metric_data: Dict[str, Dict[str, int]],
-) -> List[Group]:
+        offsets: list[tuple[str, int]],
+        current_values: dict[str, int],
+        metric_data: dict[str, dict[str, int]],
+) -> list[Group]:
     metrics = {
         metric_name: Metric.from_data(
             metric_name,

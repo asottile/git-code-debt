@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from git_code_debt.discovery import get_metric_parsers
 from git_code_debt.discovery import get_modules
 from git_code_debt.discovery import is_metric_cls

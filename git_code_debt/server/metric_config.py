@@ -1,17 +1,15 @@
+from __future__ import annotations
+
 import re
 from typing import Any
-from typing import Dict
-from typing import FrozenSet
-from typing import List
 from typing import NamedTuple
 from typing import Pattern
-from typing import Tuple
 
 
 class Group(NamedTuple):
     name: str
-    metrics: FrozenSet[str]
-    metric_expressions: Tuple[Pattern[str], ...]
+    metrics: frozenset[str]
+    metric_expressions: tuple[Pattern[str], ...]
 
     def contains(self, metric_name: str) -> bool:
         return (
@@ -23,9 +21,9 @@ class Group(NamedTuple):
     def from_yaml(
             cls,
             name: str,
-            metrics: List[str],
-            metric_expressions: List[str],
-    ) -> 'Group':
+            metrics: list[str],
+            metric_expressions: list[str],
+    ) -> Group:
         if not metrics and not metric_expressions:
             raise TypeError(
                 'Group {} must define at least one of '
@@ -38,7 +36,7 @@ class Group(NamedTuple):
         )
 
 
-def _get_groups_from_yaml(yaml: List[Dict[str, Any]]) -> Tuple[Group, ...]:
+def _get_groups_from_yaml(yaml: list[dict[str, Any]]) -> tuple[Group, ...]:
     # A group dict maps it's name to a dict containing metrics and
     # metric_expressions
     # Here's an example yaml:
@@ -54,8 +52,8 @@ def _get_groups_from_yaml(yaml: List[Dict[str, Any]]) -> Tuple[Group, ...]:
 
 
 def _get_commit_links_from_yaml(
-        yaml: Dict[str, str],
-) -> Tuple[Tuple[str, str], ...]:
+        yaml: dict[str, str],
+) -> tuple[tuple[str, str], ...]:
     # The CommitLinks will look like
     # LinkName: 'link_value'
     # OtherLinkName: 'other_link_value'
@@ -64,13 +62,13 @@ def _get_commit_links_from_yaml(
 
 
 class Config(NamedTuple):
-    color_overrides: FrozenSet[str]
-    commit_links: Tuple[Tuple[str, str], ...]
-    groups: Tuple[Group, ...]
-    widget_metrics: List[str]
+    color_overrides: frozenset[str]
+    commit_links: tuple[tuple[str, str], ...]
+    groups: tuple[Group, ...]
+    widget_metrics: list[str]
 
     @classmethod
-    def from_data(cls, data: Dict[str, Any]) -> 'Config':
+    def from_data(cls, data: dict[str, Any]) -> Config:
         return cls(
             color_overrides=frozenset(data['ColorOverrides']),
             commit_links=_get_commit_links_from_yaml(data['CommitLinks']),

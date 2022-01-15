@@ -1,8 +1,7 @@
+from __future__ import annotations
+
 import collections
-from typing import Dict
 from typing import Generator
-from typing import List
-from typing import Tuple
 
 from identify import identify
 
@@ -16,7 +15,7 @@ from git_code_debt.metrics.curse_words import word_list
 from git_code_debt.repo_parser import Commit
 
 
-def count_curse_words(lines: List[bytes]) -> int:
+def count_curse_words(lines: list[bytes]) -> int:
     curses = 0
     for line in lines:
         for word in line.split():
@@ -31,10 +30,10 @@ class CurseWordsParser(DiffParserBase):
     def get_metrics_from_stat(
             self,
             _: Commit,
-            file_diff_stats: Tuple[FileDiffStat, ...],
+            file_diff_stats: tuple[FileDiffStat, ...],
     ) -> Generator[Metric, None, None]:
         total_curses = 0
-        curses_by_file_type: Dict[str, int] = collections.defaultdict(int)
+        curses_by_file_type: dict[str, int] = collections.defaultdict(int)
 
         for file_diff_stat in file_diff_stats:
             curses_added = count_curse_words(file_diff_stat.lines_added)
@@ -57,7 +56,7 @@ class CurseWordsParser(DiffParserBase):
             if tag in ALL_TAGS and value:
                 yield Metric(f'TotalCurseWords_{tag}', value)
 
-    def get_metrics_info(self) -> List[MetricInfo]:
+    def get_metrics_info(self) -> list[MetricInfo]:
         metric_names = [f'TotalCurseWords_{tag}' for tag in ALL_TAGS]
         metric_names.append('TotalCurseWords')
         return [MetricInfo(metric_name) for metric_name in metric_names]

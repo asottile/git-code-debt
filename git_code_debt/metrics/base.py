@@ -1,9 +1,8 @@
+from __future__ import annotations
+
 import inspect
 from typing import Generator
-from typing import List
 from typing import NamedTuple
-from typing import Tuple
-from typing import Type
 
 from git_code_debt.file_diff_stat import FileDiffStat
 from git_code_debt.metric import Metric
@@ -15,7 +14,7 @@ class MetricInfo(NamedTuple):
     description: str = ''
 
     @classmethod
-    def from_class(cls, c: 'Type[DiffParserBase]') -> 'MetricInfo':
+    def from_class(cls, c: type[DiffParserBase]) -> MetricInfo:
         return cls(c.__name__, inspect.cleandoc(c.__doc__ or ''))
 
 
@@ -26,7 +25,7 @@ class DiffParserBase:
     def get_metrics_from_stat(
             self,
             commit: Commit,
-            file_diff_stats: Tuple[FileDiffStat, ...],
+            file_diff_stats: tuple[FileDiffStat, ...],
     ) -> Generator[Metric, None, None]:
         """Implement me to yield Metric objects from the input list of
         FileStat objects.
@@ -40,7 +39,7 @@ class DiffParserBase:
         """
         raise NotImplementedError
 
-    def get_metrics_info(self) -> List[MetricInfo]:
+    def get_metrics_info(self) -> list[MetricInfo]:
         raise NotImplementedError
 
 
@@ -50,7 +49,7 @@ class SimpleLineCounterBase(DiffParserBase):
     def get_metrics_from_stat(
             self,
             _: Commit,
-            file_diff_stats: Tuple[FileDiffStat, ...],
+            file_diff_stats: tuple[FileDiffStat, ...],
     ) -> Generator[Metric, None, None]:
         metric_value = 0
 
@@ -66,7 +65,7 @@ class SimpleLineCounterBase(DiffParserBase):
         if metric_value:
             yield Metric(self.metric_name, metric_value)
 
-    def get_metrics_info(self) -> List[MetricInfo]:
+    def get_metrics_info(self) -> list[MetricInfo]:
         return [MetricInfo(self.metric_name, self.metric_description)]
 
     @property
