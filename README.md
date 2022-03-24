@@ -1,6 +1,6 @@
-[![Build Status](https://asottile.visualstudio.com/asottile/_apis/build/status/asottile.git-code-debt?branchName=master)](https://asottile.visualstudio.com/asottile/_build/latest?definitionId=16&branchName=master)
-[![Azure DevOps coverage](https://img.shields.io/azure-devops/coverage/asottile/asottile/16/master.svg)](https://dev.azure.com/asottile/asottile/_build/latest?definitionId=16&branchName=master)
-[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/asottile/git-code-debt/master.svg)](https://results.pre-commit.ci/latest/github/asottile/git-code-debt/master)
+[![Build Status](https://asottile.visualstudio.com/asottile/_apis/build/status/asottile.git-code-debt?branchName=main)](https://asottile.visualstudio.com/asottile/_build/latest?definitionId=16&branchName=main)
+[![Azure DevOps coverage](https://img.shields.io/azure-devops/coverage/asottile/asottile/16/main.svg)](https://dev.azure.com/asottile/asottile/_build/latest?definitionId=16&branchName=main)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/asottile/git-code-debt/main.svg)](https://results.pre-commit.ci/latest/github/asottile/git-code-debt/main)
 
 git-code-debt
 =============
@@ -153,7 +153,7 @@ class DiffParserBase(object):
 ## Some screenshots
 
 ### Index
-![Example screen index](https://raw.githubusercontent.com/asottile/git-code-debt/master/img/debt_screen_1.png)
+![Example screen index](https://raw.githubusercontent.com/asottile/git-code-debt/main/img/debt_screen_1.png)
 
 ### Graph
-![Example screen graph](https://raw.githubusercontent.com/asottile/git-code-debt/master/img/debt_screen_2.png)
+![Example screen graph](https://raw.githubusercontent.com/asottile/git-code-debt/main/img/debt_screen_2.png)
