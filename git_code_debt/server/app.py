@@ -4,8 +4,8 @@ import argparse
 import os.path
 import shutil
 import sqlite3
+from typing import NoReturn
 from typing import Sequence
-from typing import TYPE_CHECKING
 
 import flask
 import pkg_resources
@@ -18,9 +18,6 @@ from git_code_debt.server.servlets.index import index
 from git_code_debt.server.servlets.status import status
 from git_code_debt.server.servlets.widget import widget
 from git_code_debt.util import yaml
-
-if TYPE_CHECKING:
-    from typing import NoReturn
 
 app = flask.Flask(__name__)
 app.register_blueprint(changes)
