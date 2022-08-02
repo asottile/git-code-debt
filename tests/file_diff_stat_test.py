@@ -47,7 +47,8 @@ index 0000000..dc7827c
 +bar
 """
 
-FILE_REMOVED_COMMIT = b"""diff --git a/example_config.yaml b/example_config.yaml
+FILE_REMOVED_COMMIT = b"""\
+diff --git a/example_config.yaml b/example_config.yaml
 deleted file mode 100644
 index dc7827c..0000000
 --- a/example_config.yaml
@@ -61,7 +62,8 @@ index dc7827c..0000000
 
 SAMPLE_OUTPUT_MULTIPLE_FILES = FILE_ADDED_COMMIT + FILE_REMOVED_COMMIT
 
-COMMIT_ENDING_WITH_BINARY_FILES = b"""diff --git a/htdocs/css/base.css b/htdocs/css/base.css
+COMMIT_ENDING_WITH_BINARY_FILES = b"""\
+diff --git a/htdocs/css/base.css b/htdocs/css/base.css
 index f0f7eac..ca3d0a2 100644
 --- a/htdocs/css/base.css
 +++ b/htdocs/css/base.css
