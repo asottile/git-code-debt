@@ -1,5 +1,4 @@
-[![Build Status](https://asottile.visualstudio.com/asottile/_apis/build/status/asottile.git-code-debt?branchName=main)](https://asottile.visualstudio.com/asottile/_build/latest?definitionId=16&branchName=main)
-[![Azure DevOps coverage](https://img.shields.io/azure-devops/coverage/asottile/asottile/16/main.svg)](https://dev.azure.com/asottile/asottile/_build/latest?definitionId=16&branchName=main)
+[![build status](https://github.com/asottile/git-code-debt/actions/workflows/main.yml/badge.svg)](https://github.com/asottile/git-code-debt/actions/workflows/main.yml)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/asottile/git-code-debt/main.svg)](https://results.pre-commit.ci/latest/github/asottile/git-code-debt/main)
 
 git-code-debt
