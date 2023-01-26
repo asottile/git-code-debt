@@ -24,4 +24,4 @@ def cmd_output_b(*cmd: str, **kwargs: Any) -> bytes:
 
 
 def cmd_output(*cmd: str, **kwargs: Any) -> str:
-    return cmd_output_b(*cmd, **kwargs).decode()
+    return cmd_output_b(*cmd, **kwargs).decode('utf-8', 'ignore')
