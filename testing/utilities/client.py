@@ -15,7 +15,7 @@ class Response:
 
     @property
     def text(self):
-        return self.response.data.decode(self.response.charset)
+        return self.response.text
 
     @property
     def pq(self):

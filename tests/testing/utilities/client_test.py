@@ -23,16 +23,12 @@ def test_return_value_is_testing_response(client_open_mock):
 
 
 def test_pq():
-    response = auto_namedtuple(
-        'Response', data=b'<p>Oh hai!</p>', charset='UTF-8',
-    )
+    response = auto_namedtuple('Response', text='<p>Oh hai!</p>')
     instance = Response(response)
-    assert instance.pq.__html__() == response.data.decode('UTF-8')
+    assert instance.pq.__html__() == response.text
 
 
 def test_json():
-    response = auto_namedtuple(
-        'Response', data=b'{"foo": "bar"}', charset='UTF-8',
-    )
+    response = auto_namedtuple('Response', text='{"foo": "bar"}')
     instance = Response(response)
     assert instance.json == {'foo': 'bar'}
