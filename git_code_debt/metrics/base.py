@@ -26,7 +26,7 @@ class DiffParserBase:
             self,
             commit: Commit,
             file_diff_stats: tuple[FileDiffStat, ...],
-    ) -> Generator[Metric, None, None]:
+    ) -> Generator[Metric]:
         """Implement me to yield Metric objects from the input list of
         FileStat objects.
 
@@ -50,7 +50,7 @@ class SimpleLineCounterBase(DiffParserBase):
             self,
             _: Commit,
             file_diff_stats: tuple[FileDiffStat, ...],
-    ) -> Generator[Metric, None, None]:
+    ) -> Generator[Metric]:
         metric_value = 0
 
         for file_diff_stat in file_diff_stats:

@@ -11,7 +11,7 @@ T = TypeVar('T')
 def chunk_iter(
         iterable: Iterable[T],
         n: int,
-) -> Generator[tuple[T, ...], None, None]:
+) -> Generator[tuple[T, ...]]:
     """Yields an iterator in chunks
 
     For example you can do

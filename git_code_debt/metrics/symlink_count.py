@@ -18,7 +18,7 @@ class SymlinkCount(DiffParserBase):
             self,
             _: Commit,
             file_diff_stats: tuple[FileDiffStat, ...],
-    ) -> Generator[Metric, None, None]:
+    ) -> Generator[Metric]:
         symlink_delta = 0
 
         for file_diff_stat in file_diff_stats:

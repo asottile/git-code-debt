@@ -44,7 +44,7 @@ def get_metrics(
 ) -> tuple[Metric, ...]:
     def get_all_metrics(
             file_diff_stats: tuple[FileDiffStat, ...],
-    ) -> Generator[Metric, None, None]:
+    ) -> Generator[Metric]:
         for metric_parser_cls in metric_parsers:
             metric_parser = metric_parser_cls()
             yield from metric_parser.get_metrics_from_stat(
@@ -89,7 +89,7 @@ T2 = TypeVar('T2')
 
 @contextlib.contextmanager
 def mapper(jobs: int) -> Generator[
-    Callable[[Callable[[T2], T], Iterable[T2]], Iterable[T]], None, None,
+    Callable[[Callable[[T2], T], Iterable[T2]], Iterable[T]],
 ]:
     if jobs == 1:
         yield map

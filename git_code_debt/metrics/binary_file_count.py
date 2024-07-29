@@ -17,7 +17,7 @@ class BinaryFileCount(DiffParserBase):
     def get_metrics_from_stat(
             self, _: Commit,
             file_diff_stats: tuple[FileDiffStat, ...],
-    ) -> Generator[Metric, None, None]:
+    ) -> Generator[Metric]:
         binary_delta = 0
 
         for file_diff_stat in file_diff_stats:
