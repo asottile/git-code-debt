@@ -21,7 +21,7 @@ class LinesOfCodeParser(DiffParserBase):
             self,
             _: Commit,
             file_diff_stats: tuple[FileDiffStat, ...],
-    ) -> Generator[Metric, None, None]:
+    ) -> Generator[Metric]:
         total_lines = 0
         lines_by_file_type: dict[str, int] = collections.defaultdict(int)
 

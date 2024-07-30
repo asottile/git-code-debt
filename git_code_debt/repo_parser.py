@@ -28,7 +28,7 @@ class RepoParser:
         self.tempdir: str | None = None
 
     @contextlib.contextmanager
-    def repo_checked_out(self) -> Generator[None, None, None]:
+    def repo_checked_out(self) -> Generator[None]:
         assert not self.tempdir
         with tempfile.TemporaryDirectory(suffix='temp-repo') as self.tempdir:
             try:
