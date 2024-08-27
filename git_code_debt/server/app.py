@@ -40,7 +40,7 @@ def before_request() -> None:
 
 
 @app.teardown_request
-def teardown_request(_: Exception | None) -> None:
+def teardown_request(_: object) -> None:
     flask.g.config = None
     flask.g.db.close()
 
