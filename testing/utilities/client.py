@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-from typing import TYPE_CHECKING
 
 import flask.testing
 import pyquery
@@ -26,13 +25,7 @@ class Response:
         return json.loads(self.text)
 
 
-if TYPE_CHECKING:
-    ClientBase = flask.testing.FlaskClient[Response]
-else:
-    ClientBase = flask.testing.FlaskClient
-
-
-class Client(ClientBase):
+class Client(flask.testing.FlaskClient):
     """A Client wraps the client given by flask to add other utilities."""
 
     def open(self, *args, **kwargs):
