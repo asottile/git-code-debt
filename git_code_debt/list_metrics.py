@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import argparse
-from typing import Sequence
+from collections.abc import Sequence
 
 from git_code_debt import options
 from git_code_debt.discovery import get_metric_parsers_from_args

@@ -7,12 +7,12 @@ import itertools
 import multiprocessing.pool
 import os.path
 import sqlite3
+from collections import Counter
+from collections.abc import Generator
+from collections.abc import Iterable
+from collections.abc import Sequence
+from re import Pattern
 from typing import Callable
-from typing import Counter
-from typing import Generator
-from typing import Iterable
-from typing import Pattern
-from typing import Sequence
 from typing import TypeVar
 
 import pkg_resources
