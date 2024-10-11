@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
 from types import ModuleType
 from typing import Any
-from typing import Sequence
 
 from git_code_debt.metrics.base import DiffParserBase
 from git_code_debt.util.discovery import discover

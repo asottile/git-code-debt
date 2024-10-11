@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import re
+from re import Pattern
 from typing import Any
 from typing import NamedTuple
-from typing import Pattern
 
 
 class Group(NamedTuple):

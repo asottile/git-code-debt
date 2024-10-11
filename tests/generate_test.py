@@ -4,7 +4,7 @@ import collections
 import os.path
 import re
 import sqlite3
-from typing import Counter
+from collections import Counter
 
 import pytest
 

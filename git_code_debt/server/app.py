@@ -4,8 +4,8 @@ import argparse
 import os.path
 import shutil
 import sqlite3
+from collections.abc import Sequence
 from typing import NoReturn
-from typing import Sequence
 
 import flask
 import pkg_resources

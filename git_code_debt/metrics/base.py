@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import inspect
-from typing import Generator
+from collections.abc import Generator
 from typing import NamedTuple
 
 from git_code_debt.file_diff_stat import FileDiffStat
