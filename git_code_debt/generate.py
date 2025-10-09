@@ -9,11 +9,11 @@ import multiprocessing.pool
 import os.path
 import sqlite3
 from collections import Counter
+from collections.abc import Callable
 from collections.abc import Generator
 from collections.abc import Iterable
 from collections.abc import Sequence
 from re import Pattern
-from typing import Callable
 from typing import TypeVar
 
 from git_code_debt import options
