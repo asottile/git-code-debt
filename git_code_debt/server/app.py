@@ -1,14 +1,13 @@
 from __future__ import annotations
 
 import argparse
+import importlib.resources
 import os.path
-import shutil
 import sqlite3
 from collections.abc import Sequence
 from typing import NoReturn
 
 import flask
-import pkg_resources
 
 from git_code_debt.server.metric_config import Config
 from git_code_debt.server.servlets.changes import changes
@@ -53,12 +52,12 @@ def create_metric_config_if_not_exists() -> None:
         return
 
     print('WARNING: no metric_config.yaml detected.  Creating sample config!')
-    shutil.copyfile(
-        pkg_resources.resource_filename(
-            'git_code_debt.server', 'metric_config.sample.yaml',
-        ),
-        'metric_config.yaml',
+    bts = importlib.resources.read_binary(
+        'git_code_debt.server',
+        'metric_config.sample.yaml',
     )
+    with open('metric_config.yaml', 'wb') as f:
+        f.write(bts)
 
 
 def main(argv: Sequence[str] | None = None) -> NoReturn:

@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import inspect
 import pkgutil
+from collections.abc import Callable
 from types import ModuleType
 from typing import Any
-from typing import Callable
 
 
 def discover(

@@ -3,19 +3,18 @@ from __future__ import annotations
 import argparse
 import collections
 import contextlib
+import importlib.resources
 import itertools
 import multiprocessing.pool
 import os.path
 import sqlite3
 from collections import Counter
+from collections.abc import Callable
 from collections.abc import Generator
 from collections.abc import Iterable
 from collections.abc import Sequence
 from re import Pattern
-from typing import Callable
 from typing import TypeVar
-
-import pkg_resources
 
 from git_code_debt import options
 from git_code_debt.discovery import get_metric_parsers_from_args
@@ -163,13 +162,10 @@ def load_data(
 
 def create_schema(db: sqlite3.Connection) -> None:
     """Creates the database schema."""
-    schema_dir = pkg_resources.resource_filename('git_code_debt', 'schema')
-    schema_files = os.listdir(schema_dir)
+    schema_dir = importlib.resources.files('git_code_debt.schema')
 
-    for sql_file in schema_files:
-        resource_filename = os.path.join(schema_dir, sql_file)
-        with open(resource_filename) as resource:
-            db.executescript(resource.read())
+    for sql_file in schema_dir.iterdir():
+        db.executescript(sql_file.read_text())
 
 
 def get_metrics_info(
