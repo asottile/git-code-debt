@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import collections
+import contextlib
 import os.path
 import re
 import sqlite3
@@ -19,7 +20,6 @@ from git_code_debt.metric import Metric
 from git_code_debt.metrics.lines import LinesOfCodeParser
 from git_code_debt.repo_parser import RepoParser
 from git_code_debt.util.subprocess import cmd_output
-from testing.utilities.cwd import cwd
 
 
 def test_increment_metrics_first_time():
@@ -99,7 +99,7 @@ def test_generate_new_data_created(sandbox, cloneable_with_commits):
     main(('-C', cfg))
     before_data_count = get_metric_data_count(sandbox)
     # Add some commits
-    with cwd(cloneable_with_commits.path):
+    with contextlib.chdir(cloneable_with_commits.path):
         with open('new_file.py', 'w') as f:
             f.write('# test\n')
         cmd_output('git', 'add', 'new_file.py')
@@ -111,7 +111,7 @@ def test_generate_new_data_created(sandbox, cloneable_with_commits):
 
 def test_regression_for_issue_10(sandbox, cloneable):
     # Create a commit, then create another commit at a previous time
-    with cwd(cloneable):
+    with contextlib.chdir(cloneable):
         cmd_output(
             'git', 'commit', '--allow-empty', '-m', 'c1',
             env=dict(
@@ -135,7 +135,7 @@ def test_regression_for_issue_10(sandbox, cloneable):
 
 
 def test_moves_handled_properly(sandbox, cloneable):
-    with cwd(cloneable):
+    with contextlib.chdir(cloneable):
         with open('f', 'w') as f:
             f.write('foo\nbar\nbaz\n')
         cmd_output('git', 'add', 'f')
@@ -148,7 +148,7 @@ def test_moves_handled_properly(sandbox, cloneable):
 
 
 def test_internal_zero_populated(sandbox, cloneable):
-    with cwd(cloneable):
+    with contextlib.chdir(cloneable):
         with open('f.py', 'w') as f:
             f.write('# hello world\n')
         cmd_output('git', 'add', 'f.py')

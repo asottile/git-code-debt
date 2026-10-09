@@ -15,7 +15,6 @@ from git_code_debt.repo_parser import COMMIT_FORMAT
 from git_code_debt.util import yaml
 from git_code_debt.util.subprocess import cmd_output
 from testing.utilities.auto_namedtuple import auto_namedtuple
-from testing.utilities.cwd import cwd
 
 
 @pytest.fixture
@@ -70,7 +69,7 @@ def sandbox(tempdir_factory):
 @pytest.fixture
 def cloneable(tempdir_factory):
     repo_path = tempdir_factory.get()
-    with cwd(repo_path):
+    with contextlib.chdir(repo_path):
         subprocess.check_call(('git', 'init', '.'))
         subprocess.check_call(('git', 'commit', '-m', 'foo', '--allow-empty'))
 
@@ -98,7 +97,7 @@ def cloneable_with_commits(cloneable):
         ))
         append_commit()
 
-    with cwd(cloneable):
+    with contextlib.chdir(cloneable):
         # Append a commit for the inital commit
         append_commit()
         make_commit('bar.py', '')
